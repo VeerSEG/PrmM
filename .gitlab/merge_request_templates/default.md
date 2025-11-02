@@ -8,4 +8,4 @@ Please fill the summary of the merge request changes here.
 
 ## Performing Validation
 
-- [x] Validation
+- [x] Validation Items. (Currently not defined)
