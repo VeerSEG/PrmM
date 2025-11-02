@@ -60,8 +60,8 @@
       "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
       "FunctionName": "Add-CICDSupport",
       "NamedParams": {
-        "AccessToken": "$env:SEGEAGitlabTokenSecretText",
-        "GitlabUrl": "$SEGEAGitlabUrl",
+        "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+        "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
         "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))"
       }
     },
@@ -71,8 +71,8 @@
       "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
       "FunctionName": "Add-JenkinsIntegration",
       "NamedParams": {
-        "AccessToken": "$env:SEGEAGitlabTokenSecretText",
-        "GitlabUrl": "$SEGEAGitlabUrl",
+        "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+        "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
         "JenkinsProjectName": "$ProjectJenkinsRootFolder/$ProjectDevPath/GitlabJenkinsIntegration/GitlabRouter",
         "JenkinsUrl": "$JENKINS_URL",
         "Password": "$env:JenkinsUser_Password",
@@ -86,8 +86,8 @@
       "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
       "FunctionName": "Set-GitlabMergeRequestSettings",
       "NamedParams": {
-        "AccessToken": "$env:SEGEAGitlabTokenSecretText",
-        "GitlabUrl": "$SEGEAGitlabUrl",
+        "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+        "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
         "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))",
         "ConfigFilePath": "$SandboxPath/.seg/CI/CaC/MergeRequestConfig.json"
       }
@@ -98,8 +98,8 @@
       "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
       "FunctionName": "Protect-BranchesFromJson",
       "NamedParams": {
-        "AccessToken": "$env:SEGEAGitlabTokenSecretText",
-        "GitlabUrl": "$SEGEAGitlabUrl",
+        "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+        "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
         "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))",
         "JsonFilePath": "$SandboxPath/.seg/CI/CaC/ProtectedBranches.json"
       }
@@ -185,7 +185,8 @@
   ],
   "WithCredentials": {
     "SecretText": [
-      "SEGEAGitlabTokenSecretText"
+      "SEGEAGitlabTokenSecretText",
+      "SEGGitlabTokenSecretText"
     ],
     "UserInfo": [
       "JenkinsUser"
