@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "project:bootstrap",
+      "type": "shell",
+      "windows": {
+        "command": "pwsh -ExecutionPolicy Bypass -File ./.seg/Scripts/Git/GitInit.ps1"
+      },
+      "options": { "cwd": "${workspaceFolder}" },
+      "runOptions": { "runOn": "folderOpen" },   // 关键：打开仓库即尝试运行
+      "problemMatcher": []
+    }
+  ]
+}

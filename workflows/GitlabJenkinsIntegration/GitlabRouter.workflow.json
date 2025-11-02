@@ -1,0 +1,31 @@
+{
+  "Name": "GitlabRouter",
+  "Type": "Workflow",
+  "Description": "This is a template job for the gitlab router.",
+  "RequiredNode": "EA&&Git&&PTC",
+  "WorkflowRunnerRepo": {
+    "Type": "SEGGitlab",
+    "Branch": "main",
+    "UrlRelativePath": "ci-development/workflowrunner.git"
+  },
+  "Envs": {
+    "GitlabJenkinsIntegration": "SEGGitlab",
+    "GitlabRouterJob":"GitlabRouterJob"
+  },
+  "Params": {
+    "ForceTriggerAll": {
+      "Type": "Bool",
+      "Description": "Trigger all stages without condition matchings."
+    },
+    "GitActionType": {
+      "Type": "Choice",
+      "Default": "PUSH",
+      "List": [
+        "MERGE",
+        "PUSH",
+        "TAG"
+      ]
+    }
+  },
+  "Stages": []
+}

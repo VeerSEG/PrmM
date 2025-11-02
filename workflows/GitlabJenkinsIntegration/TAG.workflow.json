@@ -1,0 +1,18 @@
+{
+  "Name": "TAG",
+  "Type": "Workflow",
+  "RequiredNode": "Git",
+  "WorkflowRepo": {
+    "Type": "ReposSet",
+    "Repos": {}
+  },
+  "WorkflowRunnerRepo": {
+    "Type": "SEGGitlab",
+    "Branch": "main",
+    "UrlRelativePath": "ci-development/workflowrunner.git"
+  },
+  "Stages": [],
+  "Env": {
+    "GitlabJenkinsIntegration": true
+  }
+}

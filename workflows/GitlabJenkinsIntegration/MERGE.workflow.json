@@ -1,0 +1,192 @@
+{
+  "Name": "MERGE",
+  "Type": "Workflow",
+  "RequiredNode": "EA&&Git&&PTC",
+  "Description": "This workflow will be triggered when a merge request is created or reopened. It will read the validation list, perform project CI processes, and generate a report template.",
+  "WorkflowRepo": {
+    "Type": "ReposSet",
+    "Repos": {
+      "PTCKpiM": {
+        "Type": "SEGGitlab",
+        "Branch": "Developer",
+        "UrlRelativePath": "ci-development/ptc-kpi-m.git"
+      }
+    }
+  },
+  "WorkflowRunnerRepo": {
+    "Type": "SEGGitlab",
+    "Branch": "main",
+    "UrlRelativePath": "ci-development/workflowrunner.git"
+  },
+  "When": {
+    "Condition": "$gitlabMergeRequestState -eq 'opened' -or $gitlabMergeRequestState -eq 'reopened'"
+  },
+  "WithEnv": [
+    {
+      "Key": "_MonitorBranches",
+      "Value": "$SandboxPath/.seg/CI/CaC/MonitorBranches.json"
+    },
+    {
+      "Key": "_GlobalJenkinsConfig",
+      "Value": "$SEGJenkinsShareFolder\\Configs\\GlobalConfigs\\Configs.json"
+    },
+    {
+      "Key": "_ProjectJenkinsConfig",
+      "Value": "$SEGJenkinsShareFolder\\Configs\\ProjectConfigs\\$ProjectName\\Configs.json"
+    }
+  ],
+  "Envs": {
+    "GitlabJenkinsIntegration": "SEGEAGitlab"
+  },
+  "Lock": "$ProjectPath::MergeRequest::$gitlabMergeRequestIid",
+  "Stages": [
+    {
+      "Name": "Information Read and Process",
+      "Type": "ParallelStages",
+      "Parallel": [
+        {
+          "Name": "ValidationListRead",
+          "Type": "ParallelSet",
+          "Stages": [
+            {
+              "Name": "Read Validation List",
+              "Desc": "Read the validations need to be performed.",
+              "Type": "Stage",
+              "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-MergeRequest",
+              "FunctionName": "Get-MarkdownCheckboxStatus",
+              "NamedParams": {
+                "Content": "$gitlabMergeRequestDescription",
+                "ChapterTitle": "## Performing Validation"
+              },
+              "GitlabIntegration": true,
+              "OutputProcess": {
+                "OutputFilePath": "$ArchivePath/ValidationList.json"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "Project CI Process",
+      "Type": "ParallelStages",
+      "WithEnv": [
+        {
+          "Key": "_ValidationList",
+          "Value": "$ArchivePath/ValidationList.json"
+        }
+      ],
+      "Parallel": [
+        {
+          "Name": "ProjectValidation",
+          "Type": "ParallelSet",
+          "Stages": [
+            
+          ]
+        },
+        {
+          "Name": "TaskValidation",
+          "Type": "ParallelSet",
+          "Stages": [
+            {
+              "Name": "Read Task Info",
+              "Desc": "Task Id should belongs to the current project. And the status shoulde be In progress.",
+              "Type": "Stage",
+              "ModuleName": "$WorkflowRepoPath/PTCKpiM/Modules/PTCKpiM-TaskValidation",
+              "FunctionName": "Confirm-TaskStatus",
+              "NamedParams": {
+                "TaskID": "$($gitlabMergeRequestTitle.Split('-')[-1])",
+                "ExpectedProject": "$($ProjectInfos.WindChillProjectInformation.ProjectPath)",
+                "ExpectedState": "In progress",
+                "ExpectedUser": "$($BuildTriggerUser.NTAccount)"
+              },
+              "GitlabIntegration": true,
+              "IgnoreError": true,
+              "WithEnv": [
+                {
+                  "Key": "ProjectInfos",
+                  "Value": "$SandboxPath/.seg/CI/CIEnvConfig/ProjectInfos/ProjectInfos.json"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "Generate Report Template",
+      "Type": "Stage",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Activities",
+      "FunctionName": "Out-ReportWithTestCasesFilter",
+      "NamedParams": {
+        "Changes": "$SandboxContext.Changes",
+        "OutputPath": "$WorkspacePath/ReportsTemplate/Report.json"
+      }
+    },
+    {
+      "Name": "Add Matrix To Notification",
+      "Type": "Stage",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+      "FunctionName": "Add-Matrix",
+      "NamedParams": {
+        "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+        "Matrix": [
+          {
+            "Name": "\"Merge Reqeust Info\"",
+            "Contents": [
+              {
+                "Name": "\"Title\"",
+                "Value": "$gitlabMergeRequestTitle"
+              },
+              {
+                "Name": "\"Description\"",
+                "Value": "$gitlabMergeRequestDescription"
+              }
+            ]
+          }
+        ],
+        "OutputLocation": "$WorkspacePath/ReportsTemplate/Report.json"
+      }
+    },
+    {
+      "Name": "Add Links To Notification",
+      "Type": "Stage",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+      "FunctionName": "Add-Links",
+      "NamedParams": {
+        "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+        "Links": [
+          {
+            "Name": "\"MergeRequestTicket\"",
+            "Link": "\"$gitlabSourceRepoHomepage/-/merge_requests/$gitlabMergeRequestIid\""
+          }
+        ],
+        "OutputLocation": "$WorkspacePath/ReportsTemplate/Report.json"
+      }
+    },
+    {
+      "Name": "Add Report To TriggerUser",
+      "Type": "Stage",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+      "FunctionName": "Add-PostInChat",
+      "NamedParams": {
+        "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+        "OutputLocation": "$ReportPath/ReportOnChat.json",
+        "Users": [
+          "$BuildTriggerUser.Email"
+        ]
+      }
+    },
+    {
+      "Name": "Send Reports",
+      "Type": "Stage",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Activities",
+      "FunctionName": "Resolve-WithTemplateAndOutputReportToTeams",
+      "NamedParams": {
+        "ContextFolder": "$ReportPath",
+        "OutputFolder": "$TempFolderPath/Reports/Resolved"
+      },
+      "RetryTimes": 200
+    }
+  ]
+}

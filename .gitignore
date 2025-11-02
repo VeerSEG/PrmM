@@ -1,0 +1,7 @@
+*.ldb
+/Analyze/org.yakindu.traceability.report.log
+/Analyze/DOORSResponseCache
+# Ignore all directories starting with . except .vscode
+/.[^(vscode|gitlab)]*/
+**/__pycache__/
+*.pyc
