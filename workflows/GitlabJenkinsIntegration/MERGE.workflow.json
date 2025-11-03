@@ -96,7 +96,7 @@
               "FunctionName": "Confirm-TaskStatus",
               "NamedParams": {
                 "TaskID": "$($gitlabMergeRequestTitle.Split('-')[-1])",
-                "ExpectedProject": "$($ProjectInfos.WindChillProjectInformation.ProjectPath)",
+                "ExpectedProject": "",
                 "ExpectedState": "In progress",
                 "ExpectedUser": "$($BuildTriggerUser.NTAccount)"
               },
