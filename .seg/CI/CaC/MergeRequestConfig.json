@@ -1,5 +1,5 @@
 {
-    "merge_method": "rebase_merge",
+    "merge_method": "ff",
     "squash_option": "always",
     "remove_source_branch_after_merge": true,
     "resolve_outdated_diff_discussions": true,
@@ -9,5 +9,6 @@
     "merge_commit_template": "Merge branch '%{source_branch}' into '%{target_branch}'\n\n%{title}\n\n%{description}\n\n%{issues}\n\nSee merge request %{reference}",
     "squash_commit_template": "# %{title}\n\n%{description}",
     "merge_request_template": "",
+    "mr_default_target_self": true,
     "suggestion_commit_message": "Apply %{suggestions_count} suggestion(s) to %{files_count} file(s)\n\n%{co_authored_by}"
 }
