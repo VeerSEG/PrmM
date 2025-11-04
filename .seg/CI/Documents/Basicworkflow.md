@@ -41,6 +41,54 @@ It will setup the Mergedriver etc in the current scope of project.
 
 NA
 
+## InheritRelationship
+
+![InheritRelationship](Attachments/InheritRelationship.drawio.svg)
+
+The signle route inherit relationship is been used. which means the child project can merge the from its parent or ancestor branches, but never the other way around.
+
+### Way of handling variant:
+
+1. When no dedicated workflow branch exists
+
+    Use the Base Workflow directly.
+    Do not create a variant branch prematurely.
+
+2. When a process needs a variant
+   
+    First create a top-level variant branch (temporary home for process-specific changes).
+    Keep changes narrowly scoped to this process/variant.
+
+3. When common requirements emerge across variants
+    If multiple variants start sharing the same needs, do not continue piling them on the top-level variant branch.
+
+    Refactor the common part downward:
+
+        - Identify the lowest suitable level that is shared by all impacted variants.
+
+        - Create a Variant Base Branch there (the new common base).
+
+        - Apply the shared changes to this Variant Base Branch.
+
+        - Merge downward from the new base into the affected top-level variant(s).
+
+        - From the Variant Base Branch, branch off any new variants as needed.
+
+4. Merge direction (inheritance rule)
+
+    - Only downward merges are allowed (child ← parent/ancestor).
+
+    - Child/variant branches must include updates from their parent or ancestor branches.
+
+    - No upward merges back into parent/ancestor.
+
+5. Naming recommendations on Branch
+
+    - Basic workflow: main
+    - Domain Specified workflow: \<Domain\>/template
+    - Undefined Layer workflow: variants/\<VairantName\>
+    - Process Specified workflow: \<Domain\>/\<ProcessName\>
+
 ## Change Logs
 
 ### 0.0.1
