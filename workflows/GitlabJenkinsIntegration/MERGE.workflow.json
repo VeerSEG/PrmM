@@ -1,7 +1,7 @@
 {
   "Name": "MERGE",
   "Type": "Workflow",
-  "RequiredNode": "EA&&Git&&PTC",
+  "RequiredNode": "Git",
   "Description": "This workflow will be triggered when a merge request is created or reopened. It will read the validation list, perform project CI processes, and generate a report template.",
   "WorkflowRepo": {
     "Type": "ReposSet",

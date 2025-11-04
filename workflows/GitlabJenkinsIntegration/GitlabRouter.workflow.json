@@ -1,8 +1,8 @@
 {
   "Name": "GitlabRouter",
   "Type": "Workflow",
-  "Description": "This is a template job for the gitlab router.",
-  "RequiredNode": "EA&&Git&&PTC",
+  "Description": "This is a router job, will handover the control to the respective event workflow in each branch folder. when the branch folder is not declared. Will handover to the folder ElsesBranches.",
+  "RequiredNode": "Git",
   "WorkflowRunnerRepo": {
     "Type": "SEGGitlab",
     "Branch": "main",
