@@ -1,7 +1,8 @@
 {
   "Name": "MergeWithSourceBranch",
   "Type": "Workflow",
-  "RequiredNode": "EA&&Git&&PTC",
+  "RequiredNode": "Git",
+  "Description":"When there is a changes in the parent branch, this workflow will be triggered, child branch will try merge the parent and to use the merge tool to solve the conflict. When there is no conflict reported by merge driver. the changes will be checked in and commited.",
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {}

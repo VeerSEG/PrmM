@@ -8,6 +8,7 @@
 4. Configure the basic merge request template. [/.gitlab/merge_request_templates](/.gitlab/merge_request_templates)
 5. Use the external open tool plugin to open the binary files with 3rd software (e.g. EA, Office). see "openInExternalApp.openMapper" at [/.vscode/settings.json](/.vscode/settings.json)
 6. An cylic task will be raised in vscode, to help setup the configuration of the current project local sandbox, to make sure the settings are correct. see project:bootstrap at [/.vscode/tasks.json](/.vscode/tasks.json)
+7. When in monitor branches, there is a new commit, workflow will try merge changes to the child branches.[/workflows/Support/MergewithSourceBranch.workflow.json](/workflows/Support/MergewithSourceBranch.workflow.json). 
 
 
 ### Major Entries
