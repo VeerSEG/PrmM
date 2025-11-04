@@ -1,7 +1,7 @@
 {
   "Name": "PUSH",
   "Type": "Workflow",
-  "RequiredNode": "EA&&Git&&PTC",
+  "RequiredNode": "EA&&Git",
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {}
