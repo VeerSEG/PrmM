@@ -231,7 +231,7 @@
         "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
         "OutputLocation": "$ReportPath/ReportOnGroup.json",
         "Groups": [
-          "$_ProjectJenkinsConfig.StakeHolders.Groups|Where-Object{\"$ProjectName/$SandboxProjectDevPath/$\"$_.StakeHoldersTags.Contains(\"Architecture\")}|Select-Object -ExpandProperty GroupName"
+          "$_ProjectJenkinsConfig.StakeHolders.Groups|Where-Object{$JOB_DISPLAY_URL.Replace(\"$JENKINS_URL/job\",'')|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName"
         ]
       },
       "When": {

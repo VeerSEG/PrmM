@@ -7,3 +7,5 @@ git config  merge.LemonTree.name "LemonTree Merge Driver"
 git config  merge.LemonTree.driver "pwsh -NoProfile -ExecutionPolicy Bypass -File ./.seg/Scripts/EA/MergeEA.ps1 %O %A %B %P"
 # Set the merge strategy for LemonTree to handle files as binary in merges.
 git config  merge.LemonTree.recursive binary
+
+Write-Host "Configuring Finished" -ForegroundColor Green
