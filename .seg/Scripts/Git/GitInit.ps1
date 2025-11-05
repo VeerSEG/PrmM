@@ -2,7 +2,7 @@
 # get file hash
 $oldHash=""
 
-while ($true) {
+while ($true -and (-not($env:WorkflowRunningEnvironment) -or( $env:WorkflowRunningEnvironment -ne 'Jenkins'))) {
     $newHash=git rev-parse HEAD:./.seg/Scripts
     if ($newHash -ne $oldHash) {
         Write-Host "Detected change in .seg/Scripts, re-initializing Git configuration..."
