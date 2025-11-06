@@ -58,7 +58,7 @@
       "Name": "Generate Signature",
       "Description": "Generate singature for current project to make sure the workflows has been init from Jenkins side.",
       "Type": "Stage",
-      "ModuleName": "$WorkflowRepoPath/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Hash",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Hash",
       "FunctionName": "Get-HashForConfigContent",
       "NamedParams": [
         {
@@ -86,14 +86,13 @@
       ]
     },
     {
-      "Name": "Check if Label Existed",
-      "Type": "Groovy",
+      "Name": "Check if Signature Existed",
+      "Type": "JenkinsApi",
       "NamedParams": {
-        "Label": "$($_SeedsSignature)",
+        "Description": "$($_SeedsSignature)",
         "OutputPath": "\"$WorkspacePath/LabelStatus.json\""
       },
-      "FunctionName": "checkBuildWithLabel",
-      "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+      "FunctionName": "checkBuildWithDesc",
       "WithEnv": [
         {
           "Key": "_SeedsSignature",
@@ -243,13 +242,12 @@
           ]
         },
         {
-          "Name": "Adapt Display Name",
-          "Type": "Groovy",
+          "Name": "Adapt Signature",
+          "Type": "JenkinsApi",
           "NamedParams": {
-            "DisplayName": "$_SeedsSignature"
+            "Description": "$_SeedsSignature"
           },
-          "FunctionName": "SetCurrentBuildName",
-          "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+          "FunctionName": "SetCurrentBuildDesc",
           "WithEnv": [
             {
               "Key": "_SeedsSignature",
@@ -259,10 +257,9 @@
         },
         {
           "Name": "Save Current Build Forever",
-          "Type": "Groovy",
+          "Type": "JenkinsApi",
           "NamedParams": {},
-          "FunctionName": "saveBuildForever",
-          "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy"
+          "FunctionName": "saveBuildForever"
         }
       ]
     }

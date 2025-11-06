@@ -130,13 +130,12 @@
       }
     },
       {
-        "Name": "Adapt Display Name",
-        "Type": "Groovy",
+        "Name": "Adapt Signature",
+        "Type": "JenkinsApi",
         "NamedParams": {
-          "DisplayName": "$_SeedsSignature"
+          "Description": "$_SeedsSignature"
         },
-        "FunctionName": "SetCurrentBuildName",
-        "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+        "FunctionName": "SetCurrentBuildDesc",
         "WithEnv": [
           {
             "Key": "_SeedsSignature",
@@ -146,10 +145,9 @@
       },
       {
         "Name": "Save Current Build Forever",
-        "Type": "Groovy",
+        "Type": "JenkinsApi",
         "NamedParams": {},
-        "FunctionName": "saveBuildForever",
-        "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy"
+        "FunctionName": "saveBuildForever"
       }
   ]
 }
