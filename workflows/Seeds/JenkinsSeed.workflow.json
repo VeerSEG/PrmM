@@ -108,6 +108,48 @@
           ]
         }
       ]
-    }
+    },
+    {
+      "Name": "Generate Signature",
+      "Description": "Generate singature for current project to make sure the workflows has been init from Jenkins side.",
+      "Type": "Stage",
+      "ModuleName": "$WorkflowRepoPath/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Hash",
+      "FunctionName": "Get-HashForConfigContent",
+      "NamedParams": [
+        {
+          "Type": "\"Directory\"",
+          "Path": "$SandboxPath",
+          "FileMatches": [
+            "\"^\\.\"",
+            "\"^workflows\""
+          ]
+        }
+      ],
+      "OutputProcess": {
+        "OutputFilePath": "$ArchivePath/SeedsSignature.json"
+      }
+    },
+      {
+        "Name": "Adapt Display Name",
+        "Type": "Groovy",
+        "NamedParams": {
+          "DisplayName": "$_SeedsSignature"
+        },
+        "FunctionName": "SetCurrentBuildName",
+        "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+        "WithEnv": [
+          {
+            "Key": "_SeedsSignature",
+            "Value": "$ArchivePath/SeedsSignature.json"
+          }
+        ]
+      },
+      {
+        "Name": "Save Current Build Forever",
+        "Type": "Groovy",
+        "NamedParams": {},
+        "FunctionName": "saveBuildForever",
+        "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy"
+      }
   ]
 }
