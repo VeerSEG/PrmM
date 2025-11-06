@@ -12,7 +12,7 @@
 8. Seeds job is based on signature to reduce the IO for settings it up:
    - ProjectJenkinsSeed workflow will based on the signature workflows+folder starting with "." and the branches information to start if not started before. see [ProjectJenkinsSeed](/workflows/Seeds/ProjectJenkinsSeed.workflow.json)
    - JenkinsSeed workflow will be triggered by PUSH even. And based on the signature of  workflows+folder starting with ".". see [PUSH](workflows/GitlabJenkinsIntegration/PUSH.workflow.json)
-
+9. Only the workflow maintainer or the maintainer of gitlab repo can have the permission to directly change the workflow folder and all the files stored in folder starting with "." e.g. .seg, .vscode etc. Other members create MR will failed.
 
 ### Major Entries
 
