@@ -31,6 +31,31 @@
   },
   "Stages": [
     {
+      "Name":"JenkinsSeedsInit",
+      "Description":"This stage will check if the current branch integration has already been setup. By checking the signature of the workflows and .seg folder.",
+      "Type": "Workflow",
+      "NamedParams": {
+        "JobName": "\"JenkinsSeed\"",
+        "JobFolder": "\"$ProjectJenkinsRootFolder/$BranchFolderName/_JenkinsCaC\"",
+        "CanShareSandbox": true,
+        "SearchingDepth":2
+      },
+      "GitlabIntegration": true,
+      "IgnoreError": true,
+      "SignatureStage": {
+        "SignatureVector": [
+          {
+            "Type": "\"Directory\"",
+            "Path": "$SandboxPath",
+            "FileMatches": [
+              "\"^\\.\"",
+              "\"^workflows\""
+            ]
+          }
+        ]
+      }
+    },
+    {
       "Name": "Project CI Process",
       "Type": "ParallelStages",
       "Parallel": [
