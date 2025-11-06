@@ -31,15 +31,38 @@
   },
   "Stages": [
     {
+      "Name": "JenkinsSeedsInit",
+      "Description": "This stage will check if the current branch integration has already been setup. By checking the signature of the workflows and .seg folder.",
+      "Type": "Workflow",
+      "NamedParams": {
+        "JobName": "\"JenkinsSeed\"",
+        "JobFolder": "\"$ProjectJenkinsRootFolder/$BranchFolderName/_JenkinsCaC\"",
+        "CanShareSandbox": true,
+        "SearchingDepth": 2
+      },
+      "GitlabIntegration": true,
+      "IgnoreError": true,
+      "SignatureStage": {
+        "SignatureVector": [
+          {
+            "Type": "\"Directory\"",
+            "Path": "$SandboxPath",
+            "FileMatches": [
+              "\"^\\.\"",
+              "\"^workflows\""
+            ]
+          }
+        ]
+      }
+    },
+    {
       "Name": "Project CI Process",
       "Type": "ParallelStages",
       "Parallel": [
         {
           "Name": "ProjectValidation",
           "Type": "ParallelSet",
-          "Stages": [
-            
-          ]
+          "Stages": []
         },
         {
           "Name": "PTC Validation and Link Creation",
@@ -95,7 +118,7 @@
           ]
         },
         {
-          "Name": "Update Child Branches",
+          "Name": "Update Child Branches and Project Jenkins Seeds",
           "Type": "ParallelSet",
           "When": {
             "Condition": "($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ })"
@@ -116,7 +139,44 @@
               "ThrowIfFailed": true
             },
             {
-              "Name": "Start Branches",
+              "Name": "Start ProjectJenkinsSeeds",
+              "Type": "Workflow",
+              "NamedParams": {
+                "JobName": "\"ProjectJenkinsSeed\"",
+                "JobFolder": "\"$ProjectJenkinsRootFolder/_JenkinsCaC\"",
+                "ObtainTestsResult": false,
+                "NoWaitJob": true,
+                "Params": {
+                  "ProjectDevPath": "$ParallelContext.DevPath"
+                },
+                  "IgnoreError": true
+              },
+              "SignatureStage": {
+                "SignatureVector": [
+                  {
+                    "Type": "\"Directory\"",
+                    "Path": "$SandboxPath",
+                    "FileMatches": [
+                      "\"^\\.\"",
+                      "\"^workflows\""
+                    ]
+                  },
+                  {
+                    "Type": "\"Array\"",
+                    "Path": "$SandboxPath",
+                    "Content": " @{Name=\"ElseBranches\";DevPath=$ProjectDevPath};$_DevPathsInfo|Where-Object{$branchName=$_;$_MonitorBranches|Where-Object{$branchName -like $_ }}|Foreach-Object{@{Name=$_;DevPath=$_}}"
+                  }
+                ]
+              },
+              "WithEnv": [
+                {
+                  "Key": "_DevPathsInfo",
+                  "Value": "$ArchivePath/ProjectDevPathsInfo.json"
+                }
+              ]
+            },
+            {
+              "Name": "Start Branches Merging",
               "Type": "ParallelWithTemplate",
               "ParallelSetNameTemplate": "Update Branch $($ParallelContext.Name)",
               "ParallelWith": "$_DevPathsInfo|Where-Object{$_.StartsWith(\"Devs/$SandboxProjectDevPath/\")}|Foreach-Object{@{Name=$_;DevPath=$_}}",
@@ -134,10 +194,12 @@
                     "JobName": "\"MergewithSourceBranch\"",
                     "JobFolder": "\"$ProjectJenkinsRootFolder/ElseBranches/Support\"",
                     "ObtainTestsResult": false,
+                    "NoWaitJob": true,
                     "Params": {
                       "ProjectDevPath": "$ParallelContext.DevPath"
                     }
-                  }
+                  },
+                  "IgnoreError": true
                 }
               ]
             }

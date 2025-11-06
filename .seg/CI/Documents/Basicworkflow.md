@@ -9,7 +9,10 @@
 5. Use the external open tool plugin to open the binary files with 3rd software (e.g. EA, Office). see "openInExternalApp.openMapper" at [/.vscode/settings.json](/.vscode/settings.json)
 6. An cylic task will be raised in vscode, to help setup the configuration of the current project local sandbox, to make sure the settings are correct. see project:bootstrap at [/.vscode/tasks.json](/.vscode/tasks.json)
 7. When in monitor branches, there is a new commit, workflow will try merge changes to the child branches.[/workflows/Support/MergewithSourceBranch.workflow.json](/workflows/Support/MergewithSourceBranch.workflow.json). 
-
+8. Seeds job is based on signature to reduce the IO for settings it up:
+   - ProjectJenkinsSeed workflow will based on the signature workflows+folder starting with "." and the branches information to start if not started before. see [ProjectJenkinsSeed](/workflows/Seeds/ProjectJenkinsSeed.workflow.json)
+   - JenkinsSeed workflow will be triggered by PUSH even. And based on the signature of  workflows+folder starting with ".". see [PUSH](workflows/GitlabJenkinsIntegration/PUSH.workflow.json)
+9. Only the workflow maintainer or the maintainer of gitlab repo can have the permission to directly change the workflow folder and all the files stored in folder starting with "." e.g. .seg, .vscode etc. Other members create MR will failed.
 
 ### Major Entries
 
