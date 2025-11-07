@@ -36,8 +36,9 @@ function Out-SortHashTable {
         
     }
 }
-"$PSScriptRoot/../../workflows" | Get-ChildItem -Recurse -Filter "*.workflow.json" | Foreach-Object {
+"workflows" | Get-ChildItem -Recurse -Filter "*.workflow.json" | Foreach-Object {
     $item = $_
+    Write-Host "Formatting $item"
     $rawObj = Get-Content $item -Raw | ConvertFrom-Json -AsHashtable
     $rawObj | Out-SortHashTable | ConvertTo-Json -Depth 100 | Out-File $item -Force
 }

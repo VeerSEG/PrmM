@@ -56,45 +56,45 @@
     },
     {
       "Name": "Generate Signature",
-      "Description": "Generate singature for current project to make sure the workflows has been init from Jenkins side.",
       "Type": "Stage",
+      "Description": "Generate singature for current project to make sure the workflows has been init from Jenkins side.",
       "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Hash",
       "FunctionName": "Get-HashForConfigContent",
       "NamedParams": {
         "ConfigurationList": [
           {
             "Type": "\"Directory\"",
-            "Path": "$SandboxPath",
             "FileMatches": [
               "\"^\\.(?!git`$)\"",
               "\"^workflows\""
-            ]
+            ],
+            "Path": "$SandboxPath"
           },
           {
             "Type": "\"Array\"",
-            "Path": "$SandboxPath",
-            "Content": " @{Name=\"ElseBranches\";DevPath=$ProjectDevPath};$_DevPathsInfo|Where-Object{$branchName=$_;$_MonitorBranches|Where-Object{$branchName -like $_ }}|Foreach-Object{@{Name=$_;DevPath=$_}}"
+            "Content": " @{Name=\"ElseBranches\";DevPath=$ProjectDevPath};$_DevPathsInfo|Where-Object{$branchName=$_;$_MonitorBranches|Where-Object{$branchName -like $_ }}|Foreach-Object{@{Name=$_;DevPath=$_}}",
+            "Path": "$SandboxPath"
           }
         ]
-      },
-      "OutputProcess": {
-        "OutputFilePath": "$ArchivePath/SeedsSignature.json"
       },
       "WithEnv": [
         {
           "Key": "_DevPathsInfo",
           "Value": "$ArchivePath/ProjectDevPathsInfo.json"
         }
-      ]
+      ],
+      "OutputProcess": {
+        "OutputFilePath": "$ArchivePath/SeedsSignature.json"
+      }
     },
     {
       "Name": "Check if Signature Existed",
       "Type": "JenkinsApi",
+      "FunctionName": "checkBuildWithDesc",
       "NamedParams": {
         "Description": "$($_SeedsSignature)",
         "OutputPath": "\"$WorkspacePath/LabelStatus.json\""
       },
-      "FunctionName": "checkBuildWithDesc",
       "WithEnv": [
         {
           "Key": "_SeedsSignature",
@@ -148,9 +148,9 @@
           "FunctionName": "Set-GitlabMergeRequestSettings",
           "NamedParams": {
             "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+            "ConfigFilePath": "$SandboxPath/.seg/CI/CaC/MergeRequestConfig.json",
             "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
-            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))",
-            "ConfigFilePath": "$SandboxPath/.seg/CI/CaC/MergeRequestConfig.json"
+            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))"
           }
         },
         {
@@ -161,8 +161,8 @@
           "NamedParams": {
             "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
             "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
-            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))",
-            "JsonFilePath": "$SandboxPath/.seg/CI/CaC/ProtectedBranches.json"
+            "JsonFilePath": "$SandboxPath/.seg/CI/CaC/ProtectedBranches.json",
+            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))"
           }
         },
         {
@@ -246,10 +246,10 @@
         {
           "Name": "Adapt Signature",
           "Type": "JenkinsApi",
+          "FunctionName": "SetCurrentBuildDesc",
           "NamedParams": {
             "Description": "$_SeedsSignature"
           },
-          "FunctionName": "SetCurrentBuildDesc",
           "WithEnv": [
             {
               "Key": "_SeedsSignature",
@@ -260,8 +260,8 @@
         {
           "Name": "Save Current Build Forever",
           "Type": "JenkinsApi",
-          "NamedParams": {},
-          "FunctionName": "saveBuildForever"
+          "FunctionName": "saveBuildForever",
+          "NamedParams": {}
         }
       ]
     }

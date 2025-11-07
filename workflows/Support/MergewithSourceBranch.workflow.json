@@ -1,8 +1,8 @@
 {
   "Name": "MergeWithSourceBranch",
   "Type": "Workflow",
+  "Description": "When there is a changes in the parent branch, this workflow will be triggered, child branch will try merge the parent and to use the merge tool to solve the conflict. When there is no conflict reported by merge driver. the changes will be checked in and commited.",
   "RequiredNode": "Git",
-  "Description":"When there is a changes in the parent branch, this workflow will be triggered, child branch will try merge the parent and to use the merge tool to solve the conflict. When there is no conflict reported by merge driver. the changes will be checked in and commited.",
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {}
@@ -38,7 +38,7 @@
       "NamedParams": {
         "SourceBranch": "origin/$(($SandboxProjectDevPath.Split(\"/\")|Select-Object -Skip 1 -SkipLast 1) -join \"/\")"
       },
-      "Lock":"UpdateWithSourceBranch::$SandboxProjectDevPath"
+      "Lock": "UpdateWithSourceBranch::$SandboxProjectDevPath"
     },
     {
       "Name": "Generate Report Template",
@@ -127,11 +127,11 @@
       "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
       "FunctionName": "Add-PostInGroup",
       "NamedParams": {
-        "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
-        "OutputLocation": "$ReportPath/ReportOnGroup.json",
         "Groups": [
           "$_ProjectJenkinsConfig.StakeHolders.Groups|Where-Object{$_.StakeHoldersTags.Contains(\"Architecture\")}|Select-Object -ExpandProperty GroupName"
-        ]
+        ],
+        "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+        "OutputLocation": "$ReportPath/ReportOnGroup.json"
       }
     },
     {

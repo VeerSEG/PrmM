@@ -8,10 +8,6 @@
     "Branch": "main",
     "UrlRelativePath": "ci-development/workflowrunner.git"
   },
-  "Envs": {
-    "GitlabJenkinsIntegration": "SEGGitlab",
-    "GitlabRouterJob":"GitlabRouterJob"
-  },
   "Params": {
     "ForceTriggerAll": {
       "Type": "Bool",
@@ -26,6 +22,10 @@
         "TAG"
       ]
     }
+  },
+  "Envs": {
+    "GitlabJenkinsIntegration": "SEGGitlab",
+    "GitlabRouterJob": "GitlabRouterJob"
   },
   "Stages": []
 }

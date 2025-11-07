@@ -1,8 +1,8 @@
 {
   "Name": "MERGE",
   "Type": "Workflow",
-  "RequiredNode": "Git",
   "Description": "This workflow will be triggered when a merge request is created or reopened. It will read the validation list, perform project CI processes, and generate a report template.",
+  "RequiredNode": "Git",
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {
@@ -38,7 +38,6 @@
   "Envs": {
     "GitlabJenkinsIntegration": "SEGEAGitlab"
   },
-  "Lock": "$ProjectPath::MergeRequest::$gitlabMergeRequestIid",
   "Stages": [
     {
       "Name": "Information Read and Process",
@@ -50,13 +49,13 @@
           "Stages": [
             {
               "Name": "Read Validation List",
-              "Desc": "Read the validations need to be performed.",
               "Type": "Stage",
+              "Desc": "Read the validations need to be performed.",
               "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-MergeRequest",
               "FunctionName": "Get-MarkdownCheckboxStatus",
               "NamedParams": {
-                "Content": "$gitlabMergeRequestDescription",
-                "ChapterTitle": "## Performing Validation"
+                "ChapterTitle": "## Performing Validation",
+                "Content": "$gitlabMergeRequestDescription"
               },
               "GitlabIntegration": true,
               "OutputProcess": {
@@ -70,19 +69,11 @@
     {
       "Name": "Project CI Process",
       "Type": "ParallelStages",
-      "WithEnv": [
-        {
-          "Key": "_ValidationList",
-          "Value": "$ArchivePath/ValidationList.json"
-        }
-      ],
       "Parallel": [
         {
           "Name": "ProjectValidation",
           "Type": "ParallelSet",
-          "Stages": [
-            
-          ]
+          "Stages": []
         },
         {
           "Name": "TaskValidation",
@@ -90,26 +81,32 @@
           "Stages": [
             {
               "Name": "Read Task Info",
-              "Desc": "Task Id should belongs to the current project. And the status shoulde be In progress.",
               "Type": "Stage",
+              "Desc": "Task Id should belongs to the current project. And the status shoulde be In progress.",
               "ModuleName": "$WorkflowRepoPath/PTCKpiM/Modules/PTCKpiM-TaskValidation",
               "FunctionName": "Confirm-TaskStatus",
               "NamedParams": {
-                "TaskID": "$($gitlabMergeRequestTitle.Split('-')[-1])",
                 "ExpectedProject": "$($ProjectInfos.WindChillProjectInformation.ProjectPath)",
                 "ExpectedState": "In progress",
-                "ExpectedUser": "$($BuildTriggerUser.NTAccount)"
+                "ExpectedUser": "$($BuildTriggerUser.NTAccount)",
+                "TaskID": "$($gitlabMergeRequestTitle.Split('-')[-1])"
               },
-              "GitlabIntegration": true,
-              "IgnoreError": true,
               "WithEnv": [
                 {
                   "Key": "ProjectInfos",
                   "Value": "$SandboxPath/.seg/CI/CIEnvConfig/ProjectInfos/ProjectInfos.json"
                 }
-              ]
+              ],
+              "GitlabIntegration": true,
+              "IgnoreError": true
             }
           ]
+        }
+      ],
+      "WithEnv": [
+        {
+          "Key": "_ValidationList",
+          "Value": "$ArchivePath/ValidationList.json"
         }
       ]
     },
@@ -188,5 +185,6 @@
       },
       "RetryTimes": 200
     }
-  ]
+  ],
+  "Lock": "$ProjectPath::MergeRequest::$gitlabMergeRequestIid"
 }
