@@ -121,7 +121,7 @@
             "Type": "\"Directory\"",
             "Path": "$SandboxPath",
             "FileMatches": [
-              "\"^\\.\"",
+              "\"^\\.(?!git`$)\"",
               "\"^workflows\""
             ]
           },
