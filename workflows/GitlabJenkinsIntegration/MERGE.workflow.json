@@ -86,7 +86,6 @@
               "ModuleName": "$WorkflowRepoPath/PTCKpiM/Modules/PTCKpiM-TaskValidation",
               "FunctionName": "Confirm-TaskStatus",
               "NamedParams": {
-                "TaskID": "$($gitlabMergeRequestTitle.Split('-')[-1])",
                 "ExpectedProject": "",
                 "ExpectedState": "In progress",
                 "ExpectedUser": "$($BuildTriggerUser.NTAccount)",
