@@ -13,6 +13,9 @@
       }
     }
   },
+  "Envs":{
+      "UseAutoThrottle":"Enable"
+  },
   "WorkflowRunnerRepo": {
     "Type": "SEGGitlab",
     "Branch": "main",
