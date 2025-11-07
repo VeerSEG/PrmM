@@ -145,10 +145,7 @@
                 "JobName": "\"ProjectJenkinsSeed\"",
                 "JobFolder": "\"$ProjectJenkinsRootFolder/_JenkinsCaC\"",
                 "ObtainTestsResult": false,
-                "NoWaitJob": true,
-                "Params": {
-                  "ProjectDevPath": "$ParallelContext.DevPath"
-                }
+                "NoWaitJob": true
               },
               "IgnoreError": true,
               "SignatureStage": {
