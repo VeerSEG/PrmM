@@ -1,8 +1,8 @@
 {
   "Name": "PUSH",
   "Type": "Workflow",
-  "RequiredNode": "Git",
   "Description": "This workflow will be triggered when a PUSH happened in repository. It will perform full validations always. and in monitor branches, it will create the CP in the windchill task ID ",
+  "RequiredNode": "Git",
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {}
@@ -32,12 +32,12 @@
   "Stages": [
     {
       "Name": "JenkinsSeedsInit",
-      "Description": "This stage will check if the current branch integration has already been setup. By checking the signature of the workflows and .seg folder.",
       "Type": "Workflow",
+      "Description": "This stage will check if the current branch integration has already been setup. By checking the signature of the workflows and .seg folder.",
       "NamedParams": {
-        "JobName": "\"JenkinsSeed\"",
-        "JobFolder": "\"$ProjectJenkinsRootFolder/$BranchFolderName/_JenkinsCaC\"",
         "CanShareSandbox": true,
+        "JobFolder": "\"$ProjectJenkinsRootFolder/$BranchFolderName/_JenkinsCaC\"",
+        "JobName": "\"JenkinsSeed\"",
         "SearchingDepth": 2
       },
       "GitlabIntegration": true,
@@ -46,11 +46,11 @@
         "SignatureVector": [
           {
             "Type": "\"Directory\"",
-            "Path": "$SandboxPath",
             "FileMatches": [
               "\"^\\.(?!git`$)\"",
               "\"^workflows\""
-            ]
+            ],
+            "Path": "$SandboxPath"
           }
         ]
       }
@@ -73,14 +73,14 @@
           "Stages": [
             {
               "Name": "Read Commit Message",
-              "Desc": "Read the task id, and summary info from the commit message",
               "Type": "Stage",
+              "Desc": "Read the task id, and summary info from the commit message",
               "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-MergeRequest",
               "FunctionName": "Get-CommitMessageProperties",
               "NamedParams": {
                 "Content": "$($SandboxContext.Changes.CommitMessage)",
-                "SummaryChapter": "## Summary",
                 "RelatedProblemIDChapter": "## Related Problem ID",
+                "SummaryChapter": "## Summary",
                 "ValidationChapter": "## Performing Validation"
               },
               "GitlabIntegration": true,
@@ -94,6 +94,18 @@
               "Type": "Stage",
               "ModuleName": "$WorkflowRunnerLoc/Dependencies/ptc_cmdrouter_pwsh/Modules/PTC_CMDRouter_Pwsh_GitStyleCMD",
               "FunctionName": "New-GitCommitCP",
+              "NamedParams": {
+                "Branch": "$ProjectDevPath",
+                "CommitDate": "$($SandboxContext.Changes.TimeStamp)",
+                "CommitHash": "$CommitId",
+                "CreateBy": "$($BuildTriggerUser.NTAccount)",
+                "Entries": "$SandboxContext.Changes.List",
+                "MasterHostName": "SEGGitlab",
+                "MasterRepoLocation": "$ProjectPath",
+                "Summary": "$($_CommitMessageInfo.Summary)",
+                "TaskId": "$($_CommitMessageInfo.TaskID)",
+                "WebUrl": "$gitlabSourceRepoHomepage/-/commit/$CommitId"
+              },
               "WithEnv": [
                 {
                   "Key": "_CommitMessageInfo",
@@ -101,19 +113,7 @@
                 }
               ],
               "GitlabIntegration": true,
-              "IgnoreError": true,
-              "NamedParams": {
-                "TaskId": "$($_CommitMessageInfo.TaskID)",
-                "Summary": "$($_CommitMessageInfo.Summary)",
-                "CommitHash": "$CommitId",
-                "CreateBy": "$($BuildTriggerUser.NTAccount)",
-                "CommitDate": "$($SandboxContext.Changes.TimeStamp)",
-                "MasterHostName": "SEGGitlab",
-                "MasterRepoLocation": "$ProjectPath",
-                "Branch": "$ProjectDevPath",
-                "WebUrl": "$gitlabSourceRepoHomepage/-/commit/$CommitId",
-                "Entries": "$SandboxContext.Changes.List"
-              }
+              "IgnoreError": true
             }
           ]
         },
@@ -142,35 +142,35 @@
               "Name": "Start ProjectJenkinsSeeds",
               "Type": "Workflow",
               "NamedParams": {
-                "JobName": "\"ProjectJenkinsSeed\"",
                 "JobFolder": "\"$ProjectJenkinsRootFolder/_JenkinsCaC\"",
-                "ObtainTestsResult": false,
-                "NoWaitJob": true
-              },
-              "IgnoreError": true,
-              "SignatureStage": {
-                "SignatureVector": [
-                  {
-                    "Type": "\"Directory\"",
-                    "Path": "$SandboxPath",
-                    "FileMatches": [
-                      "\"^\\.(?!git`$)\"",
-                      "\"^workflows\""
-                    ]
-                  },
-                  {
-                    "Type": "\"Array\"",
-                    "Path": "$SandboxPath",
-                    "Content": " @{Name=\"ElseBranches\";DevPath=$ProjectDevPath};$_DevPathsInfo|Where-Object{$branchName=$_;$_MonitorBranches|Where-Object{$branchName -like $_ }}|Foreach-Object{@{Name=$_;DevPath=$_}}"
-                  }
-                ]
+                "JobName": "\"ProjectJenkinsSeed\"",
+                "NoWaitJob": true,
+                "ObtainTestsResult": false
               },
               "WithEnv": [
                 {
                   "Key": "_DevPathsInfo",
                   "Value": "$ArchivePath/ProjectDevPathsInfo.json"
                 }
-              ]
+              ],
+              "IgnoreError": true,
+              "SignatureStage": {
+                "SignatureVector": [
+                  {
+                    "Type": "\"Directory\"",
+                    "FileMatches": [
+                      "\"^\\.(?!git`$)\"",
+                      "\"^workflows\""
+                    ],
+                    "Path": "$SandboxPath"
+                  },
+                  {
+                    "Type": "\"Array\"",
+                    "Content": " @{Name=\"ElseBranches\";DevPath=$ProjectDevPath};$_DevPathsInfo|Where-Object{$branchName=$_;$_MonitorBranches|Where-Object{$branchName -like $_ }}|Foreach-Object{@{Name=$_;DevPath=$_}}",
+                    "Path": "$SandboxPath"
+                  }
+                ]
+              }
             },
             {
               "Name": "Start Branches Merging",
@@ -188,13 +188,13 @@
                   "Name": "Start Child Branches Merging",
                   "Type": "Workflow",
                   "NamedParams": {
-                    "JobName": "\"MergewithSourceBranch\"",
-                    "JobFolder": "\"$ProjectJenkinsRootFolder/ElseBranches/Support\"",
-                    "ObtainTestsResult": false,
-                    "NoWaitJob": true,
                     "Params": {
                       "ProjectDevPath": "$ParallelContext.DevPath"
-                    }
+                    },
+                    "JobFolder": "\"$ProjectJenkinsRootFolder/ElseBranches/Support\"",
+                    "JobName": "\"MergewithSourceBranch\"",
+                    "NoWaitJob": true,
+                    "ObtainTestsResult": false
                   },
                   "IgnoreError": true
                 }
@@ -287,11 +287,11 @@
       "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
       "FunctionName": "Add-PostInGroup",
       "NamedParams": {
-        "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
-        "OutputLocation": "$ReportPath/ReportOnGroup.json",
         "Groups": [
           "$_ProjectJenkinsConfig.StakeHolders.Groups|Where-Object{$JOB_DISPLAY_URL.Replace(\"$JENKINS_URL/job\",'')|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName"
-        ]
+        ],
+        "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+        "OutputLocation": "$ReportPath/ReportOnGroup.json"
       },
       "When": {
         "Condition": "($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ })"
