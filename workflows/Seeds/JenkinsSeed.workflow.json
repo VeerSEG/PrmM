@@ -115,16 +115,23 @@
       "Type": "Stage",
       "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Hash",
       "FunctionName": "Get-HashForConfigContent",
-      "NamedParams": [
-        {
-          "Type": "\"Directory\"",
-          "Path": "$SandboxPath",
-          "FileMatches": [
-            "\"^\\.\"",
-            "\"^workflows\""
-          ]
-        }
-      ],
+      "NamedParams": {
+        "ConfigurationList": [
+          {
+            "Type": "\"Directory\"",
+            "Path": "$SandboxPath",
+            "FileMatches": [
+              "\"^\\.\"",
+              "\"^workflows\""
+            ]
+          },
+          {
+            "Type": "\"Array\"",
+            "Path": "$SandboxPath",
+            "Content": " @{Name=\"ElseBranches\";DevPath=$ProjectDevPath};$_DevPathsInfo|Where-Object{$branchName=$_;$_MonitorBranches|Where-Object{$branchName -like $_ }}|Foreach-Object{@{Name=$_;DevPath=$_}}"
+          }
+        ]
+      },
       "OutputProcess": {
         "OutputFilePath": "$ArchivePath/SeedsSignature.json"
       }

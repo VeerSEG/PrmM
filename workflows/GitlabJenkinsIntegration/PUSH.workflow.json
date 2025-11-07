@@ -148,9 +148,9 @@
                 "NoWaitJob": true,
                 "Params": {
                   "ProjectDevPath": "$ParallelContext.DevPath"
-                },
-                  "IgnoreError": true
+                }
               },
+              "IgnoreError": true,
               "SignatureStage": {
                 "SignatureVector": [
                   {
