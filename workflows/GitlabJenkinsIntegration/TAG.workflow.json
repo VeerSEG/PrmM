@@ -2,6 +2,7 @@
   "Name": "TAG",
   "Type": "Workflow",
   "RequiredNode": "Git",
+  "CanExecuteLocal":false,
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {}

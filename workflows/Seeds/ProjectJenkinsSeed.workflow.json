@@ -3,6 +3,7 @@
   "Type": "Workflow",
   "Description": "The initial workflow for the project. It will set up the gitproject settings, including MR template, protected branches, enable CICD",
   "RequiredNode": "Git",
+  "CanExecuteLocal":false,
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {
@@ -13,8 +14,8 @@
       }
     }
   },
-  "Envs":{
-      "UseAutoThrottle":"Enable"
+  "Envs": {
+    "UseAutoThrottle": "Enable"
   },
   "WorkflowRunnerRepo": {
     "Type": "SEGGitlab",
@@ -33,16 +34,6 @@
   ],
   "DisallowConcurrentBuild": true,
   "Stages": [
-    {
-      "Name": "Copy Folder Xml Basic",
-      "Type": "Stage",
-      "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Basic",
-      "FunctionName": "Copy-ItemToDestDirectory",
-      "NamedParams": {
-        "DestLocation": "$WorkspacePath/FolderTemplate/FolderTemplate.xml",
-        "SourceLocation": "$WorkflowRunnerLoc/Resources/FolderTemplate.xml"
-      }
-    },
     {
       "Name": "Get All Branches",
       "Type": "Stage",
@@ -67,11 +58,11 @@
         "ConfigurationList": [
           {
             "Type": "\"Directory\"",
-            "FileMatches": [
-              "\"^\\.(?!git`$)\"",
-              "\"^workflows\""
-            ],
-            "Path": "$SandboxPath"
+            "Path": "$SandboxPath/.seg/CI"
+          },
+          {
+            "Type":"File",
+            "Path":"\"$SandboxPath/workflows/Seeds/ProjectJenkinsSeed.workflow.json\""
           },
           {
             "Type": "\"Array\"",
@@ -118,6 +109,16 @@
         }
       ],
       "Stages": [
+        {
+          "Name": "Copy Folder Xml Basic",
+          "Type": "Stage",
+          "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Basic",
+          "FunctionName": "Copy-ItemToDestDirectory",
+          "NamedParams": {
+            "DestLocation": "$WorkspacePath/FolderTemplate/FolderTemplate.xml",
+            "SourceLocation": "$WorkflowRunnerLoc/Resources/FolderTemplate.xml"
+          }
+        },
         {
           "Name": "Enable CICD for Project",
           "Type": "Stage",
@@ -259,12 +260,6 @@
               "Value": "$ArchivePath/SeedsSignature.json"
             }
           ]
-        },
-        {
-          "Name": "Save Current Build Forever",
-          "Type": "JenkinsApi",
-          "FunctionName": "saveBuildForever",
-          "NamedParams": {}
         }
       ]
     }
