@@ -36,9 +36,6 @@
       "Value": "$SEGJenkinsShareFolder\\Configs\\ProjectConfigs\\$ProjectName\\Configs.json"
     }
   ],
-  "Envs": {
-    "GitlabJenkinsIntegration": "SEGEAGitlab"
-  },
   "Stages": [
     {
       "Name": "Information Read and Process",

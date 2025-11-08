@@ -12,8 +12,5 @@
     "Branch": "main",
     "UrlRelativePath": "ci-development/workflowrunner.git"
   },
-  "Stages": [],
-  "Env": {
-    "GitlabJenkinsIntegration": true
-  }
+  "Stages": []
 }
