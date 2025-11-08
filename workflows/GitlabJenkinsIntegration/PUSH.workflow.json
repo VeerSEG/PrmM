@@ -32,29 +32,47 @@
   },
   "Stages": [
     {
+      "Name": "Generate Workflow Signature",
+      "Type": "Stage",
+      "Description": "Generate singature for current workflow, to make sure the workflows has been init for this branch.",
+      "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-JenkinsBasic",
+      "FunctionName": "Out-WorkflowsSignature",
+      "NamedParams": {
+        "SandboxPath": "$SandboxPath"
+      },
+      "OutputProcess": {
+        "OutputFilePath": "$ArchivePath/WorkflowSignature.json"
+      }
+    },
+    {
       "Name": "JenkinsSeedsInit",
       "Type": "Workflow",
       "Description": "This stage will check if the current branch integration has already been setup. By checking the signature of the workflows and .seg folder.",
       "NamedParams": {
         "CanShareSandbox": true,
         "JobFolder": "\"$ProjectJenkinsRootFolder/$BranchFolderName/_JenkinsCaC\"",
-        "JobName": "\"JenkinsSeed\"",
-        "SearchingDepth": 2
+        "JobName": "\"JenkinsSeed\""
       },
       "GitlabIntegration": true,
       "IgnoreError": true,
       "SignatureStage": {
         "SignatureVector": [
           {
-            "Type": "\"Directory\"",
-            "FileMatches": [
-              "\"^\\.(?!git`$)\"",
-              "\"^workflows\""
-            ],
-            "Path": "$SandboxPath"
+            "Type":"File",
+            "Path":"\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
+          },
+          {
+            "Type":"String",
+            "Content":"$_WorkflowSignature"
           }
         ]
-      }
+      },
+      "WithEnv": [
+        {
+          "Key": "_WorkflowSignature",
+          "Value": "$ArchivePath/WorkflowSignature.json"
+        }
+      ]
     },
     {
       "Name": "Project CI Process",
