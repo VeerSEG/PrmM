@@ -3,6 +3,7 @@
   "Type": "Workflow",
   "Description": "This workflow will be triggered when a PUSH happened in repository. It will perform full validations always. and in monitor branches, it will create the CP in the windchill task ID ",
   "RequiredNode": "Git",
+  "CanExecuteLocal":false,
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {}
