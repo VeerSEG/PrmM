@@ -58,11 +58,11 @@
       "SignatureStage": {
         "SignatureVector": [
           {
-            "Type":"File",
+            "Type":"\"File\"",
             "Path":"\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
           },
           {
-            "Type":"String",
+            "Type":"\"String\"",
             "Content":"$_WorkflowSignature"
           }
         ]
@@ -177,11 +177,11 @@
                 "SignatureVector": [
                   {
                     "Type": "\"Directory\"",
-                    "FileMatches": [
-                      "\"^\\.(?!git`$)\"",
-                      "\"^workflows\""
-                    ],
-                    "Path": "$SandboxPath"
+                    "Path": "$SandboxPath/.seg/CI"
+                  },
+                  {
+                    "Type":"File",
+                    "Path":"\"$SandboxPath/workflows/Seeds/ProjectJenkinsSeed.workflow.json\""
                   },
                   {
                     "Type": "\"Array\"",
