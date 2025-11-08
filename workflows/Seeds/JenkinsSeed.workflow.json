@@ -149,7 +149,8 @@
                           "FunctionName": "Out-WorkflowIntoJenkinsXml",
                           "NamedParams": {
                             "AdditionalEnvironments": {
-                              "WorkflowPath": "\"$($ParallelContext.Parent.WorkflowsSubFolderInSandbox)/$($ParallelContext.Name).workflow.json\""
+                              "WorkflowPath": "\"$($ParallelContext.Parent.WorkflowsSubFolderInSandbox)/$($ParallelContext.Name).workflow.json\"",
+                              "GitlabJenkinsIntegration":"$ProjectType"
                             },
                             "OutputPath": "$WorkspacePath/JobXmlFromFolder/$($ParallelContext.Parent.JenkinsFolder)/$($ParallelContext.Name).xml",
                             "Workflow": "$_JobTemplate.Params+=$_GitPropertyParams;$_JobTemplate.Params.ProjectDevPath.Default=$ProjectDevPath;$_JobTemplate"

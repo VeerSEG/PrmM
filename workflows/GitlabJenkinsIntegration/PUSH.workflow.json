@@ -27,9 +27,6 @@
       "Value": "$SEGJenkinsShareFolder\\Configs\\ProjectConfigs\\$ProjectName\\Configs.json"
     }
   ],
-  "Envs": {
-    "GitlabJenkinsIntegration": "SEGEAGitlab"
-  },
   "Stages": [
     {
       "Name": "Generate Workflow Signature",

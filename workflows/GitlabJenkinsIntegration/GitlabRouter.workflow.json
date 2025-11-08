@@ -24,8 +24,7 @@
       ]
     }
   },
-  "Envs": {
-    "GitlabJenkinsIntegration": "SEGGitlab",
+  "Envs": {    
     "GitlabRouterJob": "GitlabRouterJob"
   },
   "Stages": []
