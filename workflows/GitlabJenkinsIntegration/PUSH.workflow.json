@@ -113,14 +113,14 @@
               "NamedParams": {
                 "Branch": "$ProjectDevPath",
                 "CommitDate": "$($SandboxContext.Changes.TimeStamp)",
-                "CommitHash": "$CommitId",
+                "CommitHash": "$($SandboxContext.Changes.CommitId)",
                 "CreateBy": "$($SandboxContext.Changes.AuthNTAccount)",
                 "Entries": "$SandboxContext.Changes.List",
                 "MasterHostName": "SEGGitlab",
                 "MasterRepoLocation": "$ProjectPath",
                 "Summary": "$($_CommitMessageInfo.Summary)",
                 "TaskId": "$($_CommitMessageInfo.TaskID)",
-                "WebUrl": "$gitlabSourceRepoHomepage/-/commit/$CommitId"
+                "WebUrl": "$gitlabSourceRepoHomepage/-/commit/$($SandboxContext.Changes.CommitId)"
               },
               "WithEnv": [
                 {
@@ -250,7 +250,7 @@
               },
               {
                 "Name": "\"CommitId\"",
-                "Value": "$CommitId"
+                "Value": "$SandboxContext.Changes.CommitId"
               },
               {
                 "Name": "\"Commit Message\"",
@@ -275,7 +275,7 @@
         "Links": [
           {
             "Name": "\"CommitLink\"",
-            "Link": "\"$gitlabSourceRepoHomepage/-/commit/$CommitId\""
+            "Link": "\"$gitlabSourceRepoHomepage/-/commit/$($SandboxContext.Changes.CommitId))\""
           }
         ],
         "OutputLocation": "$WorkspacePath/ReportsTemplate/Report.json"
