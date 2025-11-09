@@ -114,7 +114,7 @@
                 "Branch": "$ProjectDevPath",
                 "CommitDate": "$($SandboxContext.Changes.TimeStamp)",
                 "CommitHash": "$CommitId",
-                "CreateBy": "$($BuildTriggerUser.NTAccount)",
+                "CreateBy": "$($SandboxContext.Changes.AuthNTAccount)",
                 "Entries": "$SandboxContext.Changes.List",
                 "MasterHostName": "SEGGitlab",
                 "MasterRepoLocation": "$ProjectPath",
