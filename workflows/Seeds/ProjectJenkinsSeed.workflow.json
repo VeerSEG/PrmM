@@ -61,7 +61,7 @@
             "Path": "$SandboxPath/.seg/CI"
           },
           {
-            "Type":"File",
+            "Type":"\"File\"",
             "Path":"\"$SandboxPath/workflows/Seeds/ProjectJenkinsSeed.workflow.json\""
           },
           {

@@ -42,11 +42,11 @@
       "NamedParams": {
         "ConfigurationList": [
           {
-            "Type":"File",
+            "Type":"\"File\"",
             "Path":"\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
           },
           {
-            "Type":"String",
+            "Type":"\"String\"",
             "Content":"$_WorkflowSignature"
           }
         ]
