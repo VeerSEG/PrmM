@@ -168,8 +168,26 @@
         "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
         "OutputLocation": "$ReportPath/ReportOnChat.json",
         "Users": [
-          "$BuildTriggerUser.Email"
+          "$BuildTriggerUser.Email",
+          "$SandboxContext.Changes.AuthorEmail"
         ]
+      }
+    },
+    {
+      "Name": "Add Report To Group",
+      "Type": "Stage",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+      "FunctionName": "Add-PostInGroup",
+      "NamedParams": {
+        "Groups": [
+          "if($_ProjectJenkinsConfig){$_ProjectJenkinsConfig.StakeHolders.Groups|Where-Object{($JOB_DISPLAY_URL.Replace(\"$JENKINS_URL/job\",'')+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}",
+          "if($_GlobalJenkinsConfig){$_GlobalJenkinsConfig.StakeHolders.Groups|Where-Object{($JOB_DISPLAY_URL.Replace(\"$JENKINS_URL/job\",'')+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}"
+        ],
+        "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+        "OutputLocation": "$ReportPath/ReportOnGroup.json"
+      },
+      "When": {
+        "Condition": "($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ })"
       }
     },
     {
