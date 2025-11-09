@@ -122,19 +122,6 @@
       }
     },
     {
-      "Name": "Add Report To Group",
-      "Type": "Stage",
-      "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
-      "FunctionName": "Add-PostInGroup",
-      "NamedParams": {
-        "Groups": [
-          "$_ProjectJenkinsConfig.StakeHolders.Groups|Where-Object{$_.StakeHoldersTags.Contains(\"Architecture\")}|Select-Object -ExpandProperty GroupName"
-        ],
-        "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
-        "OutputLocation": "$ReportPath/ReportOnGroup.json"
-      }
-    },
-    {
       "Name": "Send Reports",
       "Type": "Stage",
       "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Activities",
