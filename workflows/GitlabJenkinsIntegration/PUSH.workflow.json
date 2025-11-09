@@ -275,7 +275,7 @@
         "Links": [
           {
             "Name": "\"CommitLink\"",
-            "Link": "\"$gitlabSourceRepoHomepage/-/commit/$($SandboxContext.Changes.CommitId))\""
+            "Link": "\"$gitlabSourceRepoHomepage/-/commit/$($SandboxContext.Changes.CommitId)\""
           }
         ],
         "OutputLocation": "$WorkspacePath/ReportsTemplate/Report.json"
