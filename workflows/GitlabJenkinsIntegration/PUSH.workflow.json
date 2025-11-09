@@ -295,8 +295,8 @@
         "Users": [
           "$BuildTriggerUser.Email",
           "$SandboxContext.Changes.AuthorEmail",
-          "if($_ProjectJenkinsConfig){$_ProjectJenkinsConfig.StakeHolders.Users|Where-Object{($JOB_DISPLAY_URL.Replace(\"$JENKINS_URL/job\",'')+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}",
-          "if($_GlobalJenkinsConfig){$_GlobalJenkinsConfig.StakeHolders.Users|Where-Object{($JOB_DISPLAY_URL.Replace(\"$JENKINS_URL/job\",'')+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}"
+          "if($_ProjectJenkinsConfig){$_ProjectJenkinsConfig.StakeHolders.Users|Where-Object{($JOB_NAME+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}",
+          "if($_GlobalJenkinsConfig){$_GlobalJenkinsConfig.StakeHolders.Users|Where-Object{($JOB_NAME+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}"
         ]
       }
     },
@@ -307,8 +307,8 @@
       "FunctionName": "Add-PostInGroup",
       "NamedParams": {
         "Groups": [
-          "if($_ProjectJenkinsConfig){$_ProjectJenkinsConfig.StakeHolders.Groups|Where-Object{($JOB_DISPLAY_URL.Replace(\"$JENKINS_URL/job\",'')+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}",
-          "if($_GlobalJenkinsConfig){$_GlobalJenkinsConfig.StakeHolders.Groups|Where-Object{($JOB_DISPLAY_URL.Replace(\"$JENKINS_URL/job\",'')+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}"
+          "if($_ProjectJenkinsConfig){$_ProjectJenkinsConfig.StakeHolders.Groups|Where-Object{($JOB_NAME+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}",
+          "if($_GlobalJenkinsConfig){$_GlobalJenkinsConfig.StakeHolders.Groups|Where-Object{($JOB_NAME+'::'+$env:CurrentBuildStatus)|Select-String -Pattern $_.StakeHoldersTags}|Select-Object -ExpandProperty GroupName}"
         ],
         "InputFileLocation": "$ReportPath/ReportOnChat.json",
         "OutputLocation": "$ReportPath/ReportOnGroup.json"
