@@ -63,7 +63,19 @@ else {
 
         Write-Output "Creating new branch $($inputObj.TargetBranch) from '$($inputObj.SourceBranch)'..."
         git reset --hard
-        git checkout --no-track -B "$($inputObj.TargetBranch)" "$($inputObj.SourceBranch)"
+        # add check if the branch is exisiting on local side. and force change it and push  --force.
+        # 
+        $localBranches = git branch --format="%(refname:short)"
+        $exists = $localBranches -contains $targetBranch
+        if ($exists) {
+            Write-Host "switch branch to the exisiting local branch"
+            git switch "$($inputObj.TargetBranch)"
+            git push --force
+        }
+        else{
+            git checkout --no-track -B "$($inputObj.TargetBranch)" "$($inputObj.SourceBranch)"
+        }
+        
 
         Write-Output "Pushing new branch $($inputObj.TargetBranch) to 'origin'..."
         git push -u origin "$($inputObj.TargetBranch)"
