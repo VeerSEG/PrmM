@@ -65,6 +65,9 @@ else {
     elseif ($remoteUrl -match '^https?://(.+?)/(.+)\.git$') {
         $baseUrl = "https://$($matches[1])/$($matches[2])"
     }
+    elseif ($remoteUrl.StartsWith("https")){
+        $baseUrl = $remoteUrl
+    }
     else {
         Write-Error "Can not analysis remote url: $remoteUrl"
         return
