@@ -1,0 +1,2126 @@
+{
+  "title": "Component Implementation Review",
+  "type": "object",
+  "uiSchema":".seg/Extensions/SEGJsonForm/Schema/reviewform.segform.uischema.json",
+  "properties": {
+    "Overview": {
+      "type": "object",
+      "title": "Review Information Overview",
+      "properties": {
+        "ProjectInformation": {
+          "enum": [
+            "P200 - 5000751",
+            "P210 - 5001588",
+            "P211 - 9000408",
+            "P212 - 5001310",
+            "P215 - 5001596",
+            "P220 - 5001027",
+            "P222 - 5001027",
+            "P230 - 5001420",
+            "P231 - 5001571",
+            "P232 - 5001628",
+            "P240 - 5001045",
+            "P250 - 5001019,5001258",
+            "P260 - 5001696",
+            "P263 - 5001653",
+            "P264 - 8000546",
+            "P265 - 5001714",
+            "P270 - 5001436",
+            "P280 - 5001097",
+            "H100 - 5001681",
+            "H110 - 5001681"
+          ],
+          "title": "Project Name",
+          "type": "string"
+        },
+        "ReviewMethod": {
+          "title": "Method",
+          "oneOf": [
+            {
+              "title": "Pass Around",
+              "const": "PassAround"
+            },
+            {
+              "title": "Walk-Thurough",
+              "const": "WalkThurough"
+            },
+            {
+              "title": "Inspection (for safety-Relevant WP)",
+              "const": "Inspection"
+            }
+          ],
+          "type": "string"
+        },
+        "ReviewWorkProduct": {
+          "title": "Review Work Product",
+          "oneOf": [
+            {
+              "title": "Software Implementation (Hand Coded)",
+              "const": "SWImplementation-HandCoded"
+            },
+            {
+              "title": "Software Implementation (Model Based)",
+              "const": "SWImplementation-ModelBased"
+            },
+            {
+              "title": "Software Implementation (Configured)",
+              "const": "SWImplementation-Configured"
+            }
+          ],
+          "type": "string"
+        },
+        "ReviewScope": {
+          "title": "Review Scope",
+          "oneOf": [
+            {
+              "title": "Full Review",
+              "const": "FullReview"
+            },
+            {
+              "title": "Delta Review",
+              "const": "DeltaReview"
+            }
+          ],
+          "type": "string"
+        },
+        "ReviewItems": {
+          "type": "array",
+          "title": "Work Products",
+          "items": {
+            "title": "Work Product Information",
+            "type": "object",
+            "properties": {
+              "DocumentID": {
+                "title": "Document ID",
+                "description": "Defined Content (Feature, Component etc.)*, Release Name (if available)",
+                "type": "string"
+              },
+              "Version": {
+                "title": "Work Product Version / Baseline / Date + Time",
+                "description": "Version, baseline, or date-time identifying this work product",
+                "type": "string"
+              },
+              "Author": {
+                "title": "Author",
+                "description": "Name of the responsible author or owner",
+                "type": "string"
+              }
+            },
+            "required": [
+              "DocumentID",
+              "Author",
+              "Version"
+            ]
+          }
+        },
+        "ReviewTeam": {
+          "type": "object",
+          "title": "Review Team Members",
+          "properties": {
+            "MandatoryMembers": {
+              "title": "Mandatory Members for Review Team",
+              "type": "object",
+              "properties": {
+                "Author": {
+                  "title": "Author",
+                  "type": "object",
+                  "properties": {
+                    "ProjectRole": {
+                      "default": "Author",
+                      "oneOf": [
+                        {
+                          "title": "Peer SW Developer",
+                          "const": "PeerSWDeveloper"
+                        },
+                        {
+                          "title": "SW Architect",
+                          "const": "SWArchitect"
+                        },
+                        {
+                          "title": "SW Developer",
+                          "const": "SWDeveloper"
+                        }
+                      ],
+                      "const": "PeerSWDeveloper",
+                      "title": "Project Role",
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "Name": {
+                      "title": "Name",
+                      "description": "Full name of the team member",
+                      "type": "string"
+                    },
+                    "ReviewScope": {
+                      "description": "Select all applicable review focus areas",
+                      "title": "Review Scope",
+                      "type": "array",
+                      "default": [
+                        "Completeness",
+                        "Correctness",
+                        "Robustness",
+                        "Clarity",
+                        "Testability"
+                      ],
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "Completeness",
+                          "Correctness",
+                          "Trace",
+                          "Clarity",
+                          "Design Principles",
+                          "Testability",
+                          "Robustness"
+                        ]
+                      },
+                      "uniqueItems": true
+                    },
+                    "ReviewTeamRole": {
+                      "default": "Reviewer",
+                      "oneOf": [
+                        {
+                          "title": "Author",
+                          "const": "Author"
+                        },
+                        {
+                          "title": "Moderator",
+                          "const": "Moderator"
+                        },
+                        {
+                          "title": "Reviewer",
+                          "const": "Reviewer"
+                        }
+                      ],
+                      "const": "Reviewer",
+                      "title": "Review Team Role",
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "ReviewTeamRole",
+                    "Name",
+                    "ProjectRole",
+                    "ReviewScope"
+                  ]
+                },
+                "PeerSWDeveloper": {
+                  "title": "Peer SW Developer",
+                  "type": "object",
+                  "properties": {
+                    "ProjectRole": {
+                      "default": "PeerSWDeveloper",
+                      "oneOf": [
+                        {
+                          "title": "Peer SW Developer",
+                          "const": "PeerSWDeveloper"
+                        },
+                        {
+                          "title": "SW Architect",
+                          "const": "SWArchitect"
+                        },
+                        {
+                          "title": "SW Developer",
+                          "const": "SWDeveloper"
+                        }
+                      ],
+                      "const": "PeerSWDeveloper",
+                      "title": "Project Role",
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "Name": {
+                      "title": "Name",
+                      "description": "Full name of the team member",
+                      "type": "string"
+                    },
+                    "ReviewScope": {
+                      "description": "Select all applicable review focus areas",
+                      "title": "Review Scope",
+                      "type": "array",
+                      "default": [
+                        "Completeness",
+                        "Correctness",
+                        "Robustness",
+                        "Clarity",
+                        "Testability"
+                      ],
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "Completeness",
+                          "Correctness",
+                          "Trace",
+                          "Clarity",
+                          "Design Principles",
+                          "Testability",
+                          "Robustness"
+                        ]
+                      },
+                      "uniqueItems": true
+                    },
+                    "ReviewTeamRole": {
+                      "default": "Reviewer",
+                      "oneOf": [
+                        {
+                          "title": "Author",
+                          "const": "Author"
+                        },
+                        {
+                          "title": "Moderator",
+                          "const": "Moderator"
+                        },
+                        {
+                          "title": "Reviewer",
+                          "const": "Reviewer"
+                        }
+                      ],
+                      "const": "Reviewer",
+                      "title": "Review Team Role",
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "ReviewTeamRole",
+                    "Name",
+                    "ProjectRole",
+                    "ReviewScope"
+                  ]
+                },
+                "SWArchitect": {
+                  "title": "SW Architect",
+                  "type": "object",
+                  "properties": {
+                    "ProjectRole": {
+                      "default": "SWArchitect",
+                      "oneOf": [
+                        {
+                          "title": "Peer SW Developer",
+                          "const": "PeerSWDeveloper"
+                        },
+                        {
+                          "title": "SW Architect",
+                          "const": "SWArchitect"
+                        },
+                        {
+                          "title": "SW Developer",
+                          "const": "SWDeveloper"
+                        }
+                      ],
+                      "const": "SWArchitect",
+                      "title": "Project Role",
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "Name": {
+                      "title": "Name",
+                      "description": "Full name of the team member",
+                      "type": "string"
+                    },
+                    "ReviewScope": {
+                      "description": "Select all applicable review focus areas",
+                      "title": "Review Scope",
+                      "type": "array",
+                      "default": [
+                        "Completeness",
+                        "Clarity"
+                      ],
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "Completeness",
+                          "Correctness",
+                          "Trace",
+                          "Clarity",
+                          "Design Principles",
+                          "Testability",
+                          "Robustness"
+                        ]
+                      },
+                      "uniqueItems": true
+                    },
+                    "ReviewTeamRole": {
+                      "default": "Reviewer",
+                      "oneOf": [
+                        {
+                          "title": "Author",
+                          "const": "Author"
+                        },
+                        {
+                          "title": "Moderator",
+                          "const": "Moderator"
+                        },
+                        {
+                          "title": "Reviewer",
+                          "const": "Reviewer"
+                        }
+                      ],
+                      "const": "Reviewer",
+                      "title": "Review Team Role",
+                      "type": "string",
+                      "readOnly": true
+                    }
+                  },
+                  "required": [
+                    "ReviewTeamRole",
+                    "Name",
+                    "ProjectRole",
+                    "ReviewScope"
+                  ]
+                }
+              },
+              "required": [
+                "Author",
+                "PeerSWDeveloper",
+                "SWArchitect"
+              ]
+            },
+            "AdditionalMembers": {
+              "type": "array",
+              "title": "Additional Members for Review Team",
+              "items": {
+                "title": "Review Team Member",
+                "type": "object",
+                "properties": {
+                  "ProjectRole": {
+                    "title": "Project Role",
+                    "oneOf": [
+                      {
+                        "title": "Peer SW Developer",
+                        "const": "PeerSWDeveloper"
+                      },
+                      {
+                        "title": "SW Architect",
+                        "const": "SWArchitect"
+                      },
+                      {
+                        "title": "SW Developer",
+                        "const": "SWDeveloper"
+                      }
+                    ],
+                    "type": "string"
+                  },
+                  "Name": {
+                    "title": "Name",
+                    "description": "Full name of the team member",
+                    "type": "string"
+                  },
+                  "ReviewScope": {
+                    "uniqueItems": true,
+                    "title": "Review Scope",
+                    "description": "Select all applicable review focus areas",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Completeness",
+                        "Correctness",
+                        "Trace",
+                        "Clarity",
+                        "Design Principles",
+                        "Testability",
+                        "Robustness"
+                      ]
+                    }
+                  },
+                  "ReviewTeamRole": {
+                    "title": "Review Team Role",
+                    "oneOf": [
+                      {
+                        "title": "Author",
+                        "const": "Author"
+                      },
+                      {
+                        "title": "Moderator",
+                        "const": "Moderator"
+                      },
+                      {
+                        "title": "Reviewer",
+                        "const": "Reviewer"
+                      }
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "ReviewTeamRole",
+                  "Name",
+                  "ProjectRole",
+                  "ReviewScope"
+                ]
+              }
+            }
+          },
+          "required": [
+            "MandatoryMembers"
+          ]
+        }
+      },
+      "required": [
+        "ProjectInformation",
+        "ReviewMethod",
+        "ReviewWorkProduct",
+        "ReviewScope",
+        "ReviewItems",
+        "ReviewTeam"
+      ]
+    },
+    "CheckList": {
+      "Completeness_2": {
+        "title": "Completeness",
+        "type": "object",
+        "properties": {
+          "SWIM2": {
+            "type": "object",
+            "title": "SWIM2-Inputs: Are all documents needed for the review available in their required state? (e.g., source code, SW detailed design, static test reports such as MISRA checks, Polyspace, compiler warnings, model advisor for MBD, ...)",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM11": {
+            "type": "object",
+            "title": "SWIM11-Global Data/Variables: Are globals avoided or their use clearly documented as per detailed design? Is data used appropriately and change local to avoid repetitive definitions?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM12": {
+            "type": "object",
+            "title": "SWIM12-a2l: Are all parameters/variables implemented correctly and in the right location with the correct data type (esp. for calibration)?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM10": {
+            "type": "object",
+            "title": "SWIM10-Identifiers: Naming convention fulfilled (signals/variables)? No identifiers rely on significance of >31 characters.",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM18": {
+            "type": "object",
+            "title": "SWIM18-Completeness vs limits: Does the code follow defined limits? Are deviations justified in the Code metrics report?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM8": {
+            "type": "object",
+            "title": "SWIM8-Style guide & clarity: Implemented artifact sufficiently clear and understandable for intended readers? Proper commenting, no unnecessary complexity; implementation structure referenced in PDP.",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM6": {
+            "type": "object",
+            "title": "SWIM6-Definitions: Is it checked that all definition of Code and Data area are included in the defined Program/Memory Assignment and not duplicated or shadowed?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM14": {
+            "type": "object",
+            "title": "SWIM14-Type conversion: For explicit casts, has value range been checked (no under/overflow, no re-interpretation issues)? Examples: cast from signed -> unsigned; long -> short; etc.",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM4": {
+            "type": "object",
+            "title": "SWIM4-Completeness: Is it checked that the Code is complete, covers the Design, and complements all parts of the design? Is there no part of the implementation that is not covered in the SW Design?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM13": {
+            "type": "object",
+            "title": "SWIM13-Correctness: (Source) code free of obviously wrong/obsolete statements?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM15": {
+            "type": "object",
+            "title": "SWIM15-Division: For all divisions, has the denominator been tested to be non-zero? (If zero can be excluded, justify in comment.)",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM1": {
+            "type": "object",
+            "title": "SWIM1-Is the Software Implementation Guideline & review process checked & followed by the developer for SW unit construction (source code) & technical review?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM7": {
+            "type": "object",
+            "title": "SWIM7-Traceability: Is correct bidirectional traceability established per the Detail design & implementation guideline to design elements and all implemented requirements? (e.g., naming conventions between Model / Source Code, code comments, SW Detailed Design).",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM16": {
+            "type": "object",
+            "title": "SWIM16-Complete: Are all design elements implemented? Any unused interfaces removed?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM9": {
+            "type": "object",
+            "title": "SWIM9-Complexity: Is cyclomatic complexity/LOC below the specified limit? (e.g., Polyspace metric limit <= 20).",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM17": {
+            "type": "object",
+            "title": "SWIM17-Notation & documentation: Are code and associated documents (compiler warnings, Polyspace) properly commented and documented per guideline and naming conventions?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM3": {
+            "type": "object",
+            "title": "SWIM3-Baseline planning: Is the artifact to be reviewed checked in or delivered in the stream?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Completeness_1": {
+        "title": "Completeness",
+        "type": "object",
+        "properties": {
+          "SWIM2": {
+            "type": "object",
+            "title": "SWIM2-Inputs: Are all documents needed for the review available in their required state? (e.g., source code, SW detailed design, static test reports such as MISRA checks, Polyspace, compiler warnings, model advisor for MBD, ...)",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM4": {
+            "type": "object",
+            "title": "SWIM4-Completeness: Is it checked that the Code is complete, covers the Design, and complements all parts of the design? Is there no part of the implementation that is not covered in the SW Design?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM1": {
+            "type": "object",
+            "title": "SWIM1-Is the Software Implementation Guideline & review process checked & followed by the developer for SW unit construction (source code) & technical review?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM6": {
+            "type": "object",
+            "title": "SWIM6-Definitions: Is it checked that all definition of Code and Data area are included in the defined Program/Memory Assignment and not duplicated or shadowed?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM3": {
+            "type": "object",
+            "title": "SWIM3-Baseline planning: Is the artifact to be reviewed checked in or delivered in the stream?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "properties": {
+        "SWIM1": {
+          "type": "object",
+          "title": "SWIM1-Is the Software Implementation Guideline & review process checked & followed by the developer for SW unit construction (source code) & technical review?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM2": {
+          "type": "object",
+          "title": "SWIM2-Inputs: Are all documents needed for the review available in their required state? (e.g., source code, SW detailed design, static test reports such as MISRA checks, Polyspace, compiler warnings, model advisor for MBD, ...)",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM3": {
+          "type": "object",
+          "title": "SWIM3-Baseline planning: Is the artifact to be reviewed checked in or delivered in the stream?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM4": {
+          "type": "object",
+          "title": "SWIM4-Completeness: Is it checked that the Code is complete, covers the Design, and complements all parts of the design? Is there no part of the implementation that is not covered in the SW Design?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM6": {
+          "type": "object",
+          "title": "SWIM6-Definitions: Is it checked that all definition of Code and Data area are included in the defined Program/Memory Assignment and not duplicated or shadowed?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM7": {
+          "type": "object",
+          "title": "SWIM7-Traceability: Is correct bidirectional traceability established per the Detail design & implementation guideline to design elements and all implemented requirements? (e.g., naming conventions between Model / Source Code, code comments, SW Detailed Design).",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM8": {
+          "type": "object",
+          "title": "SWIM8-Style guide & clarity: Implemented artifact sufficiently clear and understandable for intended readers? Proper commenting, no unnecessary complexity; implementation structure referenced in PDP.",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM9": {
+          "type": "object",
+          "title": "SWIM9-Complexity: Is cyclomatic complexity/LOC below the specified limit? (e.g., Polyspace metric limit <= 20).",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM10": {
+          "type": "object",
+          "title": "SWIM10-Identifiers: Naming convention fulfilled (signals/variables)? No identifiers rely on significance of >31 characters.",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM11": {
+          "type": "object",
+          "title": "SWIM11-Global Data/Variables: Are globals avoided or their use clearly documented as per detailed design? Is data used appropriately and change local to avoid repetitive definitions?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM12": {
+          "type": "object",
+          "title": "SWIM12-a2l: Are all parameters/variables implemented correctly and in the right location with the correct data type (esp. for calibration)?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM13": {
+          "type": "object",
+          "title": "SWIM13-Correctness: (Source) code free of obviously wrong/obsolete statements?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM14": {
+          "type": "object",
+          "title": "SWIM14-Type conversion: For explicit casts, has value range been checked (no under/overflow, no re-interpretation issues)? Examples: cast from signed -> unsigned; long -> short; etc.",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM15": {
+          "type": "object",
+          "title": "SWIM15-Division: For all divisions, has the denominator been tested to be non-zero? (If zero can be excluded, justify in comment.)",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM16": {
+          "type": "object",
+          "title": "SWIM16-Complete: Are all design elements implemented? Any unused interfaces removed?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM17": {
+          "type": "object",
+          "title": "SWIM17-Notation & documentation: Are code and associated documents (compiler warnings, Polyspace) properly commented and documented per guideline and naming conventions?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM18": {
+          "type": "object",
+          "title": "SWIM18-Completeness vs limits: Does the code follow defined limits? Are deviations justified in the Code metrics report?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM19": {
+          "type": "object",
+          "title": "SWIM19-Static analysis: Have MISRA C / Polyspace / Code Metrics / Compiler Warnings been judged? Are all errors solved or commented with justification (e.g., division by zero handled)?",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        },
+        "SWIM20": {
+          "type": "object",
+          "title": "SWIM20-Design principles: Are implementations not bypassing AUTOSAR concepts? (e.g., no constant variable exchange between SW components that violates architecture guidance).",
+          "properties": {
+            "Ready": {
+              "enum": [
+                "Yes",
+                "No",
+                "NA"
+              ],
+              "title": "Ready for Review",
+              "type": "string"
+            },
+            "Comment": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Clarity": {
+        "title": "Clarity",
+        "type": "object",
+        "properties": {
+          "SWIM1": {
+            "type": "object",
+            "title": "SWIM1-Is the Software Implementation Guideline & review process checked & followed by the developer for SW unit construction (source code) & technical review?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM9": {
+            "type": "object",
+            "title": "SWIM9-Complexity: Is cyclomatic complexity/LOC below the specified limit? (e.g., Polyspace metric limit <= 20).",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM3": {
+            "type": "object",
+            "title": "SWIM3-Baseline planning: Is the artifact to be reviewed checked in or delivered in the stream?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM14": {
+            "type": "object",
+            "title": "SWIM14-Type conversion: For explicit casts, has value range been checked (no under/overflow, no re-interpretation issues)? Examples: cast from signed -> unsigned; long -> short; etc.",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM11": {
+            "type": "object",
+            "title": "SWIM11-Global Data/Variables: Are globals avoided or their use clearly documented as per detailed design? Is data used appropriately and change local to avoid repetitive definitions?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM10": {
+            "type": "object",
+            "title": "SWIM10-Identifiers: Naming convention fulfilled (signals/variables)? No identifiers rely on significance of >31 characters.",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM15": {
+            "type": "object",
+            "title": "SWIM15-Division: For all divisions, has the denominator been tested to be non-zero? (If zero can be excluded, justify in comment.)",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM4": {
+            "type": "object",
+            "title": "SWIM4-Completeness: Is it checked that the Code is complete, covers the Design, and complements all parts of the design? Is there no part of the implementation that is not covered in the SW Design?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM6": {
+            "type": "object",
+            "title": "SWIM6-Definitions: Is it checked that all definition of Code and Data area are included in the defined Program/Memory Assignment and not duplicated or shadowed?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM2": {
+            "type": "object",
+            "title": "SWIM2-Inputs: Are all documents needed for the review available in their required state? (e.g., source code, SW detailed design, static test reports such as MISRA checks, Polyspace, compiler warnings, model advisor for MBD, ...)",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM13": {
+            "type": "object",
+            "title": "SWIM13-Correctness: (Source) code free of obviously wrong/obsolete statements?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM12": {
+            "type": "object",
+            "title": "SWIM12-a2l: Are all parameters/variables implemented correctly and in the right location with the correct data type (esp. for calibration)?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM7": {
+            "type": "object",
+            "title": "SWIM7-Traceability: Is correct bidirectional traceability established per the Detail design & implementation guideline to design elements and all implemented requirements? (e.g., naming conventions between Model / Source Code, code comments, SW Detailed Design).",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM8": {
+            "type": "object",
+            "title": "SWIM8-Style guide & clarity: Implemented artifact sufficiently clear and understandable for intended readers? Proper commenting, no unnecessary complexity; implementation structure referenced in PDP.",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "title": "SW Integration Code Review Checklist",
+      "type": "object",
+      "Prerequisites": {
+        "title": "Pre-requisites",
+        "type": "object",
+        "properties": {
+          "SWIM2": {
+            "type": "object",
+            "title": "SWIM2-Inputs: Are all documents needed for the review available in their required state? (e.g., source code, SW detailed design, static test reports such as MISRA checks, Polyspace, compiler warnings, model advisor for MBD, ...)",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM1": {
+            "type": "object",
+            "title": "SWIM1-Is the Software Implementation Guideline & review process checked & followed by the developer for SW unit construction (source code) & technical review?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM3": {
+            "type": "object",
+            "title": "SWIM3-Baseline planning: Is the artifact to be reviewed checked in or delivered in the stream?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Robustness": {
+        "title": "Robustness",
+        "type": "object",
+        "properties": {
+          "SWIM19": {
+            "type": "object",
+            "title": "SWIM19-Static analysis: Have MISRA C / Polyspace / Code Metrics / Compiler Warnings been judged? Are all errors solved or commented with justification (e.g., division by zero handled)?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM1": {
+            "type": "object",
+            "title": "SWIM1-Is the Software Implementation Guideline & review process checked & followed by the developer for SW unit construction (source code) & technical review?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM11": {
+            "type": "object",
+            "title": "SWIM11-Global Data/Variables: Are globals avoided or their use clearly documented as per detailed design? Is data used appropriately and change local to avoid repetitive definitions?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM7": {
+            "type": "object",
+            "title": "SWIM7-Traceability: Is correct bidirectional traceability established per the Detail design & implementation guideline to design elements and all implemented requirements? (e.g., naming conventions between Model / Source Code, code comments, SW Detailed Design).",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM2": {
+            "type": "object",
+            "title": "SWIM2-Inputs: Are all documents needed for the review available in their required state? (e.g., source code, SW detailed design, static test reports such as MISRA checks, Polyspace, compiler warnings, model advisor for MBD, ...)",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM18": {
+            "type": "object",
+            "title": "SWIM18-Completeness vs limits: Does the code follow defined limits? Are deviations justified in the Code metrics report?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM9": {
+            "type": "object",
+            "title": "SWIM9-Complexity: Is cyclomatic complexity/LOC below the specified limit? (e.g., Polyspace metric limit <= 20).",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM13": {
+            "type": "object",
+            "title": "SWIM13-Correctness: (Source) code free of obviously wrong/obsolete statements?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM15": {
+            "type": "object",
+            "title": "SWIM15-Division: For all divisions, has the denominator been tested to be non-zero? (If zero can be excluded, justify in comment.)",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM12": {
+            "type": "object",
+            "title": "SWIM12-a2l: Are all parameters/variables implemented correctly and in the right location with the correct data type (esp. for calibration)?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM10": {
+            "type": "object",
+            "title": "SWIM10-Identifiers: Naming convention fulfilled (signals/variables)? No identifiers rely on significance of >31 characters.",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM8": {
+            "type": "object",
+            "title": "SWIM8-Style guide & clarity: Implemented artifact sufficiently clear and understandable for intended readers? Proper commenting, no unnecessary complexity; implementation structure referenced in PDP.",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM20": {
+            "type": "object",
+            "title": "SWIM20-Design principles: Are implementations not bypassing AUTOSAR concepts? (e.g., no constant variable exchange between SW components that violates architecture guidance).",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM17": {
+            "type": "object",
+            "title": "SWIM17-Notation & documentation: Are code and associated documents (compiler warnings, Polyspace) properly commented and documented per guideline and naming conventions?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM6": {
+            "type": "object",
+            "title": "SWIM6-Definitions: Is it checked that all definition of Code and Data area are included in the defined Program/Memory Assignment and not duplicated or shadowed?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM16": {
+            "type": "object",
+            "title": "SWIM16-Complete: Are all design elements implemented? Any unused interfaces removed?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM14": {
+            "type": "object",
+            "title": "SWIM14-Type conversion: For explicit casts, has value range been checked (no under/overflow, no re-interpretation issues)? Examples: cast from signed -> unsigned; long -> short; etc.",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM3": {
+            "type": "object",
+            "title": "SWIM3-Baseline planning: Is the artifact to be reviewed checked in or delivered in the stream?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM4": {
+            "type": "object",
+            "title": "SWIM4-Completeness: Is it checked that the Code is complete, covers the Design, and complements all parts of the design? Is there no part of the implementation that is not covered in the SW Design?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Trace": {
+        "title": "Trace",
+        "type": "object",
+        "properties": {
+          "SWIM2": {
+            "type": "object",
+            "title": "SWIM2-Inputs: Are all documents needed for the review available in their required state? (e.g., source code, SW detailed design, static test reports such as MISRA checks, Polyspace, compiler warnings, model advisor for MBD, ...)",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM1": {
+            "type": "object",
+            "title": "SWIM1-Is the Software Implementation Guideline & review process checked & followed by the developer for SW unit construction (source code) & technical review?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM6": {
+            "type": "object",
+            "title": "SWIM6-Definitions: Is it checked that all definition of Code and Data area are included in the defined Program/Memory Assignment and not duplicated or shadowed?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM7": {
+            "type": "object",
+            "title": "SWIM7-Traceability: Is correct bidirectional traceability established per the Detail design & implementation guideline to design elements and all implemented requirements? (e.g., naming conventions between Model / Source Code, code comments, SW Detailed Design).",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM3": {
+            "type": "object",
+            "title": "SWIM3-Baseline planning: Is the artifact to be reviewed checked in or delivered in the stream?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          },
+          "SWIM4": {
+            "type": "object",
+            "title": "SWIM4-Completeness: Is it checked that the Code is complete, covers the Design, and complements all parts of the design? Is there no part of the implementation that is not covered in the SW Design?",
+            "properties": {
+              "Ready": {
+                "enum": [
+                  "Yes",
+                  "No",
+                  "NA"
+                ],
+                "title": "Ready for Review",
+                "type": "string"
+              },
+              "Comment": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "SWIM1",
+        "SWIM2",
+        "SWIM3",
+        "SWIM4",
+        "SWIM6",
+        "SWIM7",
+        "SWIM8",
+        "SWIM9",
+        "SWIM10",
+        "SWIM11",
+        "SWIM12",
+        "SWIM13",
+        "SWIM14",
+        "SWIM15",
+        "SWIM16",
+        "SWIM17",
+        "SWIM18",
+        "SWIM19",
+        "SWIM20"
+      ]
+    },
+    "Findings": {
+      "title": "ReviewLog",
+      "type": "array",
+      "items": {
+        "title": "Finding",
+        "type": "object",
+        "properties": {
+          "Information": {
+            "title": "Finding Information",
+            "type": "object",
+            "properties": {
+              "WPReference": {
+                "title": "Work Product Reference",
+                "description": "Full name of the team member",
+                "type": "string"
+              },
+              "Location": {
+                "title": "Location",
+                "description": "e.g. Page/Line , Model Path etc.",
+                "type": "string"
+              },
+              "Category": {
+                "enum": [
+                  "Formality\nAttributes\nTrace\nClarity\nCompleteness\nCorrectness\nRobustness\nDesign\nVerifiability\nMiscellaneous\nTest Case Specification\nTest Case Report\nTest Automation"
+                ],
+                "title": "Finding Category",
+                "type": "string"
+              },
+              "Description": {
+                "title": "Finding Description",
+                "type": "string"
+              },
+              "Reviewer": {
+                "title": "Reviewer",
+                "description": "name & department",
+                "type": "string"
+              }
+            },
+            "required": [
+              "WPReference",
+              "Location",
+              "Category",
+              "Description",
+              "Reviewer"
+            ]
+          },
+          "Evaluation": {
+            "title": "Evaluation and corrective actions",
+            "type": "object",
+            "properties": {
+              "Evaluation": {
+                "enum": [
+                  "Accepted",
+                  "NotAccepted"
+                ],
+                "title": "Finding Evaluation",
+                "type": "string"
+              },
+              "Action": {
+                "type": "string",
+                "title": "Corrective Action"
+              },
+              "ActionStatus": {
+                "type": "boolean",
+                "title": "Corrective Status"
+              },
+              "Comment": {
+                "type": "string"
+              },
+              "Plan": {
+                "type": "string",
+                "title": "(To be) Fixed in baseline(optional)"
+              }
+            },
+            "required": [
+              "Evaluation",
+              "Action",
+              "ActionStatus",
+              "Comment"
+            ]
+          },
+          "Confirmation": {
+            "type": "boolean",
+            "title": "Confirmation of Closure"
+          }
+        },
+        "required": [
+          "Information",
+          "Evaluation",
+          "Confirmation"
+        ]
+      }
+    }
+  },
+  "required": [
+    "CheckList",
+    "Findings",
+    "Overview"
+  ]
+}
