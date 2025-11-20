@@ -29,6 +29,12 @@ try {
             "Content" = "GitActions"
             "Icon"    = "repo"
             "Context" = ".seg/Extensions/SEGTreeView/Git/Context.ps1"
+        },
+        @{
+            "Id"      = "ASPICE"
+            "Content" = "ASPICE"
+            "Icon"    = "notebook-render-output"
+            "Context" = ".seg/Extensions/SEGTreeView/ASPICE/Context.ps1"
         }
     )
 
