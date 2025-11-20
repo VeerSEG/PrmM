@@ -8,7 +8,8 @@ if (Test-Path $InputFile) {
     $inputObj = Get-Content $InputFile -Raw | ConvertFrom-Json -AsHashtable
     
 }
-$reviewActions=@(Get-ChildItem $PSScriptRoot/Review|ForEach-Object{
+Write-Host "$PSScriptRoot/Review"
+$reviewActions=@(Get-ChildItem "$PSScriptRoot/Review"|ForEach-Object{
     @{
         "Id"      = $_.BaseName
         "Content" = $_.BaseName
@@ -16,7 +17,9 @@ $reviewActions=@(Get-ChildItem $PSScriptRoot/Review|ForEach-Object{
         "Event"   = ".seg/Extensions/SEGTreeView/ASPICE/Review/$($_.Name)"
     }
 })
-@(
+$outputResult=@()
+if($reviewActions.Count -gt 0){
+    $outputResult+=@(
 
     @{
         "Id"      = "Review"
@@ -25,4 +28,6 @@ $reviewActions=@(Get-ChildItem $PSScriptRoot/Review|ForEach-Object{
         "Items"   = $reviewActions
     }
     
-) | ConvertTo-Json -Depth 10 -AsArray | Out-File -Encoding UTF8 -FilePath $OutputFile
+) 
+}
+$outputResult| ConvertTo-Json -Depth 10  | Out-File -Encoding UTF8 -FilePath $OutputFile
