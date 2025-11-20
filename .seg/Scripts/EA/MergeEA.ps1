@@ -16,7 +16,7 @@ $startArguments = @(
   "--base=`"$Base`"",
   "--mine=`"$Ours`"",
   "--theirs=`"$Theirs`"",
-  "--out=`"$Ours`""
+  "--out=`"$Original`""
 )
 
 # $wvArgs = @(
