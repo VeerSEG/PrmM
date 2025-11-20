@@ -1,6 +1,6 @@
 param (
     [string]$InputFile,
-    [string]$OutputFile
+    [string]$OutputFile=".text.json"
 )
 # git fetch
 $inputObj = @{}
