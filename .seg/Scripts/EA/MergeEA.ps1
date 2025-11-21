@@ -31,7 +31,7 @@ $startArguments = @(
 try {
   $proc = Start-Process -FilePath $starter -ArgumentList $startArguments -PassThru -WindowStyle Hidden
   $mergeWindow = $false
-  $currentTimeStamp = (Get-Item $Ours).LastWriteTime
+  $currentTimeStamp = (Get-Item $Original).LastWriteTime
   $finalExitCode = 0
   $processFinished=$false
   while (!$proc.HasExited) {
@@ -85,8 +85,8 @@ try {
     }
     else {
       # check if the file was changed
-      $latestTimeStamp = (Get-Item $Ours).LastWriteTime
-      $fileSize = (Get-Item $Ours).Length
+      $latestTimeStamp = (Get-Item $Original).LastWriteTime
+      $fileSize = (Get-Item $Original).Length
       Write-Host ("{0:HH:mm:ss.fff}  Current Timestamp: {1}, Latest Timestamp: {2}, File Size: {3}" -f (Get-Date), $currentTimeStamp, $latestTimeStamp, $fileSize)
       if ($latestTimeStamp -gt $currentTimeStamp) {
         if ($fileSize -eq 0) {
