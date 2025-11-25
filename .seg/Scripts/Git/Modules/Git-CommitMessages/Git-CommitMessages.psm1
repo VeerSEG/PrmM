@@ -140,11 +140,11 @@ function Get-CommitMessageProperties {
             $content = Get-ChapterContent -ChapterTitle $chapter -Content $Content
 
             if ($content) {
-                Write-Host "[INFO] Extracted string chapter '$key'" -ForegroundColor DarkGreen
+                Write-Host "[INFO] Extracted string chapter '$key'" -ForegroundColor Green
                 $result[$key] = $content.Trim()
             }
             else {
-                Write-Host "[INFO] String chapter '$chapter' not found." -ForegroundColor DarkGray
+                Write-Host "[INFO] String chapter '$chapter' not found." -ForegroundColor Gray
                 $result[$key] = ""
             }
         }
@@ -158,11 +158,11 @@ function Get-CommitMessageProperties {
             $checkResult = Get-MarkdownCheckboxStatus -ChapterTitle $chapter -Content $Content
 
             if ($checkResult.Count -gt 0) {
-                Write-Host "[INFO] Extracted checkbox chapter '$key'" -ForegroundColor DarkGreen
+                Write-Host "[INFO] Extracted checkbox chapter '$key'" -ForegroundColor Green
                 $result[$key] = $checkResult
             }
             else {
-                Write-Host "[INFO] Checkbox chapter '$chapter' not found or empty." -ForegroundColor DarkGray
+                Write-Host "[INFO] Checkbox chapter '$chapter' not found or empty." -ForegroundColor Gray
                 $result[$key] = @{}
             }
         }
@@ -178,11 +178,11 @@ function Get-CommitMessageProperties {
                 -Content $Content
 
             if ($validateResult.Count -gt 0) {
-                Write-Host "[INFO] Extracted validation chapter '$key'" -ForegroundColor DarkGreen
+                Write-Host "[INFO] Extracted validation chapter '$key'" -ForegroundColor Green
                 $result[$key] = $validateResult
             }
             else {
-                Write-Host "[INFO] Validation chapter '$ValidationChapter' not found or empty." -ForegroundColor DarkGray
+                Write-Host "[INFO] Validation chapter '$ValidationChapter' not found or empty." -ForegroundColor Gray
                 $result[$key] = @{}
             }
         }

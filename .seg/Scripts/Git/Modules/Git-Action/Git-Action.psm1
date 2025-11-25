@@ -9,80 +9,98 @@ function Start-BranchCreation {
             Push-Location $SandboxPath
 
             Write-Host "[INFO] Fetching origin…" -ForegroundColor Cyan
-            git fetch origin
+            git fetch origin *>&1
             if ($LASTEXITCODE -ne 0) { throw "git fetch failed." }
 
-            # ------------------------------------------------------------
-            # Detect local branches
-            # ------------------------------------------------------------
+            # Detect local
             Write-Host "[INFO] Checking local branches…" -ForegroundColor Cyan
-            $localBranches = git branch --format="%(refname:short)"
+            $localBranches = git branch --format="%(refname:short)" *>&1
             if ($LASTEXITCODE -ne 0) { throw "git branch failed." }
 
-            $branchList = $localBranches -split "`r?`n" | Where-Object { $_ }
+            $branchList  = $localBranches -split "`r?`n" | Where-Object { $_ }
             $localExists = $branchList -contains $TargetBranch
 
-            # ------------------------------------------------------------
-            # Detect remote branch existence
-            # ------------------------------------------------------------
+            # Detect remote
             Write-Host "[INFO] Checking remote branches…" -ForegroundColor Cyan
-            $remoteBranches = git branch -r --format="%(refname:short)"
-            $remoteList = $remoteBranches -split "`r?`n" | Where-Object { $_ }
+            $remoteBranches = git branch -r --format="%(refname:short)" *>&1
+            if ($LASTEXITCODE -ne 0) { throw "git branch -r failed." }
+
+            $remoteList   = $remoteBranches -split "`r?`n" | Where-Object { $_ }
             $remoteExists = $remoteList -contains "origin/$TargetBranch"
 
-            # ------------------------------------------------------------
-            # Always reset first
-            # ------------------------------------------------------------
+            # Clean working tree
             Write-Host "[INFO] git reset --hard" -ForegroundColor Yellow
-            git reset --hard
+            git reset --hard *>&1
             if ($LASTEXITCODE -ne 0) { throw "git reset --hard failed." }
 
-            if ($remoteExists) {
-                # ============================================================
-                # REMOTE EXISTS → reset to remote branch
-                # ============================================================
-                Write-Host "[INFO] Remote branch 'origin/$TargetBranch' exists → reset to it." -ForegroundColor Green
+            if ($remoteExists -or $localExists) {
+                #
+                # EXISTING BRANCH PATH
+                #
 
-                if (-not $localExists) {
-                    Write-Host "[INFO] Local branch does not exist → create tracking branch." -ForegroundColor Yellow
-                    git checkout -B "$TargetBranch" "origin/$TargetBranch"
+                if ($remoteExists) {
+                    Write-Host "[INFO] Remote exists → sync local." -ForegroundColor Green
+
+                    if (-not $localExists) {
+                        git checkout -B "$TargetBranch" "origin/$TargetBranch" *>&1
+                        if ($LASTEXITCODE -ne 0) { throw "git checkout failed." }
+                    }
+                    else {
+                        git switch "$TargetBranch" *>&1
+                        if ($LASTEXITCODE -ne 0) { throw "git switch $TargetBranch failed." }
+
+                        git reset --hard "origin/$TargetBranch" *>&1
+                        if ($LASTEXITCODE -ne 0) { throw "git reset failed." }
+                    }
                 }
                 else {
-                    Write-Host "[INFO] Local branch exists → switching to it." -ForegroundColor Yellow
                     git switch "$TargetBranch" *>&1
                     if ($LASTEXITCODE -ne 0) { throw "git switch $TargetBranch failed." }
-
-                    Write-Host "[INFO] Resetting local branch → origin/$TargetBranch" -ForegroundColor Yellow
-                    git reset --hard "origin/$TargetBranch"
                 }
 
-                Write-Host "[DONE] Local branch now synced with origin/$TargetBranch" -ForegroundColor Green
-            }
-            elseif ($localExists) {
-                # ============================================================
-                # LOCAL EXISTS BUT REMOTE DOES NOT → reset to SourceBranch
-                # ============================================================
-                Write-Host "[INFO] Local branch '$TargetBranch' exists but NOT remote → recreate from $SourceBranch." -ForegroundColor Yellow
+                # MERGE
+                Write-Host "[INFO] Merging $SourceBranch → $TargetBranch..." -ForegroundColor Yellow
+                git merge --no-ff --no-edit "$SourceBranch" *>&1
+                if ($LASTEXITCODE -ne 0) {
+                    Write-Host "[WARN] Merge conflict! Recreating branch..." -ForegroundColor Yellow
 
-                git switch "$TargetBranch"
-                git reset --hard "$SourceBranch"
-                git push -u origin "$TargetBranch"
+                    git merge --abort *>&1
+
+                    git switch "$SourceBranch" *>&1
+                    git branch -D "$TargetBranch" *>&1
+                    git push origin --delete "$TargetBranch" *>&1
+
+                    git checkout --no-track -B "$TargetBranch" "$SourceBranch" *>&1
+                    if ($LASTEXITCODE -ne 0) { throw "Failed to recreate branch." }
+
+                    git push -u origin "$TargetBranch" *>&1
+                    if ($LASTEXITCODE -ne 0) { throw "git push failed." }
+
+                    Write-Host "[DONE] Branch recreated due to conflict." -ForegroundColor Green
+                }
+                else {
+                    git push origin "$TargetBranch" *>&1
+                    if ($LASTEXITCODE -ne 0) { throw "git push failed after merge." }
+
+                    Write-Host "[DONE] Merge completed and pushed." -ForegroundColor Green
+                }
             }
             else {
-                # ============================================================
-                # BOTH DO NOT EXIST → create from SourceBranch
-                # ============================================================
-                Write-Host "[INFO] Neither local nor remote branch exists → creating from $SourceBranch." -ForegroundColor Green
+                #
+                # CREATE NEW BRANCH
+                #
+                Write-Host "[INFO] Creating new branch from $SourceBranch..." -ForegroundColor Green
+                git checkout --no-track -B "$TargetBranch" "$SourceBranch" *>&1
+                if ($LASTEXITCODE -ne 0) { throw "checkout failed." }
 
-                git checkout --no-track -B "$TargetBranch" "$SourceBranch"
-                git push -u origin "$TargetBranch"
+                git push -u origin "$TargetBranch" *>&1
+                if ($LASTEXITCODE -ne 0) { throw "git push failed." }
             }
 
-            Write-Host "[DONE] Branch '$TargetBranch' created/updated successfully." -ForegroundColor Green
+            Write-Host "[DONE] Branch processed ok." -ForegroundColor Green
         }
         catch {
             Write-Error "[ERROR] $($_.Exception.Message)"
-            Pop-Location
             exit 1
         }
         finally {
