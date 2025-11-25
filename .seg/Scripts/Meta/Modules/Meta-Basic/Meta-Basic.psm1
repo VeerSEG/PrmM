@@ -10,7 +10,7 @@ function Resolve-YamlObjectOrder {
         # Sort Hashtable keys alphabetically
         $ordered = [ordered]@{}
         foreach ($key in ($obj.Keys | Sort-Object)) {
-            $ordered[$key] = Sort-YamlObject $obj[$key]
+            $ordered[$key] = Resolve-YamlObjectOrder $obj[$key]
         }
         return $ordered
     }
@@ -20,7 +20,7 @@ function Resolve-YamlObjectOrder {
         # For arrays, keep original order but sort inner objects
         return @(
             foreach ($item in $obj) {
-                Sort-YamlObject $item
+                Resolve-YamlObjectOrder $item
             }
         )
     }
