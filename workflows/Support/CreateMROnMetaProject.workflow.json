@@ -99,8 +99,8 @@
                   "Type": "Workflow",
                   "NamedParams": {
                     "Params": {
-                      "ProjectName": "$($ParallelContext.GroupName)",
-                      "UpdateProjects":"$($_CommitsMessages.Dependencies),$"
+                      "ProjectName": "$($ParallelContext.SubprojectName)",
+                      "UpdateProjects":"$($_CommitsMessages.Dependencies),$($ParallelContext.SubprojectName)"
                     },
                     "JobFolder": "\"Gitlab/$($ParallelContext.GroupName)/$($ParallelContext.ProjectName)/$($ParallelContext.Branch)/Support\"",
                     "JobName": "\"UpdateProjectToRevision\"",
