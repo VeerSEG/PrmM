@@ -1,3 +1,9 @@
+Import-Module "$PSScriptRoot/../../../Pwsh/Modules/Pwsh-Dependencies"
+Get-ModuleDependencies -ModuleVersions @(
+    @{ Name = 'powershell-yaml'; MinimumVersion = '0.4.12' }
+)
+
+
 function New-OrUpdateMR{
     [CmdletBinding()]
     param(

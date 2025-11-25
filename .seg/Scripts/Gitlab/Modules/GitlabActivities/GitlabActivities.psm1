@@ -30,6 +30,7 @@ function Find-MatchingSubprojects {
             if ($dict["Url"] -eq $TargetUrl -and $dict["Revision"] -eq $TargetRevision) {
                 $results += @{
                     SubprojectUrl      = $dict["Url"]
+                    SubprojectName     = $dict["Name"]
                     SubprojectRevision = $dict["Revision"]
                     YamlPath           = $Path
                 }
@@ -38,7 +39,7 @@ function Find-MatchingSubprojects {
 
         foreach ($key in $dict.Keys) {
             $childValue = $dict[$key]
-            $childPath  = if ($Path) { "$Path.$key" } else { "$key" }
+            $childPath = if ($Path) { "$Path.$key" } else { "$key" }
 
             $results += Find-MatchingSubprojects `
                 -Node $childValue `
@@ -54,7 +55,7 @@ function Find-MatchingSubprojects {
     if ($Node -is [psobject]) {
 
         $props = $Node.PSObject.Properties
-        $hasUrl      = $props.Name -contains "Url"
+        $hasUrl = $props.Name -contains "Url"
         $hasRevision = $props.Name -contains "Revision"
 
         if ($hasUrl -and $hasRevision) {
@@ -149,7 +150,7 @@ function Find-SegmetaSubprojectUsage {
     $results = @()
 
     foreach ($proj in $projects) {
-        $projectId   = [int]$proj.id
+        $projectId = [int]$proj.id
         $projectName = [string]$proj.name
         $projectPath = [string]$proj.path_with_namespace
 
@@ -253,14 +254,14 @@ function Find-SegmetaSubprojectUsage {
             if ($matches.Count -gt 0) {
                 foreach ($m in $matches) {
                     $entry = @{
-                        GroupName           = $group.full_path
-                        ProjectName         = $projectName
-                        ProjectPath         = $projectPath
-                        Branch              = $branchName
-                        MetaFilePath        = $MetaFilePath
-                        SubprojectUrl       = $m.SubprojectUrl
-                        SubprojectRevision  = $m.SubprojectRevision
-                        YamlPath            = $m.YamlPath
+                        GroupName          = $group.full_path
+                        ProjectName        = $projectName
+                        ProjectPath        = $projectPath
+                        Branch             = $branchName
+                        MetaFilePath       = $MetaFilePath
+                        SubprojectUrl      = $m.SubprojectUrl
+                        SubprojectRevision = $m.SubprojectRevision
+                        YamlPath           = $m.YamlPath
                     }
 
                     $results += $entry

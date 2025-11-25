@@ -45,7 +45,8 @@
                                 "GroupPath": "esw-playground/hv",
                                 "MetaFilePath": "seg_meta/development.yml",
                                 "TargetSubprojectUrl": "$SEGGitlabUrl/$ProjectPath",
-                                "TargetRevision": "$SandboxProjectDevPath"
+                                "TargetRevision": "$SandboxProjectDevPath",
+                                "IncludeSubgroups":false
                             },
                             "OutputProcess": {
                                 "OutputFilePath": "$ArchivePath/DependeedRepos.json",
@@ -59,19 +60,54 @@
                     "Type": "ParallelSet",
                     "Stages": [
                         {
-                            "Name": "Obtain the Dependeed Project.",
+                            "Name": "Obtain the Dependeed Project",
                             "Type": "Stage",
                             "ModuleName": "$SandboxPath/.seg/Scripts/Git/Modules/Git-CommitMessages",
                             "FunctionName": "Get-CommitMessageProperties",
                             "NamedParams": {
-                                "StringChapters": "$SEGGitlabUrl",
-                                "Content":""
+                                "StringChapters": [
+                                    "\"## Dependencies\""
+                                ],
+                                "Content": "$($SandboxContext.Changes.CommitMessage)"
                             },
                             "OutputProcess": {
                                 "OutputFilePath": "$ArchivePath/CommitsMessages.json"
                             }
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "Name": "Trigger Meta Project Update",
+            "Type": "ParallelWithTemplate",
+            "ParallelSetNameTemplate": "Update Branch $($ParallelContext.ProjectName)",
+            "ParallelWith": "$_DependeedRepos",
+            "WithEnv": [
+                {
+                    "Key": "_CommitsMessages",
+                    "Value": "$ArchivePath/CommitsMessages.json"
+                },
+                {
+                    "Key": "_DependeedRepos",
+                    "Value": "$ArchivePath/DependeedRepos.json"
+                }
+            ],
+            "Stages": [
+                {
+                  "Name": "Start Meta Project Update",
+                  "Type": "Workflow",
+                  "NamedParams": {
+                    "Params": {
+                      "ProjectName": "$($ParallelContext.GroupName)",
+                      "UpdateProjects":"$($_CommitsMessages.Dependencies),$"
+                    },
+                    "JobFolder": "\"Gitlab/$($ParallelContext.GroupName)/$($ParallelContext.ProjectName)/$($ParallelContext.Branch)/Support\"",
+                    "JobName": "\"UpdateProjectToRevision\"",
+                    "NoWaitJob": true,
+                    "ObtainTestsResult": false
+                  },
+                  "IgnoreError": true
                 }
             ]
         },
