@@ -101,5 +101,11 @@
                 }
             ]
         }
+    ],
+    "git.repositoryScanMaxDepth": 7,
+    "git.repositoryScanIgnoredFolders": [
+        "node_modules",
+        "workflows",
+        ".*"
     ]
 }

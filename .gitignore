@@ -1,8 +1,29 @@
-*.ldb
-/Analyze/org.yakindu.traceability.report.log
-/Analyze/DOORSResponseCache
-# Ignore all directories starting with . except .vscode
-/.[^(vscode|gitlab)]*/
+build/
+.*
+!.gitignore
+!.gitattributes
+!.vscode/
+!.seg/
+!.gitlab/
 **/__pycache__/
 *.pyc
-WorkflowWorkspace/
+*.log
+
+bk/*
+bk/**/*             
+!bk/**/            
+!bk/**/.git
+
+# Re-allow traversal down to the specific folder (every parent!)
+!bk/Tools_cfg/
+bk/Tools_cfg/vector/
+!bk/08_Includes
+
+arch/**
+!arch/**/.git
+
+sw_core_tools/**
+!sw_core_tools/**/.git
+
+ext/**
+!ext/**/.git

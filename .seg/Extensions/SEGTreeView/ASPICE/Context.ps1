@@ -33,4 +33,4 @@ if($reviewActions -and $reviewActions.Count -gt 0){
     
 ) 
 }
-$outputResult| ConvertTo-Json -Depth 10 -AsArray  | Out-File -Encoding UTF8 -FilePath $OutputFile
+ConvertTo-Json $outputResult -Depth 10  | Out-File -Encoding UTF8 -FilePath $OutputFile
