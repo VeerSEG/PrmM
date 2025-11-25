@@ -1,0 +1,253 @@
+{
+	"Name": "CreateSoftware",
+	"Type": "Workflow",
+	"WorkflowRepo": {
+		"Type": "ReposSet",
+		"Repos": {
+			"SEGIniFileReader": {
+				"Type": "SEGGitlab",
+				"UrlRelativePath": "ci-development/segini-file-reader.git",
+				"Branch": "master"
+			},
+			"SoftwareBuildTool": {
+				"Type": "SEGGitlab",
+				"UrlRelativePath": "ci-development/softwarebuildtool.git",
+				"Branch": "main"
+			}
+		}
+	},
+	"WorkflowRunnerRepo": {
+		"Type": "SEGGitlab",
+		"UrlRelativePath": "ci-development/workflowrunner.git",
+		"Branch": "main"
+	},
+	"RequiredNode": "PTC",
+	"Params": {
+		"EMachineVariant": {
+			"Type": "Choice",
+			"List": [
+				"<ToBeFilledBySeed>"
+			]
+		},
+		"BuildTargetVariant": {
+			"Type": "Choice",
+			"List": [
+				"<ToBeFilledBySeed>"
+			]
+		},
+		"InverterVariant": {
+			"Type": "Choice",
+			"List": [
+				"<ToBeFilledBySeed>"
+			]
+		}
+	},
+	"Stages": [
+		{
+			"Name": "Format Compiler Switch",
+			"Type": "Stage",
+			"ModuleName": "$WorkflowRepoPath/SEGIniFileReader/Modules/SEGIniFileReader-Reader",
+			"FunctionName": "Out-IniMappingsFromConfigInput",
+			"NamedParams": {
+				"OutputPath": "$WorkspacePath/ProgramVariables/GcsTemplate.json",
+				"InputPath": "$SandboxPath/bk/Tools_cfg/swBuildAdvanced/gcs.ini"
+			}
+		},
+		{
+			"Name": "Format Template Program Variables",
+			"Type": "Stage",
+			"ModuleName": "$WorkflowRepoPath/SEGIniFileReader/Modules/SEGIniFileReader-Reader",
+			"FunctionName": "Out-IniMappingsFromConfigInput",
+			"NamedParams": {
+				"OutputPath": "$WorkspacePath/ProgramVariables/Template.json",
+				"InputPath": "$SandboxPath/bk/Tools_cfg/swBuildAdvanced/project.ini"
+			}
+		},
+		{
+			"Name": "Mirror SoftwareBuildAdvance",
+			"Type": "Stage",
+			"ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Basic",
+			"FunctionName": "Copy-DirectoryContentToDestDirectory",
+			"NamedParams": {
+				"SourceLocation": "$SandboxPath/bk/Tools_cfg/swBuildAdvanced",
+				"DestLocation": "$WorkspacePath/swBuildAdvanced"
+			}
+		},
+		{
+			"Name": "Generate Program Global Switch",
+			"Type": "Stage",
+			"ModuleName": "$WorkflowRepoPath/SEGIniFileReader/Modules/SEGIniFileReader-Writer",
+			"FunctionName": "Out-ConfigWithUpdateToIniFile",
+			"NamedParams": {
+				"ConfigRaw": "$_GcsDefaultConfig",
+				"ConfigUpdate": {
+					"GCS_EMACHINE_VARIANT": {
+						"name": "\"EMACHINE_VARIANT\"",
+						"value": "$_VariantsConfig.EMachineVariant[$SandboxContext.Params.EMachineVariant].Configs.EMachineVariant",
+						"comment": "\"Global Switch for e machine variant\""
+					},
+					"GCS_BUILD_ENVIRONMENT_VARIANT": {
+						"name": "\"BUILD_ENVIRONMENT_VARIANT\"",
+						"value": "$_VariantsConfig.TargetVariant[$SandboxContext.Params.BuildTargetVariant].Configs.TargetVariant",
+						"comment": "\"Global Switch for build target variant\""
+					},
+					"GCS_INVERTER_VARIANT": {
+						"name": "\"INVERTER_VARIANT\"",
+						"value": "$_VariantsConfig.InverterVariant[$SandboxContext.Params.InverterVariant].Configs.InverterVariant",
+						"comment": "\"Global Switch for build target variant\""
+					}
+				},
+				"IniOutputLocation": "$WorkspacePath/swBuildAdvanced/gcs.ini"
+			},
+			"WithEnv": [
+				{
+					"Value": "$SandboxPath/var/ci_Workspace/ProjectConfig/SWVariants.json",
+					"Key": "_VariantsConfig"
+				},
+				{
+					"Value": "$WorkspacePath/ProgramVariables/GcsTemplate.json",
+					"Key": "_GcsDefaultConfig"
+				}
+			]
+		},
+		{
+			"Name": "Build SW",
+			"Type": "Stage",
+			"ModuleName": "$WorkflowRepoPath/SoftwareBuildTool/Modules/SoftwareBuildTool-AdvanceAdaption",
+			"FunctionName": "Start-SWBuildAdvanceToolCommandWithRedirect",
+			"IgnoreError": true,
+			"NamedParams": {
+				"SandboxLoc": "$SandboxPath",
+				"Command": "$(if($SandboxContext.Params.IncrementalBuild){\"incrementalBuild\"}else{\"completeBuild\"})",
+				"SoftwareBuildAdvancedLocation": "$WorkspacePath/swBuildAdvanced",
+				"OutputLocation": "$WorkspacePath/SoftwareBuildResult"
+			},
+			"SignatureStage": {
+				"OutputDirsArgs": [
+					"\"OutputLocation\""
+				],
+				"PoolPath": "\"$GlobalContainer/SoftwareBuildAdvanced/CompleteBuild/Result\"",
+				"SignatureVector": [
+					{
+						"Type": "Directory",
+						"Path": "$SandboxPath",
+						"FileMatches": [
+							"(cfg|src)/((?!ci/).)*\\.(c|h|a2l|ini)$",
+							"^workflows/BuildSW"
+						]
+					}
+				]
+			}
+		},
+		{
+			"Name": "Generate Else Products",
+			"Type": "ParallelStages",
+			"Parallel": [
+				{
+					"Name": "Generate A2L Files",
+					"Type": "ParallelSet",
+					"Stages": [
+						{
+							"Name": "Generate A2L",
+							"Lock": "UTN/A2L",
+							"Type": "Stage",
+							"ModuleName": "$WorkflowRepoPath/SoftwareBuildTool/Modules/SoftwareBuildTool-AdvanceAdaption",
+							"FunctionName": "Start-SWBuildAdvanceToolCommandWithRedirect",
+							"IgnoreError": true,
+							"NamedParams": {
+								"SandboxLoc": "$SandboxPath",
+								"Command": "a2l",
+								"SoftwareBuildAdvancedLocation": "$WorkspacePath/swBuildAdvanced",
+								"OutputLocation": "$WorkspacePath/SoftwareBuildResult"
+							},
+							"SignatureStage": {
+								"OutputDirsArgs": [
+									"\"OutputLocation\""
+								],
+								"PoolPath": "\"$GlobalContainer/SoftwareBuildAdvanced/A2L/Result\"",
+								"SignatureVector": [
+									{
+										"Type": "Directory",
+										"Path": "$SandboxPath",
+										"FileMatches": [
+											"(cfg|src)/((?!ci/).)*\\.(c|h|a2l|ini)$",
+											"^workflows/BuildSW"
+										]
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"Name": "Format CNT Files",
+					"Type": "ParallelSet",
+					"Stages": [
+						{
+							"Name": "GenCNT",
+							"Type": "Stage",
+							"ModuleName": "$WorkflowRepoPath/SoftwareBuildTool/Modules/SoftwareBuildTool-AdvanceAdaption",
+							"FunctionName": "Start-SWBuildAdvanceToolCommandWithRedirect",
+							"IgnoreError": true,
+							"NamedParams": {
+								"SandboxLoc": "$SandboxPath",
+								"Command": "cnt",
+								"SoftwareBuildAdvancedLocation": "$WorkspacePath/swBuildAdvanced",
+								"OutputLocation": "$WorkspacePath/SoftwareBuildResult"
+							},
+							"SignatureStage": {
+								"OutputDirsArgs": [
+									"\"OutputLocation\""
+								],
+								"PoolPath": "\"$GlobalContainer/SoftwareBuildAdvanced/CNT/Result\"",
+								"SignatureVector": [
+									{
+										"Type": "Directory",
+										"Path": "$SandboxPath",
+										"FileMatches": [
+											"(cfg|src)/((?!ci/).)*\\.(c|h|a2l|ini)$",
+											"^workflows/BuildSW"
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"Name": "Organize Build Result To Archive",
+			"Type": "Stage",
+			"ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Basic",
+			"FunctionName": "Copy-FlattenFilesToDestDir",
+			"NamedParams": {
+				"SourceLocation": "$WorkspacePath/SoftwareBuildResult/$($_ProgramConfigTemplate.RELEASE.label.Replace('_',''))/product/",
+				"DestLocation": "$ArchivePath/",
+				"Include": [
+					"*.hex",
+					"*.sre",
+					"*.bin",
+					"*.a",
+					"*.bin",
+					"*.crc",
+					"*.elf",
+					"*.map",
+					"*.s19",
+					"*.a2l",
+					"*.cnt",
+					"*.mdf"
+				],
+				"Exclude": [
+					"SP_RUNTIME_*.a"
+				]
+			},
+			"WithEnv": [
+				{
+					"Value": "$WorkspacePath/ProgramVariables/Template.json",
+					"Key": "_ProgramConfigTemplate"
+				}
+			]
+		}
+	]
+}

@@ -6,7 +6,7 @@
     "ProjectConfigurationManagement"
   ],
   "RequiredNode": "Git",
-  "CanExecuteLocal":false,
+  "CanExecuteLocal": false,
   "WorkflowRunnerRepo": {
     "Type": "SEGGitlab",
     "Branch": "main",
@@ -42,12 +42,12 @@
       "NamedParams": {
         "ConfigurationList": [
           {
-            "Type":"\"File\"",
-            "Path":"\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
+            "Type": "\"File\"",
+            "Path": "\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
           },
           {
-            "Type":"\"String\"",
-            "Content":"$_WorkflowSignature"
+            "Type": "\"String\"",
+            "Content": "$_WorkflowSignature"
           }
         ]
       },
@@ -150,7 +150,7 @@
                           "NamedParams": {
                             "AdditionalEnvironments": {
                               "WorkflowPath": "\"$($ParallelContext.Parent.WorkflowsSubFolderInSandbox)/$($ParallelContext.Name).workflow.json\"",
-                              "GitlabJenkinsIntegration":"$ProjectType"
+                              "GitlabJenkinsIntegration": "$ProjectType"
                             },
                             "OutputPath": "$WorkspacePath/JobXmlFromFolder/$($ParallelContext.Parent.JenkinsFolder)/$($ParallelContext.Name).xml",
                             "Workflow": "$_JobTemplate.Params+=$_GitPropertyParams;$_JobTemplate.Params.ProjectDevPath.Default=$ProjectDevPath;$_JobTemplate"
@@ -178,6 +178,67 @@
                   ]
                 }
               ]
+            },
+            {
+              "Name": "Create BuildSW Jobs",
+              "Type": "ParallelSet",
+              "Stages": [
+                {
+                  "Name": "Create BuildSW Folder",
+                  "Type": "Groovy",
+                  "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+                  "FunctionName": "LoadXml",
+                  "NamedParams": {
+                    "Name": "\"BuildSW\"",
+                    "FolderName": "\"$ProjectJenkinsRootFolder/$BranchFolderName\"",
+                    "FilePath": "\"$WorkspacePath/FolderTemplate/FolderTemplate.xml\""
+                  }
+                },
+                {
+                  "Name": "Create Variant Related SW Creation Job",
+                  "Type": "ParallelWithTemplate",
+                  "ParallelWith": "Get-ChildItem $SandboxPath/workflows/BuildSW -Filter *.workflow.json|Foreach-Object{@{Name=$_.Name.Replace('.workflow.json',''); Path=$_.FullName}}",
+                  "ParallelSetNameTemplate": "Gen Workflow for $($ParallelContext.Name)",
+                  "Stages": [
+                    {
+                      "Name": "Generate Create $($ParallelContext.Name) Job Xml",
+                      "Type": "Stage",
+                      "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-JenkinsBasic",
+                      "FunctionName": "Out-WorkflowIntoJenkinsXml",
+                      "NamedParams": {
+                        "Workflow": "$_JobTemplate.Params+=$_GitPropertyParams;$_JobTemplate.Params.ProjectDevPath.Default=$ProjectDevPath;$_JobTemplate.Params.InverterVariant.List=($_SWVariants.InverterVariant.Keys|Sort-Object);$_JobTemplate.Params.EMachineVariant.List=($_SWVariants.EMachineVariant.Keys|Sort-Object);$_JobTemplate.Params.BuildTargetVariant.List=$_SWVariants.TargetVariant.Keys|Sort-Object -Property {if($_ -eq \"RealTarget\"){return -1}else{return $_}};$_JobTemplate",
+                        "OutputPath": "$WorkspacePath/JobXml/BuildSW/$($ParallelContext.Name).xml",
+                        "AdditionalEnvironments": {
+                          "WorkflowPath": "\"workflows/BuildSW/$($ParallelContext.Name).workflow.json\""
+                        }
+                      },
+                      "WithEnv": [
+                        {
+                          "Key": "_JobTemplate",
+                          "Value": "$SandboxPath/workflows/BuildSW/$($ParallelContext.Name).workflow.json"
+                        }
+                      ]
+                    },
+                    {
+                      "Name": "Add or Update $($ParallelContext.Name) Job",
+                      "Type": "Groovy",
+                      "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+                      "FunctionName": "LoadXml",
+                      "NamedParams": {
+                        "FolderName": "\"$ProjectJenkinsRootFolder/$BranchFolderName/BuildSW\"",
+                        "Name": "\"$($ParallelContext.Name)\"",
+                        "FilePath": "\"$WorkspacePath/JobXml/BuildSW/$($ParallelContext.Name).xml\""
+                      }
+                    }
+                  ],
+                  "WithEnv": [
+                    {
+                      "Key": "_SWVariants",
+                      "Value": "$SandboxPath/var/ci_Workspace/ProjectConfig/SWVariants.json"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -191,7 +252,7 @@
           "WithEnv": [
             {
               "Key": "_SeedsSignature",
-              "Value":  "$ArchivePath/SeedsSignature.json"
+              "Value": "$ArchivePath/SeedsSignature.json"
             }
           ]
         }

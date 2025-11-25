@@ -3,7 +3,7 @@
   "Type": "Workflow",
   "Description": "This workflow will be triggered when a merge request is created or reopened. It will read the validation list, perform project CI processes, and generate a report template.",
   "RequiredNode": "Git",
-  "CanExecuteLocal":false,
+  "CanExecuteLocal": false,
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {
@@ -61,6 +61,28 @@
               }
             }
           ]
+        },
+        {
+          "Name": "Meta Projects Setting Up",
+          "Type": "ParallelSet",
+          "Stages": [
+            {
+              "Name": "Setup Meta Repos with Integration.yml",
+              "Type": "Stage",
+              "Description": "Update repos to use the Meta Repos",
+              "ModuleName": "$SandboxPath/.seg/Scripts/Meta/Modules/Meta-Action",
+              "FunctionName": "Update-RepoToTargetConfigure",
+              "NamedParams": {
+                "IntegrationFile": "seg_meta/integration.yml",
+                "SandboxPath": "$SandboxPath",
+                "MetaCache": "$GlobalContainer/Meta/RepoPackages",
+                "Token": {
+                  "gitlab.web.sg.lan": "$env:SEGGitlabTokenSecretText",
+                  "git4ea.web.sg.lan": "$env:SEGEAGitlabTokenSecretText"
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -71,7 +93,32 @@
         {
           "Name": "ProjectValidation",
           "Type": "ParallelSet",
-          "Stages": []
+          "Stages": [
+            {
+              "Name": "CreateSoftware",
+              "Type": "Workflow",
+              "GitlabIntegration": true,
+              "IgnoreError": true,
+              "NamedParams": {
+                "JobName": "\"CreateSoftware\"",
+                "JobFolder": "\"$ProjectJenkinsRootFolder/$(if($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ }){$SandboxProjectDevPath}else{\"ElseBranches\"})/BuildSW\"",
+                "ShareSandbox": true,
+                "ObtainTestsResult": true
+              },
+              "SignatureStage": {
+                "SignatureVector": [
+                  {
+                    "Type": "\"Directory\"",
+                    "Path": "$SandboxPath",
+                    "FileMatches": [
+                      "\"(cfg|src)/((?!ci/).)*\\.(c|h|a2l|ini)$\"",
+                      "\"^workflows/BuildSW\""
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
         },
         {
           "Name": "TaskValidation",

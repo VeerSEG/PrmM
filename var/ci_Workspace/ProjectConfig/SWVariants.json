@@ -1,0 +1,67 @@
+{
+    "EMachineVariant": {
+        "VariantA": {
+            "SetName": "VariantA",
+            "Desc": "Software For Variant A",
+            "Configs": {
+                "EMachineVariant": "ENUM_EMACHINE_VARIANT_A"
+            }
+        },
+        "VariantB": {
+            "SetName": "VariantB",
+            "Desc": "Software For Variant B",
+            "Configs": {
+                "EMachineVariant": "ENUM_EMACHINE_VARIANT_B"
+            }
+        },
+        "VariantC": {
+            "SetName": "VariantC",
+            "Desc": "Software For Variant C",
+            "Configs": {
+                "EMachineVariant": "ENUM_EMACHINE_VARIANT_C"
+            }
+        },
+        "VariantD": {
+            "SetName": "VariantD",
+            "Desc": "Software For Variant D",
+            "Configs": {
+                "EMachineVariant": "ENUM_EMACHINE_VARIANT_D"
+            }
+        }
+    },
+    "TargetVariant":{
+        "VEOS":{
+            "SetName": "VEOS",
+            "Configs": {
+                "TargetVariant": "ENUM_BUILD_ENVIRONMENT_VEOS"
+            }
+        },
+        "VTT":{
+            "SetName": "VTT",
+            "Configs": {
+                "TargetVariant": "ENUM_BUILD_ENVIRONMENT_VTT"
+            }
+        },
+        "RealTarget":{
+            "SetName": "RealTarget",
+            "Configs": {
+                "TargetVariant": "ENUM_BUILD_ENVIRONMENT_TARGET"
+            }
+        }
+    },
+    "InverterVariant":{
+        "HP26":{
+            "SetName": "HP26",
+            "Configs": {
+                "InverterVariant": "ENUM_INVERTER_VARIANT_HP26"
+            }
+        },
+        "MP16":{
+            "SetName": "MP16",
+            "Configs": {
+                "InverterVariant": "ENUM_INVERTER_VARIANT_MP16"
+            }
+        }
+
+    }
+}

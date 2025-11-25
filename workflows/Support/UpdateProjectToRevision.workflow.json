@@ -1,0 +1,203 @@
+{
+    "Name": "UpdateProjectToRevision",
+    "Type": "Workflow",
+    "Description": "The job is triggered by the child repo. When requesting update the repo version.",
+    "RequiredNode": "Git",
+    "WorkflowRepo": {
+        "Type": "ReposSet",
+        "Repos": {}
+    },
+    "Params": {
+        "ProjectName": {
+            "Type": "String",
+            "Default": "",
+            "Description": "The project branch want to update."
+        },
+        "UpdateProjects": {
+            "Type": "String",
+            "Default": "",
+            "Description": "The projects want to update."
+        },
+        "Revision": {
+            "Type": "String",
+            "Default": "",
+            "Description": "The revision want to update."
+        }
+    },
+    "WorkflowRunnerRepo": {
+        "Type": "SEGGitlab",
+        "Branch": "main",
+        "UrlRelativePath": "ci-development/workflowrunner.git"
+    },
+    "WithEnv": [
+        {
+            "Key": "_MonitorBranches",
+            "Value": "$SandboxPath/.seg/CI/CaC/MonitorBranches.json"
+        },
+        {
+            "Key": "_GlobalJenkinsConfig",
+            "Value": "$SEGJenkinsShareFolder\\Configs\\GlobalConfigs\\Configs.json"
+        },
+        {
+            "Key": "_ProjectJenkinsConfig",
+            "Value": "$SEGJenkinsShareFolder\\Configs\\ProjectConfigs\\$ProjectName\\Configs.json"
+        }
+    ],
+    "Stages": [
+        {
+            "Name": "Create Branch",
+            "Type": "Stage",
+            "ModuleName": "$SandboxPath/.seg/Scripts/Git/Modules/Git-Action",
+            "FunctionName": "Start-BranchCreation",
+            "NamedParams": {
+                "SourceBranch": "origin/$SandboxProjectDevPath",
+                "TargetBranch": "Devs/$SandboxProjectDevPath/CI_$($SandboxContext.Params.ProjectName)-5147036",
+                "SandboxPath":"$SandboxPath"
+            },
+            "Lock": "CreateUpdateMetaBranch::$SandboxProjectDevPath"
+        },
+        {
+            "Name": "Update Component Hash",
+            "Type": "Stage",
+            "ModuleName": "$SandboxPath/.seg/Scripts/Meta/Modules/Meta-Action",
+            "FunctionName": "Update-ProjectsToRevision",
+            "NamedParams": {
+                "ProjectIntegrationMetaData": "$SandboxPath/seg_meta/integration.segmeta.yml",
+                "ProjectDevelopmentMetaData": "$SandboxPath/seg_meta/development.segmeta.yml",
+                "ProjectMetaDataOutputPath": "$SandboxPath/seg_meta/integration.segmeta.yml",
+                "ProjectNames": "$($SandboxContext.Params.UpdateProjects -split '[\\s;,]+')",
+                "Revision": "$($SandboxContext.Params.Revision)"
+            }
+        },
+        {
+            "Name": "Submit Changes for meta",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-Git",
+            "FunctionName": "Update-AndPushFolderChanges",
+            "NamedParams": {
+                "FolderPath": "$SandboxPath/seg_meta",
+                "CommitMessage": "Update meta Project"
+            }
+        },
+        {
+            "Name": "Create MR for Meta",
+            "Type": "Stage",
+            "ModuleName": "$SandboxPath/.seg/Scripts/Gitlab/Modules/GitlabAction",
+            "FunctionName": "New-OrUpdateMR",
+            "NamedParams": {
+                "MRTitle": "CI_$($SandboxContext.Params.ProjectName)-5147036",
+                "SourceBranch": "Devs/$SandboxProjectDevPath/CI_$($SandboxContext.Params.ProjectName)-5147036",
+                "TargetBranch": "origin/$SandboxProjectDevPath",
+                "Token": {
+                    "gitlab.sg.lan": "$env:SEGGitlabTokenSecretText"
+                },
+                "SandboxPath":"$SandboxPath",
+                "MRContent": "## Summary\n\nPlease fill the summary of the merge request changes here.\n\n## Related Problem ID\n\n\n\n## Performing Validation\n\n- [x] Validation Items. (Currently not defined)"
+            }
+        },
+        {
+            "Name": "Generate Report Template",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Activities",
+            "FunctionName": "Out-ReportWithTestCasesFilter",
+            "NamedParams": {
+                "Changes": "$SandboxContext.Changes",
+                "OutputPath": "$WorkspacePath/ReportsTemplate/Report.json"
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$ProjectDevPath -like $_ })"
+            }
+        },
+        {
+            "Name": "Add Matrix To Notification",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+            "FunctionName": "Add-Matrix",
+            "NamedParams": {
+                "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+                "Matrix": [
+                    {
+                        "Name": "\"Push Commit Info\"",
+                        "Contents": [
+                            {
+                                "Name": "\"Branch\"",
+                                "Value": "$ProjectDevPath"
+                            },
+                            {
+                                "Name": "\"CommitId\"",
+                                "Value": "$CommitId"
+                            },
+                            {
+                                "Name": "\"Commit Message\"",
+                                "Value": "$SandboxContext.Changes.CommitMessage"
+                            }
+                        ]
+                    }
+                ],
+                "OutputLocation": "$WorkspacePath/ReportsTemplate/Report.json"
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$ProjectDevPath -like $_ })"
+            }
+        },
+        {
+            "Name": "Add Links To Notification",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+            "FunctionName": "Add-Links",
+            "NamedParams": {
+                "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+                "Links": [
+                    {
+                        "Name": "\"CommitLink\"",
+                        "Link": "\"$gitlabSourceRepoHomepage/-/commit/$($SandboxContext.Changes.CommitId)\""
+                    }
+                ],
+                "OutputLocation": "$WorkspacePath/ReportsTemplate/Report.json"
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$ProjectDevPath -like $_ })"
+            }
+        },
+        {
+            "Name": "Add Report To TriggerUser",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+            "FunctionName": "Add-PostInChat",
+            "NamedParams": {
+                "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+                "OutputLocation": "$ReportPath/ReportOnChat.json",
+                "Users": [
+                    "$BuildTriggerUser.Email",
+                    "$_ProjectJenkinsConfig.StakeHolders.Users|Where-Object{$_.StakeHoldersTags.Contains(\"Architecture\")}|Select-Object -ExpandProperty GroupName"
+                ]
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ })"
+            }
+        },
+        {
+            "Name": "Send Reports",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Activities",
+            "FunctionName": "Resolve-WithTemplateAndOutputReportToTeams",
+            "NamedParams": {
+                "ContextFolder": "$ReportPath",
+                "OutputFolder": "$TempFolderPath/Reports/Resolved"
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$ProjectDevPath -like $_ })"
+            },
+            "RetryTimes": 200
+        }
+    ],
+    "WithCredentials": {
+        "SecretText": [
+            "SEGEAGitlabTokenSecretText",
+            "SEGGitlabTokenSecretText"
+        ],
+        "UserInfo": [
+            "JenkinsUser"
+        ]
+    }
+}

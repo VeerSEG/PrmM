@@ -3,7 +3,7 @@
   "Type": "Workflow",
   "Description": "This workflow will be triggered when a PUSH happened in repository. It will perform full validations always. and in monitor branches, it will create the CP in the windchill task ID ",
   "RequiredNode": "Git",
-  "CanExecuteLocal":false,
+  "CanExecuteLocal": false,
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {}
@@ -55,12 +55,16 @@
       "SignatureStage": {
         "SignatureVector": [
           {
-            "Type":"\"File\"",
-            "Path":"\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
+            "Type": "\"File\"",
+            "Path": "\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
           },
           {
-            "Type":"\"String\"",
-            "Content":"$_WorkflowSignature"
+            "Type": "\"String\"",
+            "Content": "$_WorkflowSignature"
+          },
+          {
+            "Type": "\"File\"",
+            "Path": "\"$SandboxPath/var/ci_Workspace/ProjectConfig/SWVariants.json\""
           }
         ]
       },
@@ -72,13 +76,54 @@
       ]
     },
     {
+      "Name": "Setup Meta Repos with Integration.yml",
+      "Type": "Stage",
+      "Description": "Update repos to use the Meta Repos",
+      "ModuleName": "$SandboxPath/.seg/Scripts/Meta/Modules/Meta-Action",
+      "FunctionName": "Update-RepoToTargetConfigure",
+      "NamedParams": {
+        "IntegrationFile": "seg_meta/integration.yml",
+        "SandboxPath": "$SandboxPath",
+        "MetaCache": "$GlobalContainer/Meta/RepoPackages",
+        "Token": {
+          "gitlab.web.sg.lan": "$env:SEGGitlabTokenSecretText",
+          "git4ea.web.sg.lan": "$env:SEGEAGitlabTokenSecretText"
+        }
+      }
+    },
+    {
       "Name": "Project CI Process",
       "Type": "ParallelStages",
       "Parallel": [
         {
           "Name": "ProjectValidation",
           "Type": "ParallelSet",
-          "Stages": []
+          "Stages": [
+            {
+              "Name": "CreateSoftware",
+              "Type": "Workflow",
+              "GitlabIntegration": true,
+              "IgnoreError": true,
+              "NamedParams": {
+                "JobName": "\"CreateSoftware\"",
+                "JobFolder": "\"$ProjectJenkinsRootFolder/$(if($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ }){$SandboxProjectDevPath}else{\"ElseBranches\"})/BuildSW\"",
+                "ShareSandbox": true,
+                "ObtainTestsResult": true
+              },
+              "SignatureStage": {
+                "SignatureVector": [
+                  {
+                    "Type": "\"Directory\"",
+                    "Path": "$SandboxPath",
+                    "FileMatches": [
+                      "\"(cfg|src)/((?!ci/).)*\\.(c|h|a2l|ini)$\"",
+                      "\"^workflows/BuildSW\""
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
         },
         {
           "Name": "PTC Validation and Link Creation",
@@ -177,8 +222,8 @@
                     "Path": "$SandboxPath/.seg/CI"
                   },
                   {
-                    "Type":"File",
-                    "Path":"\"$SandboxPath/workflows/Seeds/ProjectJenkinsSeed.workflow.json\""
+                    "Type": "File",
+                    "Path": "\"$SandboxPath/workflows/Seeds/ProjectJenkinsSeed.workflow.json\""
                   },
                   {
                     "Type": "\"Array\"",
@@ -331,5 +376,14 @@
       },
       "RetryTimes": 200
     }
-  ]
+  ],
+  "WithCredentials": {
+    "SecretText": [
+      "SEGEAGitlabTokenSecretText",
+      "SEGGitlabTokenSecretText"
+    ],
+    "UserInfo": [
+      "JenkinsUser"
+    ]
+  }
 }

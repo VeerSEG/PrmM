@@ -35,6 +35,12 @@ try {
             "Content" = "ASPICE"
             "Icon"    = "notebook-render-output"
             "Context" = ".seg/Extensions/SEGTreeView/ASPICE/Context.ps1"
+        },
+        @{
+            "Id"      = "SEGMeta"
+            "Content" = "SEGMeta"
+            "Icon"    = "notebook-kernel-select"
+            "Context" = ".seg/Extensions/SEGTreeView/MetaActions/Context.ps1"
         }
     )
 

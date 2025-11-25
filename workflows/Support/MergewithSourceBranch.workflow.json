@@ -26,9 +26,6 @@
       "Value": "$SEGJenkinsShareFolder\\Configs\\ProjectConfigs\\$ProjectName\\Configs.json"
     }
   ],
-  "Envs": {
-    "GitlabJenkinsIntegration": "SEGEAGitlab"
-  },
   "Stages": [
     {
       "Name": "Update with Source Branch",
