@@ -1,0 +1,174 @@
+{
+    "Name": "CreateMROnMetaProject",
+    "Type": "Workflow",
+    "Description": "When project has new push on monitor branches, try update all meta project which reference to the same branch of current project.",
+    "RequiredNode": "Git",
+    "WorkflowRepo": {
+        "Type": "ReposSet",
+        "Repos": {}
+    },
+    "WorkflowRunnerRepo": {
+        "Type": "SEGGitlab",
+        "Branch": "main",
+        "UrlRelativePath": "ci-development/workflowrunner.git"
+    },
+    "WithEnv": [
+        {
+            "Key": "_MonitorBranches",
+            "Value": "$SandboxPath/.seg/CI/CaC/MonitorBranches.json"
+        },
+        {
+            "Key": "_GlobalJenkinsConfig",
+            "Value": "$SEGJenkinsShareFolder\\Configs\\GlobalConfigs\\Configs.json"
+        },
+        {
+            "Key": "_ProjectJenkinsConfig",
+            "Value": "$SEGJenkinsShareFolder\\Configs\\ProjectConfigs\\$ProjectName\\Configs.json"
+        }
+    ],
+    "Stages": [
+        {
+            "Name": "Project CI Process",
+            "Type": "ParallelStages",
+            "Parallel": [
+                {
+                    "Name": "Check the Dependencies",
+                    "Type": "ParallelSet",
+                    "Stages": [
+                        {
+                            "Name": "Obtain the Dependeed Project.",
+                            "Type": "Stage",
+                            "ModuleName": "$SandboxPath/.seg/Scripts/Gitlab/Modules/GitlabActivities",
+                            "FunctionName": "Find-SegmetaSubprojectUsage",
+                            "NamedParams": {
+                                "GitlabBaseUrl": "$SEGGitlabUrl",
+                                "GroupPath": "esw-playground/hv",
+                                "MetaFilePath": "seg_meta/development.yml",
+                                "TargetSubprojectUrl": "$SEGGitlabUrl/$ProjectPath",
+                                "TargetRevision": "$SandboxProjectDevPath"
+                            },
+                            "OutputProcess": {
+                                "OutputFilePath": "$ArchivePath/DependeedRepos.json",
+                                "ForceArrayOutput": true
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "Read Commits Messages",
+                    "Type": "ParallelSet",
+                    "Stages": [
+                        {
+                            "Name": "Obtain the Dependeed Project.",
+                            "Type": "Stage",
+                            "ModuleName": "$SandboxPath/.seg/Scripts/Git/Modules/Git-CommitMessages",
+                            "FunctionName": "Get-CommitMessageProperties",
+                            "NamedParams": {
+                                "StringChapters": "$SEGGitlabUrl",
+                                "Content":""
+                            },
+                            "OutputProcess": {
+                                "OutputFilePath": "$ArchivePath/CommitsMessages.json"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Generate Report Template",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Activities",
+            "FunctionName": "Out-ReportWithTestCasesFilter",
+            "NamedParams": {
+                "Changes": "$SandboxContext.Changes",
+                "OutputPath": "$WorkspacePath/ReportsTemplate/Report.json"
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$ProjectDevPath -like $_ })"
+            }
+        },
+        {
+            "Name": "Add Matrix To Notification",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+            "FunctionName": "Add-Matrix",
+            "NamedParams": {
+                "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+                "Matrix": [
+                    {
+                        "Name": "\"Push Commit Info\"",
+                        "Contents": [
+                            {
+                                "Name": "\"Branch\"",
+                                "Value": "$ProjectDevPath"
+                            },
+                            {
+                                "Name": "\"CommitId\"",
+                                "Value": "$CommitId"
+                            },
+                            {
+                                "Name": "\"Commit Message\"",
+                                "Value": "$SandboxContext.Changes.CommitMessage"
+                            }
+                        ]
+                    }
+                ],
+                "OutputLocation": "$WorkspacePath/ReportsTemplate/Report.json"
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$ProjectDevPath -like $_ })"
+            }
+        },
+        {
+            "Name": "Add Links To Notification",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+            "FunctionName": "Add-Links",
+            "NamedParams": {
+                "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+                "Links": [
+                    {
+                        "Name": "\"CommitLink\"",
+                        "Link": "\"$gitlabSourceRepoHomepage/-/commit/$($SandboxContext.Changes.CommitId)\""
+                    }
+                ],
+                "OutputLocation": "$WorkspacePath/ReportsTemplate/Report.json"
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$ProjectDevPath -like $_ })"
+            }
+        },
+        {
+            "Name": "Add Report To TriggerUser",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Basic",
+            "FunctionName": "Add-PostInChat",
+            "NamedParams": {
+                "InputFileLocation": "$WorkspacePath/ReportsTemplate/Report.json",
+                "OutputLocation": "$ReportPath/ReportOnChat.json",
+                "Users": [
+                    "$BuildTriggerUser.Email",
+                    "$_ProjectJenkinsConfig.StakeHolders.Users|Where-Object{$_.StakeHoldersTags.Contains(\"Architecture\")}|Select-Object -ExpandProperty GroupName"
+                ]
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ })"
+            }
+        },
+        {
+            "Name": "Send Reports",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRunnerLoc/Dependencies/adaptive-card/Modules/AdaptiveCard-Activities",
+            "FunctionName": "Resolve-WithTemplateAndOutputReportToTeams",
+            "NamedParams": {
+                "ContextFolder": "$ReportPath",
+                "OutputFolder": "$TempFolderPath/Reports/Resolved"
+            },
+            "When": {
+                "Condition": "($_MonitorBranches|Where-Object{$ProjectDevPath -like $_ })"
+            },
+            "RetryTimes": 200
+        }
+    ]
+}
