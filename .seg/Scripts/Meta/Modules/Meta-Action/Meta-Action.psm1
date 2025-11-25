@@ -2,7 +2,7 @@ Import-Module "$PSScriptRoot/../../../Pwsh/Modules/Pwsh-Dependencies"
 Get-ModuleDependencies -ModuleVersions @(
     @{ Name = 'powershell-yaml'; MinimumVersion = '0.4.12' }
 )
-
+Import-Module "$PSScriptRoot/../Meta-Basic"
 function Update-RepoToTargetConfigure {
     param(
         # Path to integration.yml, relative to sandbox root
@@ -493,7 +493,7 @@ function Update-RepoToTargetConfigure {
             $pathInfo   = if ($parts.Length -ge 2) { $parts[1] } else { "" }
             $shaInfo    = if ($parts.Length -ge 3) { $parts[2] } else { "" }
 
-            Write-Host (" - {0} (path={1}, targetSha={2})" -f $projPrefix, $pathInfo, $shaInfo) -ForegroundColor DarkYellow
+            Write-Host (" - {0} (path={1}, targetSha={2})" -f $projPrefix, $pathInfo, $shaInfo) -ForegroundColor Yellow
         }
     }
 }
@@ -788,7 +788,7 @@ function Update-ProjectToRevision {
             $ProjectName, $oldRevision, $targetRevision, $sourceLabel) -ForegroundColor Green
 
         # 4. Write updated YAML to output path
-        $yamlOut = $integrationRoot | ConvertTo-Yaml
+        $yamlOut = $integrationRoot |Resolve-YamlObjectOrder| ConvertTo-Yaml
         $yamlOut | Set-Content -Path $ProjectMetaDataOutputPath -NoNewline
 
         Write-Host "[DONE] Wrote updated integration metadata to '$ProjectMetaDataOutputPath'." -ForegroundColor Cyan
@@ -888,7 +888,7 @@ function Switch-ProjectToBranch {
                 $branchName = [string]$devProject["revision"]
             }
 
-            Write-Host ("[INFO] Project '{0}': repoUrl='{1}', branch='{2}'" -f $name, $repoUrl, $branchName) -ForegroundColor DarkCyan
+            Write-Host ("[INFO] Project '{0}': repoUrl='{1}', branch='{2}'" -f $name, $repoUrl, $branchName) -ForegroundColor Cyan
 
             # Determine project path: integration.path > integration.name > repo name from URL
             $relativePath = $null
@@ -920,7 +920,7 @@ function Switch-ProjectToBranch {
             $targetDir = Join-Path $sandboxRoot $relativePath
             $gitDir    = Join-Path $targetDir ".git"
 
-            Write-Host ("[INFO] Local repo path for '{0}': {1}" -f $name, $targetDir) -ForegroundColor DarkCyan
+            Write-Host ("[INFO] Local repo path for '{0}': {1}" -f $name, $targetDir) -ForegroundColor Cyan
 
             # 2. Ensure correct git repo on disk
             $needCleanCreate = $false
@@ -1048,12 +1048,12 @@ function Get-InGitRepoProjects {
             $gitDir     = Join-Path $projectDir ".git"
 
             if (-not (Test-Path $projectDir)) {
-                Write-Host "[INFO] Project '$name': directory '$relativePath' does not exist → skip." -ForegroundColor DarkGray
+                Write-Host "[INFO] Project '$name': directory '$relativePath' does not exist → skip." -ForegroundColor Gray
                 continue
             }
 
             if (-not (Test-Path $gitDir)) {
-                Write-Host "[INFO] Project '$name': '$relativePath' is not a git repo (.git missing) → skip." -ForegroundColor DarkGray
+                Write-Host "[INFO] Project '$name': '$relativePath' is not a git repo (.git missing) → skip." -ForegroundColor Gray
                 continue
             }
 
