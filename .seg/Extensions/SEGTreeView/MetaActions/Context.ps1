@@ -53,12 +53,6 @@ $outputResult = @(
                 "Content" = "UpdateWithLatestIntegrationMeta"
                 "Icon"    = "git-fetch"
                 "Script"  = ".seg/Extensions/SEGTreeView/MetaActions/Scripts/UpdateWithLatestIntegrationMeta.ps1"
-            },
-            @{
-                "Id"      = "CreateBranchOnSubRepos"
-                "Content" = "CreateBranchOnSubRepos"
-                "Icon"    = "git-branch"
-                "Event"   = ".seg/Extensions/SEGTreeView/MetaActions/GitAdaption/CreateBranchOnSubRepos.ps1"
             }
         )
     }

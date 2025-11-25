@@ -1,0 +1,68 @@
+{
+    "Name": "ProjectConfig",
+    "Type": "Workflow",
+    "RequiredTask":"Get the project software config",
+    "WorkflowRepo": {
+      "Type": "SEGGitlab",
+      "UrlRelativePath": "ci-development/intermediate-component-tool.git",
+      "Branch": "master"
+    },
+    "WorkflowRunnerRepo": {
+      "Type": "SEGGitlab",
+      "UrlRelativePath": "ci-development/workflowrunner.git",
+      "Branch": "main"
+    },
+    "Stages": [     
+      {
+        "Name": "Out Sandbox Components List",
+        "Type": "Stage",
+        "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Activities",
+        "FunctionName": "Out-ListMatchResultToPath",
+        "WithEnv": [
+          {
+            "Key": "_SubProjectList",
+            "Value": "$ArchivePath/SubProjectDeepestInfos.json"
+          },
+          {
+            "Key": "_ComponentDefinitionRegexList",
+            "Value": "$SandboxPath/var/ci_Workspace/CIEnvConfig/SoftwareComponentsRegex.json"
+          }
+        ],
+        "NamedParams": {
+          "InputList": "Get-ChildItem -Path $SandboxPath -Directory -Recurse|Foreach-Object{$_.FullName|Get-RelativePathFrom -RelativeToPath $SandboxPath}",
+          "RegexList": "$_ComponentDefinitionRegexList.ComponentsPathRegexList",
+          "ReferenceProperty": "_RefProject",
+          "OutputPath": "$ArchivePath/ComponentList.json"
+        }
+      },
+      {
+        "Name": "Generate Component Dict",
+        "Type": "Stage",
+        "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Activities",
+        "FunctionName": "Out-DictionaryWithPropertyScriptToFile",
+        "WithEnv": [
+          {
+            "Key": "_ComponentDefinitionRegexList",
+            "Value": "$SandboxPath/var/ci_Workspace/CIEnvConfig/SoftwareComponentsRegex.json"
+          }
+        ],
+        "NamedParams": {
+          "SourceListInputPath": "$ArchivePath/ComponentList.json",
+          "KeyPropertyScript": "{if($_.Variant -eq \"ext\"){\"ext.\"+$_.Name}else{$_.Name}}",
+          "PriorityComparison": "$_ComponentDefinitionRegexList.PriorityComparison",
+          "OutputPath": "$ArchivePath/ComponentDict.json"
+        }
+      },
+      {
+        "Name": "Supplement Components Infos Into Dict",
+        "Type": "Stage",
+        "ModuleName": "$WorkflowRepoPath/Modules/IntermediateComponentTool-Activities",
+        "FunctionName": "Resolve-ComponentDictProperties",
+        "NamedParams": {
+          "ComponentDictPath": "$ArchivePath/ComponentDict.json",
+          "SandboxPath": "$SandboxPath",
+          "OutputFilePath": "$ArchivePath/ComponentBuildInfos.json"
+        }
+      }
+    ]
+  }

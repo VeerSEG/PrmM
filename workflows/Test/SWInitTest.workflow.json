@@ -1,0 +1,34 @@
+{
+    "Name": "SwInitTest",
+    "Type": "Workflow",
+    "Description": "HVTestBench.",
+    "RequiredNode": "HVTestBench",
+    "CanExecuteLocal":false,
+    "WorkflowRepo": {
+        "Type": "ReposSet",
+        "Repos": {
+            "PTCKpiM": {
+                "Type": "SEGGitlab",
+                "Branch": "Developer",
+                "UrlRelativePath": "ci-development/ptc-kpi-m.git"
+            }
+        }
+    },
+    "WorkflowRunnerRepo": {
+        "Type": "SEGGitlab",
+        "Branch": "main",
+        "UrlRelativePath": "ci-development/workflowrunner.git"
+    },
+    "Stages":[
+        {
+            "Name": "Start SW Init Test",
+            "Type": "Stage",
+            "ModuleName": "$SandboxPath/var/ci_Workspace/TST/SwInitTest",
+            "FunctionName": "Start-Python",
+            "NamedParams": {
+                "SandboxPath": "$SandboxPath",
+                "ArchivePath":"$ArchivePath"
+            }
+        }
+    ]
+}

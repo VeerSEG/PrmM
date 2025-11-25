@@ -76,6 +76,7 @@
                 "IntegrationFile": "seg_meta/integration.yml",
                 "SandboxPath": "$SandboxPath",
                 "MetaCache": "$GlobalContainer/Meta/RepoPackages",
+                "IgnoreGit":true,
                 "Token": {
                   "gitlab.web.sg.lan": "$env:SEGGitlabTokenSecretText",
                   "git4ea.web.sg.lan": "$env:SEGEAGitlabTokenSecretText"
@@ -102,7 +103,7 @@
               "NamedParams": {
                 "JobName": "\"CreateSoftware\"",
                 "JobFolder": "\"$ProjectJenkinsRootFolder/$(if($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ }){$SandboxProjectDevPath}else{\"ElseBranches\"})/BuildSW\"",
-                "ShareSandbox": true,
+                "CanShareSandbox": true,
                 "ObtainTestsResult": true
               },
               "SignatureStage": {
@@ -251,5 +252,14 @@
       "RetryTimes": 200
     }
   ],
-  "Lock": "$ProjectPath::MergeRequest::$gitlabMergeRequestIid"
+  "Lock": "$ProjectPath::MergeRequest::$gitlabMergeRequestIid",
+  "WithCredentials": {
+    "SecretText": [
+      "SEGEAGitlabTokenSecretText",
+      "SEGGitlabTokenSecretText"
+    ],
+    "UserInfo": [
+      "JenkinsUser"
+    ]
+  }
 }

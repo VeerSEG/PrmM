@@ -1,8 +1,8 @@
-function New-OrUpdateMR{
+function New-OrUpdateMR {
     [CmdletBinding()]
     param(
         [string]
-        $SandboxPath=".",
+        $SandboxPath = ".",
         [string]
         $TargetBranch,
 
@@ -16,6 +16,14 @@ function New-OrUpdateMR{
         # Explicit MR title
         [string]
         $MRTitle,
+
+        # Delete source branch when MR is merged
+        [switch]
+        $DeleteSourceBranch,
+
+        # Squash commits when MR is merged
+        [switch]
+        $SquashCommits,
 
         # Hashtable: Domain -> Personal Access Token
         # e.g. @{ "gitlab.com" = "xxxxx"; "gitlab.yourcompany.de" = "yyyyy" }
@@ -38,7 +46,6 @@ function New-OrUpdateMR{
             throw "Current directory $((Get-Location).Path) is not inside a git repository."
         }
 
-
         try {
             $remoteUrl = git remote get-url origin 2>$null
             if (-not $remoteUrl) {
@@ -51,17 +58,17 @@ function New-OrUpdateMR{
             #   - https://gitlab.com/group/project.git
             #   - git@gitlab.com:group/project.git
             #---------------------------------------
-            $domain      = $null
-            $scheme      = "https"
+            $domain = $null
+            $scheme = "https"
             $projectPath = $null
 
             if ($remoteUrl -match '^(?<scheme>https?)://(?<domain>[^/]+)/(?<path>.+?)(\.git)?$') {
-                $scheme      = $matches['scheme']
-                $domain      = $matches['domain']
+                $scheme     = $matches['scheme']
+                $domain     = $matches['domain']
                 $projectPath = $matches['path']
             }
             elseif ($remoteUrl -match '^git@(?<domain>[^:]+):(?<path>.+?)(\.git)?$') {
-                $domain      = $matches['domain']
+                $domain     = $matches['domain']
                 $projectPath = $matches['path']
             }
             else {
@@ -80,7 +87,7 @@ function New-OrUpdateMR{
                 $gitlabToken = $Token[$domain]
             }
             elseif ($Token) {
-                # 尝试用后缀匹配，比如 key = "gitlab.company.com"，domain = "gitlab.company.com:8443"
+                # Try suffix match, e.g. key = "gitlab.company.com", domain = "gitlab.company.com:8443"
                 $candidate = $Token.Keys |
                     Where-Object { $domain -like "*$_" } |
                     Sort-Object { $_.Length } -Descending |
@@ -114,13 +121,19 @@ function New-OrUpdateMR{
             #---------------------------------------
             $title = if (-not [string]::IsNullOrWhiteSpace($MRTitle)) {
                 $MRTitle.Trim()
-            } else {
+            }
+            else {
                 "Merge $SourceBranch into $TargetBranch"
             }
 
             $description = $MRContent
 
+            # Normalize desired flags from switches
+            $desiredRemoveSource = [bool]$DeleteSourceBranch
+            $desiredSquash       = [bool]$SquashCommits
+
             Write-Log "MR title: $title"
+            Write-Log "DeleteSourceBranch: $desiredRemoveSource; SquashCommits: $desiredSquash"
 
             #---------------------------------------
             # 6) Find existing opened MR
@@ -146,19 +159,80 @@ function New-OrUpdateMR{
 
             if ($existingMr) {
                 #-----------------------------------
-                # 7a) Update existing MR
+                # 7a) Update existing MR – only if something changed
                 #-----------------------------------
                 $iid = $existingMr.iid
-                Write-Log "Found existing opened MR (IID: $iid). Updating..."
+                Write-Log "Found existing opened MR (IID: $iid). Checking for changes..."
 
+                # Normalize title/description
+                $oldTitle = ($existingMr.title ?? "").Trim()
+                $oldDesc  = ($existingMr.description ?? "").Trim()
+                $newTitle = ($title ?? "").Trim()
+                $newDesc  = ($description ?? "").Trim()
+
+                # Branch info from existing MR
+                $existingSource = ($existingMr.source_branch ?? "").Trim()
+                $existingTarget = ($existingMr.target_branch ?? "").Trim()
+
+                # Flags from existing MR
+                $existingRemoveSource = [bool]($existingMr.remove_source_branch)
+                $existingSquash       = [bool]($existingMr.squash)
+
+                Write-Log "Existing MR branches : source='$existingSource', target='$existingTarget'"
+                Write-Log "Requested branches   : source='$SourceBranch', target='$TargetBranch'"
+                Write-Log "Existing flags       : remove_source_branch=$existingRemoveSource, squash=$existingSquash"
+
+                $sameTitle   = $oldTitle -eq $newTitle
+                $sameDesc    = $oldDesc  -eq $newDesc
+                $sameSource  = $existingSource -eq $SourceBranch
+                $sameTarget  = $existingTarget -eq $TargetBranch
+                $sameRemove  = $existingRemoveSource -eq $desiredRemoveSource
+                $sameSquash  = $existingSquash       -eq $desiredSquash
+
+                if ($sameTitle -and $sameDesc -and $sameSource -and $sameTarget -and $sameRemove -and $sameSquash) {
+                    Write-Log "No changes in title, description, branches, or flags. MR update skipped."
+                    return $existingMr
+                }
+
+                if (-not $sameSource) {
+                    # GitLab does not support changing source_branch of an existing MR.
+                    Write-Log "WARNING: Existing MR source branch '$existingSource' differs from requested '$SourceBranch'. Source branch cannot be changed; only title/description/target/flags will be updated."
+                }
+
+                if (-not $sameTarget) {
+                    Write-Log "Target branch will be updated from '$existingTarget' to '$TargetBranch'."
+                }
+
+                if (-not $sameRemove) {
+                    Write-Log "remove_source_branch will be updated from '$existingRemoveSource' to '$desiredRemoveSource'."
+                }
+
+                if (-not $sameSquash) {
+                    Write-Log "squash will be updated from '$existingSquash' to '$desiredSquash'."
+                }
+
+                Write-Log "Changes detected → updating MR..."
+
+                # Build update body dynamically
                 $updateBody = @{
-                    title       = $title
-                    description = $description
-                } | ConvertTo-Json
+                    title       = $newTitle
+                    description = $newDesc
+                }
 
-                $updateUri = "$apiBase/projects/$projectId/merge_requests/$iid"
+                if (-not $sameTarget) {
+                    $updateBody.target_branch = $TargetBranch
+                }
+                if (-not $sameRemove) {
+                    $updateBody.remove_source_branch = $desiredRemoveSource
+                }
+                if (-not $sameSquash) {
+                    $updateBody.squash = $desiredSquash
+                }
 
-                $updated = Invoke-RestMethod -Method Put -Uri $updateUri -Headers $headers -ContentType "application/json" -Body $updateBody
+                $updateJson = $updateBody | ConvertTo-Json
+                $updateUri  = "$apiBase/projects/$projectId/merge_requests/$iid"
+
+                $updated = Invoke-RestMethod -Method Put -Uri $updateUri -Headers $headers -ContentType "application/json" -Body $updateJson
 
                 Write-Log "Merge Request updated: $($updated.web_url)"
                 return $updated
@@ -174,7 +248,8 @@ function New-OrUpdateMR{
                     target_branch        = $TargetBranch
                     title                = $title
                     description          = $description
-                    remove_source_branch = $false
+                    remove_source_branch = $desiredRemoveSource
+                    squash               = $desiredSquash
                 } | ConvertTo-Json
 
                 $createUri = "$apiBase/projects/$projectId/merge_requests"
@@ -215,7 +290,7 @@ function Get-GitlabTokenTable {
 
     Get-ChildItem -Path $TokenDir -File | ForEach-Object {
         $domain = $_.Name
-        $token  = (Get-Content $_.FullName -Raw).Trim()
+        $token = (Get-Content $_.FullName -Raw).Trim()
 
         if (-not $token) {
             throw "Token file '$($_.FullName)' is empty."
@@ -238,7 +313,7 @@ function Get-GitlabToken {
         [Parameter(Mandatory)][hashtable]$TokenTable
     )
 
-    $uri    = [System.Uri]::new($BaseUrl)
+    $uri = [System.Uri]::new($BaseUrl)
     $domain = $uri.Host
 
     if (-not $TokenTable.ContainsKey($domain)) {
@@ -282,15 +357,15 @@ function Invoke-GitlabApi {
 
     $headers = Get-GitlabAuthHeader -BaseUrl $BaseUrl -TokenTable $TokenTable
 
-    $all    = @()
-    $page   = 1
+    $all = @()
+    $page = 1
     $perPage = 100
 
     while ($true) {
         $builder = [System.UriBuilder]::new("$BaseUrl$Path")
-        $qs      = [System.Web.HttpUtility]::ParseQueryString("")
+        $qs = [System.Web.HttpUtility]::ParseQueryString("")
 
-        $qs["page"]     = $page
+        $qs["page"] = $page
         $qs["per_page"] = $perPage
 
         if ($Query) {
@@ -306,7 +381,7 @@ function Invoke-GitlabApi {
         $url = $builder.Uri.AbsoluteUri
 
         # You can change this to Write-Verbose if you prefer quieter logs.
-        Write-Host "[DEBUG] $Method $url" -ForegroundColor DarkGray
+        Write-Host "[DEBUG] $Method $url" -ForegroundColor Gray
 
         $resp = Invoke-RestMethod -Method $Method -Uri $url -Headers $headers
 
@@ -336,9 +411,9 @@ function Get-GitlabGroupByPath {
         [Parameter(Mandatory)][hashtable]$TokenTable
     )
 
-    $headers     = Get-GitlabAuthHeader -BaseUrl $BaseUrl -TokenTable $TokenTable
+    $headers = Get-GitlabAuthHeader -BaseUrl $BaseUrl -TokenTable $TokenTable
     $encodedPath = [System.Web.HttpUtility]::UrlEncode($GroupFullPath)
-    $url         = "$BaseUrl/api/v4/groups/$encodedPath"
+    $url = "$BaseUrl/api/v4/groups/$encodedPath"
 
     Write-Host "[INFO] Requesting group '$GroupFullPath'..." -ForegroundColor Cyan
     $resp = Invoke-RestMethod -Method Get -Uri $url -Headers $headers
@@ -441,12 +516,12 @@ function Get-GitlabProjectFileContent {
     $headers = Get-GitlabAuthHeader -BaseUrl $BaseUrl -TokenTable $TokenTable
 
     $projectId = [System.Web.HttpUtility]::UrlEncode($ProjectId)
-    $fp  = [System.Web.HttpUtility]::UrlEncode($FilePath)
-    $r   = [System.Web.HttpUtility]::UrlEncode($Ref)
+    $fp = [System.Web.HttpUtility]::UrlEncode($FilePath)
+    $r = [System.Web.HttpUtility]::UrlEncode($Ref)
 
     $url = "$BaseUrl/api/v4/projects/$projectId/repository/files/$($fp)?ref=$($r)"
 
-    Write-Host "[DEBUG] GET file '$FilePath' in project $ProjectId @ '$Ref'" -ForegroundColor DarkGray
+    Write-Host "[DEBUG] GET file '$FilePath' in project $ProjectId @ '$Ref'" -ForegroundColor Gray
 
     try {
         $resp = Invoke-RestMethod -Method Get -Uri $url -Headers $headers
@@ -457,7 +532,7 @@ function Get-GitlabProjectFileContent {
     }
 
     $bytes = [Convert]::FromBase64String($resp.content)
-    $text  = [Text.Encoding]::UTF8.GetString($bytes)
+    $text = [Text.Encoding]::UTF8.GetString($bytes)
     return $text
 }
 

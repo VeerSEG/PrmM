@@ -65,7 +65,7 @@
                 "ProjectIntegrationMetaData": "$SandboxPath/seg_meta/integration.segmeta.yml",
                 "ProjectDevelopmentMetaData": "$SandboxPath/seg_meta/development.segmeta.yml",
                 "ProjectMetaDataOutputPath": "$SandboxPath/seg_meta/integration.segmeta.yml",
-                "ProjectNames": "$($SandboxContext.Params.UpdateProjects -split '[\\s;,]+')",
+                "ProjectNames": "$SandboxContext.Params.UpdateProjects -split '[\\s;,]+'| Where-Object { $_ }",
                 "Revision": "$($SandboxContext.Params.Revision)"
             }
         },
@@ -87,9 +87,9 @@
             "NamedParams": {
                 "MRTitle": "CI_$($SandboxContext.Params.ProjectName)-5147036",
                 "SourceBranch": "Devs/$SandboxProjectDevPath/CI_$($SandboxContext.Params.ProjectName)-5147036",
-                "TargetBranch": "origin/$SandboxProjectDevPath",
+                "TargetBranch": "$SandboxProjectDevPath",
                 "Token": {
-                    "gitlab.sg.lan": "$env:SEGGitlabTokenSecretText"
+                    "gitlab.web.sg.lan": "$env:SEGGitlabTokenSecretText"
                 },
                 "SandboxPath":"$SandboxPath",
                 "MRContent": "## Summary\n\nPlease fill the summary of the merge request changes here.\n\n## Related Problem ID\n\n\n\n## Performing Validation\n\n- [x] Validation Items. (Currently not defined)"

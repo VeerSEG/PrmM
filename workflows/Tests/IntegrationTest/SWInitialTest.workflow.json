@@ -1,0 +1,21 @@
+{
+    "Params": {
+        "HexFile": "",
+        "ElfFile": ""
+    },
+    "Stages": [
+        {
+            "Name": "Run Init Test",
+            "Type": "Stage",
+            "ModuleName": "$WorkflowRepoPath/SWInitTest/Modules/SwInitialTest-Basic",
+            "FunctionName": "Start-SwInitialTestCase",
+            "NamedParams": {
+                "ElfFilePath": "$SandboxContext.Params.ElfFile",
+                "UDEWspFilePath": "$SandboxPath/var/ci_Workspace/ProjectConfig/InitTestWspFile.wsp",
+                "UDEConfigFilePath": "$SandboxPath/var/ci_Workspace/ProjectConfig/InitTestWspFile.cfg",
+                "ReportOutputPath": "$ArchivePath/ReportOutputPath",
+                "VirginHexPath":"$SandboxContext.Params.HexFile"
+            }
+        }
+    ]
+}

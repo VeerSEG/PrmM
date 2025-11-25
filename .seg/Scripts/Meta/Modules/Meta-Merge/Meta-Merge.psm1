@@ -2,7 +2,7 @@ Import-Module "$PSScriptRoot/../../../Pwsh/Modules/Pwsh-Dependencies"
 Get-ModuleDependencies -ModuleVersions @(
     @{ Name = 'powershell-yaml'; MinimumVersion = '0.4.12' }
 )
-
+Import-Module "$PSScriptRoot/../Meta-Basic"
 # Meta-Merge.psm1
 # Three-way merge for integration.yml (Hashtable-based):
 # - Merge on projects.name
@@ -536,7 +536,7 @@ function Invoke-MetaIntegrationMerge {
     }
 
     # ---- Write YAML ----
-    $yamlOut = $ourRoot | ConvertTo-Yaml
+    $yamlOut = $ourRoot|Resolve-YamlObjectOrder | ConvertTo-Yaml
     $yamlOut | Set-Content -Path $OutputPath -NoNewline
 }
 

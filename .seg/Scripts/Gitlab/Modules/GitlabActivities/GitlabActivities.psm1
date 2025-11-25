@@ -164,7 +164,7 @@ function Find-SegmetaSubprojectUsage {
             -TokenTable $TokenTable
 
         if (-not $protectedBranches -or $protectedBranches.Count -eq 0) {
-            Write-Host "[INFO]   No protected branches for this project." -ForegroundColor DarkGray
+            Write-Host "[INFO]   No protected branches for this project." -ForegroundColor Gray
             continue
         }
 
@@ -208,7 +208,7 @@ function Find-SegmetaSubprojectUsage {
         }
 
         if ($resolvedBranchNames.Count -eq 0) {
-            Write-Host "[INFO]   No concrete branches matched protected rules." -ForegroundColor DarkGray
+            Write-Host "[INFO]   No concrete branches matched protected rules." -ForegroundColor Gray
             continue
         }
 
@@ -218,7 +218,7 @@ function Find-SegmetaSubprojectUsage {
         # Step 4: For each resolved branch, try reading seg_meta/development.yml
         # --------------------------------------------------------------------
         foreach ($branchName in $resolvedBranchNames) {
-            Write-Host "[INFO]   Checking branch '$branchName' for '$MetaFilePath'..." -ForegroundColor DarkGray
+            Write-Host "[INFO]   Checking branch '$branchName' for '$MetaFilePath'..." -ForegroundColor Gray
 
             $fileText = Get-GitlabProjectFileContent `
                 -BaseUrl $GitlabBaseUrl `
@@ -228,7 +228,7 @@ function Find-SegmetaSubprojectUsage {
                 -TokenTable $TokenTable
 
             if (-not $fileText) {
-                Write-Host "[DEBUG]     '$MetaFilePath' NOT found in branch '$branchName'." -ForegroundColor DarkGray
+                Write-Host "[DEBUG]     '$MetaFilePath' NOT found in branch '$branchName'." -ForegroundColor Gray
                 continue
             }
 
@@ -267,7 +267,7 @@ function Find-SegmetaSubprojectUsage {
                 }
             }
             else {
-                Write-Host "[DEBUG]     No matching subproject entries found." -ForegroundColor DarkGray
+                Write-Host "[DEBUG]     No matching subproject entries found." -ForegroundColor Gray
             }
         }
     }
