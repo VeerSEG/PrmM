@@ -43,10 +43,14 @@
                             "NamedParams": {
                                 "GitlabBaseUrl": "$SEGGitlabUrl",
                                 "GroupPath": "esw-playground/hv",
-                                "MetaFilePath": "seg_meta/development.yml",
+                                "MetaFilePath": "seg_meta/development.segmeta.yml",
                                 "TargetSubprojectUrl": "$SEGGitlabUrl/$ProjectPath",
                                 "TargetRevision": "$SandboxProjectDevPath",
-                                "IncludeSubgroups":false
+                                "IncludeSubgroups":false,
+                                "TokenTable":{
+                                    "gitlab.web.sg.lan": "$env:SEGGitlabTokenSecretText",
+                                    "git4ea.web.sg.lan": "$env:SEGEAGitlabTokenSecretText"
+                                }
                             },
                             "OutputProcess": {
                                 "OutputFilePath": "$ArchivePath/DependeedRepos.json",
@@ -60,13 +64,13 @@
                     "Type": "ParallelSet",
                     "Stages": [
                         {
-                            "Name": "Obtain the Dependeed Project",
+                            "Name": "Read Commits Messages",
                             "Type": "Stage",
                             "ModuleName": "$SandboxPath/.seg/Scripts/Git/Modules/Git-CommitMessages",
                             "FunctionName": "Get-CommitMessageProperties",
                             "NamedParams": {
                                 "StringChapters": [
-                                    "\"## Dependencies\""
+                                    "\"## Dependencies Changes\""
                                 ],
                                 "Content": "$($SandboxContext.Changes.CommitMessage)"
                             },
@@ -99,8 +103,8 @@
                   "Type": "Workflow",
                   "NamedParams": {
                     "Params": {
-                      "ProjectName": "$($ParallelContext.SubprojectName)",
-                      "UpdateProjects":"$($_CommitsMessages.Dependencies),$($ParallelContext.SubprojectName)"
+                      "ProjectName": "\"$($ParallelContext.SubprojectName)\"",
+                      "UpdateProjects":"\"$($_CommitsMessages.Dependencies),$($ParallelContext.SubprojectName)\""
                     },
                     "JobFolder": "\"Gitlab/$($ParallelContext.GroupName)/$($ParallelContext.ProjectName)/$($ParallelContext.Branch)/Support\"",
                     "JobName": "\"UpdateProjectToRevision\"",
@@ -206,5 +210,14 @@
             },
             "RetryTimes": 200
         }
-    ]
+    ],
+    "WithCredentials": {
+        "SecretText": [
+            "SEGEAGitlabTokenSecretText",
+            "SEGGitlabTokenSecretText"
+        ],
+        "UserInfo": [
+            "JenkinsUser"
+        ]
+    }
 }

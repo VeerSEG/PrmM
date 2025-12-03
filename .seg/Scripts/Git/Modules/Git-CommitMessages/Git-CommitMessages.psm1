@@ -154,7 +154,7 @@ function Get-CommitMessageProperties {
         # ----------------------------------------------------------------------
         foreach ($chapter in $CheckBoxChapters) {
 
-            $key = Normalize-KeyName $chapter
+            $key = NormalizeKeyName $chapter
             $checkResult = Get-MarkdownCheckboxStatus -ChapterTitle $chapter -Content $Content
 
             if ($checkResult.Count -gt 0) {
@@ -172,7 +172,7 @@ function Get-CommitMessageProperties {
         # ----------------------------------------------------------------------
         if ($ValidationChapter) {
 
-            $key = Normalize-KeyName $ValidationChapter
+            $key = NormalizeKeyName $ValidationChapter
             $validateResult = Get-MarkdownCheckboxStatus `
                 -ChapterTitle $ValidationChapter `
                 -Content $Content

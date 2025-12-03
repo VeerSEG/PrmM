@@ -35,6 +35,13 @@ try {
             "Content" = "ASPICE"
             "Icon"    = "notebook-render-output"
             "Context" = ".seg/Extensions/SEGTreeView/ASPICE/Context.ps1"
+        },
+        @{
+            "Id"      = "Workflows"
+            "Content" = "Workflows"
+            "Icon"    = "server-process"
+            "EnableRefresh" = $true
+            "Context" = ".seg/Extensions/SEGTreeView/Workflows/Context.ps1"
         }
     )
 

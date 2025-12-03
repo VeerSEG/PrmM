@@ -9,6 +9,9 @@ $query = @"
 ((field["Assigned User"] = me) and (field["Type"] = "Task","Development_Task") and (field["State"] = "In Progress"))
 "@
 $CurrentTasksXml = [xml]((&$exe --xml --iplocal im issues --queryDefinition=$query --fields="ID,Project,Releases,CO_Task_Type,Assigned User,State,Summary,Type") -join "`n" -replace '<\?xml\s+version="1\.1"\s*\?>', '<?xml version="1.0"?>')
+
+
+
 @($CurrentTasksXml.Response.WorkItems.WorkItem | ForEach-Object {
         $item = @{
             TaskName    = $_.Field | WHere-Object { $_.name -eq "Summary" } | select-Object -ExpandProperty Value | Select-Object -ExpandProperty "#text"

@@ -717,9 +717,9 @@ function Update-ProjectToRevision {
     process {
         # 1. Load integration metadata and locate the project
         Write-Host "[INFO] Loading integration metadata from '$ProjectIntegrationMetaData'..." -ForegroundColor Cyan
-        $integrationRoot   = Get-YamlRootObject -Path $ProjectIntegrationMetaData
-        $integrationBlock  = Get-YamlProjectsBlock -Root $integrationRoot
-        $integrationProjects = $integrationBlock.Projects
+        $integrationRoot      = Get-YamlRootObject -Path $ProjectIntegrationMetaData
+        $integrationBlock     = Get-YamlProjectsBlock -Root $integrationRoot
+        $integrationProjects  = $integrationBlock.Projects
 
         $integrationProject = Find-YamlProjectByName -Projects $integrationProjects -ProjectName $ProjectName
         if (-not $integrationProject) {
@@ -733,9 +733,9 @@ function Update-ProjectToRevision {
         if ([string]::IsNullOrWhiteSpace($targetRevision)) {
             Write-Host "[INFO] No explicit -Revision provided, reading from development metadata '$ProjectDevelopmentMetaData'..." -ForegroundColor Yellow
 
-            $devRoot   = Get-YamlRootObject -Path $ProjectDevelopmentMetaData
-            $devBlock  = Get-YamlProjectsBlock -Root $devRoot
-            $devProjects = $devBlock.Projects
+            $devRoot      = Get-YamlRootObject -Path $ProjectDevelopmentMetaData
+            $devBlock     = Get-YamlProjectsBlock -Root $devRoot
+            $devProjects  = $devBlock.Projects
 
             $devProject = Find-YamlProjectByName -Projects $devProjects -ProjectName $ProjectName
             if (-not $devProject) {
@@ -787,13 +787,41 @@ function Update-ProjectToRevision {
         Write-Host ("[INFO] Updated project '{0}' revision: '{1}' -> '{2}' (source={3})" -f `
             $ProjectName, $oldRevision, $targetRevision, $sourceLabel) -ForegroundColor Green
 
-        # 4. Write updated YAML to output path
-        $yamlOut = $integrationRoot |Resolve-YamlObjectOrder| ConvertTo-Yaml
+        # 4. Sort projects by name (alphabetical) before writing YAML
+        #    - Keep structure type (manifest.projects vs top-level projects)
+        #    - Sort only by 'name' string; projects without 'name' stay at the end (原来基本没有这种情况)
+        $integrationBlock     = Get-YamlProjectsBlock -Root $integrationRoot
+        $integrationProjects  = $integrationBlock.Projects
+
+        $sortedProjects = $integrationProjects | Sort-Object {
+            # 防御式写法，避免没有 name 的项目报错
+            if ($_ -is [hashtable] -and $_.ContainsKey("name") -and $_["name"]) {
+                [string]$_.["name"]
+            }
+            else {
+                # 没有 name 的丢到最后
+                [string]::Concat("~", [guid]::NewGuid().ToString())
+            }
+        }
+
+        if ($integrationBlock.Type -eq "manifest") {
+            if (-not $integrationRoot.ContainsKey("manifest") -or $integrationRoot["manifest"] -isnot [hashtable]) {
+                $integrationRoot["manifest"] = @{}
+            }
+            $integrationRoot["manifest"]["projects"] = @($sortedProjects)
+        }
+        else {
+            $integrationRoot["projects"] = @($sortedProjects)
+        }
+
+        # 5. Write updated YAML to output path
+        $yamlOut = $integrationRoot | Resolve-YamlObjectOrder | ConvertTo-Yaml
         $yamlOut | Set-Content -Path $ProjectMetaDataOutputPath -NoNewline
 
         Write-Host "[DONE] Wrote updated integration metadata to '$ProjectMetaDataOutputPath'." -ForegroundColor Cyan
     }
 }
+
 
 # =====================================================================
 # Switch-ProjectToBranch

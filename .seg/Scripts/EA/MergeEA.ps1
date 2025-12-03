@@ -16,7 +16,7 @@ $startArguments = @(
   "--base=`"$Base`"",
   "--mine=`"$Ours`"",
   "--theirs=`"$Theirs`"",
-  "--out=`"$Original`""
+  "--out=`"$Ours`""
 )
 
 # $wvArgs = @(
@@ -31,7 +31,7 @@ $startArguments = @(
 try {
   $proc = Start-Process -FilePath $starter -ArgumentList $startArguments -PassThru -WindowStyle Hidden
   $mergeWindow = $false
-  $currentTimeStamp = (Get-Item $Original).LastWriteTime
+  $currentTimeStamp = (Get-Item $Ours).LastWriteTime
   $finalExitCode = 0
   $processFinished=$false
   while (!$proc.HasExited) {
@@ -85,8 +85,22 @@ try {
     }
     else {
       # check if the file was changed
-      $latestTimeStamp = (Get-Item $Original).LastWriteTime
-      $fileSize = (Get-Item $Original).Length
+      $latestTimeStamp = (Get-Item $Ours).LastWriteTime
+      $fileSize = (Get-Item $Ours).Length
+      while($true){
+        try{
+          $fileStream = [System.IO.File]::Open($Ours, 'Open', 'ReadWrite', 'None')
+          Write-Host "[OK] No process is holding $Ours. It can be released" -ForegroundColor Green
+          $fileStream.Close()
+          break
+        }
+        catch{
+          Write-Host "$Ours been occupied, waiting for quit"
+        }
+        
+
+        
+      }
       Write-Host ("{0:HH:mm:ss.fff}  Current Timestamp: {1}, Latest Timestamp: {2}, File Size: {3}" -f (Get-Date), $currentTimeStamp, $latestTimeStamp, $fileSize)
       if ($latestTimeStamp -gt $currentTimeStamp) {
         if ($fileSize -eq 0) {

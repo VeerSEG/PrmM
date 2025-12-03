@@ -3,7 +3,7 @@
   "Type": "Workflow",
   "Description": "This workflow will be triggered when a PUSH happened in repository. It will perform full validations always. and in monitor branches, it will create the CP in the windchill task ID ",
   "RequiredNode": "Git",
-  "CanExecuteLocal":false,
+  "CanExecuteLocal": false,
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {}
@@ -55,12 +55,12 @@
       "SignatureStage": {
         "SignatureVector": [
           {
-            "Type":"\"File\"",
-            "Path":"\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
+            "Type": "\"File\"",
+            "Path": "\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
           },
           {
-            "Type":"\"String\"",
-            "Content":"$_WorkflowSignature"
+            "Type": "\"String\"",
+            "Content": "$_WorkflowSignature"
           }
         ]
       },
@@ -134,6 +134,27 @@
           ]
         },
         {
+          "Name": "Trigger Meta Project Update",
+          "Type": "ParallelSet",
+          "When": {
+            "Condition": "($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ }) -and (-not $SandboxContext.Changes.CommitMessage.Contains(\"[SKIP_META]\")) "
+          },
+          "Stages": [
+            {
+              "Name": "Start MetaProjectUpdate",
+              "Type": "Workflow",
+              "NamedParams": {
+                "JobFolder": "\"$ProjectJenkinsRootFolder/$SandboxProjectDevPath/Support\"",
+                "JobName": "\"CreateMROnMetaProject\"",
+                "NoWaitJob": true,
+                "ObtainTestsResult": false,
+                "CanShareSandbox": true
+              },
+              "IgnoreError": true
+            }
+          ]
+        },
+        {
           "Name": "Update Child Branches and Project Jenkins Seeds",
           "Type": "ParallelSet",
           "When": {
@@ -177,8 +198,8 @@
                     "Path": "$SandboxPath/.seg/CI"
                   },
                   {
-                    "Type":"File",
-                    "Path":"\"$SandboxPath/workflows/Seeds/ProjectJenkinsSeed.workflow.json\""
+                    "Type": "File",
+                    "Path": "\"$SandboxPath/workflows/Seeds/ProjectJenkinsSeed.workflow.json\""
                   },
                   {
                     "Type": "\"Array\"",

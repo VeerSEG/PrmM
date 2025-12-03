@@ -7,7 +7,7 @@ $projectHook = ".seg/Scripts/Git/Hooks/PostCheckout.ps1"
 
 if (-not (Test-Path $gitDir)) { return }
 
-if (Test-Path $projectHook) {
+if ($false -and (Test-Path $projectHook)) {
     if (-not (Test-Path $hooksDir)) {
         New-Item -ItemType Directory -Path $hooksDir -Force | Out-Null
     }
