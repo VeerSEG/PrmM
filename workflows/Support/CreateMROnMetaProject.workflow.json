@@ -70,7 +70,8 @@
                             "FunctionName": "Get-CommitMessageProperties",
                             "NamedParams": {
                                 "StringChapters": [
-                                    "\"## Dependencies Changes\""
+                                    "\"## Dependencies Changes\"",
+                                    "\"## Summary\""
                                 ],
                                 "Content": "$($SandboxContext.Changes.CommitMessage)"
                             },
@@ -104,7 +105,8 @@
                   "NamedParams": {
                     "Params": {
                       "ProjectName": "\"$($ParallelContext.SubprojectName)\"",
-                      "UpdateProjects":"\"$($_CommitsMessages.Dependencies),$($ParallelContext.SubprojectName)\""
+                      "UpdateProjects":"\"$($_CommitsMessages.Dependencies),$($ParallelContext.SubprojectName)\"",
+                      "UpdateMessage":"\"$($_CommitsMessages.Summary)\""
                     },
                     "JobFolder": "\"Gitlab/$($ParallelContext.GroupName)/$($ParallelContext.ProjectName)/$($ParallelContext.Branch)/Support\"",
                     "JobName": "\"UpdateProjectToRevision\"",
