@@ -1,0 +1,74 @@
+{
+  "Name": "ArxmlValidation",
+  "Type": "Workflow",
+  "Description": "Generate CPG for the component and submit to stream cpg folder.",
+  "RequiredNode": "PTC&&SystemDesk",
+  "WorkflowRepo": {
+    "Type": "ReposSet",
+    "Repos": {
+      "ArxmlValidation": {
+        "Type": "SEGGitlab",
+        "Branch": "master",
+        "UrlRelativePath": "ci-development/arxml-system-desk-validation.git"
+      }
+    }
+  },
+  "WorkflowRunnerRepo": {
+    "Type": "SEGGitlab",
+    "Branch": "main",
+    "UrlRelativePath": "ci-development/workflowrunner.git"
+  },
+  "Params": {
+    "UpdateProjectConfig": {
+      "Type": "Bool",
+      "Description": "Check for if need to update project config, when you have the components new location or new source files. This should enable."
+    }
+  },
+  "Envs": {
+    "SandboxCategory": "SourceOnly"
+  },
+  "Stages": [
+    {
+      "Name": "Get Latest Project Config",
+      "Type": "Workflow",
+      "NamedParams": {
+        "ArchiveDownloadPath": "\"$WorkspacePath/ProjectConfig\"",
+        "JobFolder": "\"$ProjectJenkinsRootFolder/$ProjectDevPath/ProjectInfos\"",
+        "JobName": "\"ProjectConfig\"",
+        "ObtainTestsResult": false,
+        "ShareSandbox": true,
+        "ThrowIfError": true,
+        "UseLastSuccessResult": "-not $SandboxContext.Params.UpdateProjectConfig"
+      }
+    },
+    {
+      "Name": "Validate Components Arxml",
+      "Type": "Stage",
+      "NamedParams": {
+        "ArxmlFilePaths": [
+          "$_ComponentBuildInfos[$ComponentName].Configs.Arxmls.SwcArxml|Foreach-Object{\"$SandboxPath/$($_ComponentBuildInfos[$ComponentName].RelativePath)/$_\"}",
+          "\"$SandboxPath/var/Tools_cfg/vector/DCfgWorkspace/Config/AUTOSAR/PlatformTypes_AR4.arxml\""
+        ],
+        "GenFolderPool": "$GlobalContainer/SystemDesk/ArxmlValidation",
+        "GlobalLockDir": "$ServerFixedContainer/GlobalLock",
+        "LicenseNameExpression": "$($_UTNConfig.SystemDesk.LicenseNameExpression)",
+        "TestsResultPath": "$TestsResultPath",
+        "UTNAddresses": "$_UTNConfig.SystemDesk.Addresses"
+      },
+      "WithEnv": [
+        {
+          "Key": "_UTNConfig",
+          "Value": "\\\\sg.lan\\dfs\\GroupFiles\\Stuttgart\\SG_genproj_\\RS_Electronic\\Transfer\\Hansong\\Jenkins\\Configs\\UTNAddress.json"
+        },
+        {
+          "Key": "_ComponentBuildInfos",
+          "Value": "$WorkspacePath/ProjectConfig/ComponentBuildInfos.json"
+        }
+      ],
+      "FunctionName": "Out-ValidationResultWithPool",
+      "Lock": "$NODE_NAME/SystemDesk",
+      "ModuleName": "$WorkflowRepoPath/ArxmlValidation/Modules/ArxmlSystemDeskValidation-SystemDesk",
+      "ThrowIfErrored": true
+    }
+  ]
+}

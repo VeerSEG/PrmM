@@ -42,11 +42,11 @@
                             "FunctionName": "Find-SegmetaSubprojectUsage",
                             "NamedParams": {
                                 "GitlabBaseUrl": "$SEGGitlabUrl",
-                                "GroupPath": "esw-playground/hv",
+                                "GroupPath": "engscm/hv",
                                 "MetaFilePath": "seg_meta/development.segmeta.yml",
                                 "TargetSubprojectUrl": "$SEGGitlabUrl/$ProjectPath",
                                 "TargetRevision": "$SandboxProjectDevPath",
-                                "IncludeSubgroups":false,
+                                "IncludeSubgroups":true,
                                 "TokenTable":{
                                     "gitlab.web.sg.lan": "$env:SEGGitlabTokenSecretText",
                                     "git4ea.web.sg.lan": "$env:SEGEAGitlabTokenSecretText"
@@ -70,8 +70,7 @@
                             "FunctionName": "Get-CommitMessageProperties",
                             "NamedParams": {
                                 "StringChapters": [
-                                    "\"## Dependencies Changes\"",
-                                    "\"## Summary\""
+                                    "\"## Dependencies Changes\""
                                 ],
                                 "Content": "$($SandboxContext.Changes.CommitMessage)"
                             },
@@ -105,8 +104,7 @@
                   "NamedParams": {
                     "Params": {
                       "ProjectName": "\"$($ParallelContext.SubprojectName)\"",
-                      "UpdateProjects":"\"$($_CommitsMessages.Dependencies),$($ParallelContext.SubprojectName)\"",
-                      "UpdateMessage":"\"$($_CommitsMessages.Summary)\""
+                      "UpdateProjects":"\"$($_CommitsMessages.Dependencies),$($ParallelContext.SubprojectName)\""
                     },
                     "JobFolder": "\"Gitlab/$($ParallelContext.GroupName)/$($ParallelContext.ProjectName)/$($ParallelContext.Branch)/Support\"",
                     "JobName": "\"UpdateProjectToRevision\"",

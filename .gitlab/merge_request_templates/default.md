@@ -11,6 +11,3 @@ Please fill the summary of the merge request changes here.
 - [x] Validation Items. (Currently not defined)
 
 
-## Dependencies Changes
-
-vector

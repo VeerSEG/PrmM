@@ -1,0 +1,124 @@
+{
+  "Name": "CPGGen",
+  "Type": "Workflow",
+  "Description": "Generate CPG for the component and submit to stream cpg folder.",
+  "RequiredNode": "Git",
+  "WorkflowRepo": {
+    "Type": "ReposSet",
+    "Repos": {
+      "ArxmlParser": {
+        "Type": "SEGGitlab",
+        "Branch": "master",
+        "UrlRelativePath": "ci-development/arxml-parser.git"
+      },
+      "VectorTools": {
+        "Type": "SEGGitlab",
+        "Branch": "master",
+        "UrlRelativePath": "ci-development/vector-tools.git"
+      }
+    }
+  },
+  "WorkflowRunnerRepo": {
+    "Type": "SEGGitlab",
+    "Branch": "main",
+    "UrlRelativePath": "ci-development/workflowrunner.git"
+  },
+  "Params": {
+    "UploadResult": {
+      "Type": "Bool",
+      "Description": "Check whether upload result to sandbox or not.",
+      "Default":true
+    }
+  },
+  "Envs": {
+    
+  },
+  "Stages": [
+    {
+      "Name": "Read Arxmls and Get Components",
+      "Type": "Stage",
+      "NamedParams": {
+        "ArxmlOptimizedResultPoolPath": "$GlobalContainer/ArxmlParserPool",
+        "OptimizedArxmlObjectFilesList": "Get-ChildItem \"$SandboxPath/arch\" -Filter \"*.arxml\"|Foreach-Object{$_.FullName}",
+        "PassThurough": true,
+        "TestsResultPath": "$TestsResultPath"
+      },
+      "When": {
+        "Condition": "(Get-ChildItem \"$SandboxPath/arch\" -Filter \"*.arxml\").Count -gt 0"
+      },
+      "FunctionName": "Out-ArxmlOptimizedResultArxmlListWithPool",
+      "ModuleName": "$WorkflowRepoPath/ArxmlParser/Modules/ArxmlParser-Activities",
+      "OutputProcess": {
+        "ForceArrayOutput": true,
+        "OutputFilePath": "$WorkspacePath/ArxmlReader/Components.json",
+        "Script": "{$_.PathsItem.Values|Foreach-Object{$_}|Where-Object{$_ -and $_.GetType().Name.EndsWith(\"ComponentType\") -and -not $_.GetType().Name.EndsWith(\"CompositionComponentType\")}|Foreach-Object{$_.ToString()}}"
+      }
+    },
+    {
+      "Name": "Create Component CPG",
+      "Type": "ParallelWithTemplate",
+      "ParallelSetNameTemplate": "Gen CPG for $($ParallelContext.Name)",
+      "ParallelWith": "$_Components|Foreach-Object{@{Name=$_}}",
+      "When": {
+        "Condition": "(Get-ChildItem \"$SandboxPath/arch\" -Filter \"*.arxml\").Count -gt 0"
+      },
+      "WithEnv": [
+        {
+          "Key": "_Components",
+          "Value": "$WorkspacePath/ArxmlReader/Components.json"
+        }
+      ],
+      "Stages": [
+        {
+          "Name": "Generate CPG for $($ParallelContext.Name)",
+          "Type": "Stage",
+          "NamedParams": {
+            "ArxmlList": [
+              "Get-ChildItem \"$SandboxPath/arch\" -Filter \"*.arxml\"|Foreach-Object{$_.FullName}",
+              "\"$SandboxPath/ci/AUTOSAR/DataTypes/DataTypes.arxml\"",
+              "\"$SandboxPath/ci/AUTOSAR/DataTypes/PlatformTypes_AR4.arxml\""
+            ],
+            "ComponentName": "$($ParallelContext.Name)",
+            "ConfigPoolPath": "$GlobalContainer/CPG",
+            "GlobalLockDir": "$ServerFixedContainer/GlobalLock",
+            "LicenseNameExpression": "(Davinci[\\s\\S]*Dev[\\s\\S]*SMS)",
+            "OutputFolder": "$WorkspacePath/CPG/$($ParallelContext.Name)",
+            "TestsResultPath": "$TestsResultPath",
+            "UTNAddresses": [
+              "\"10.219.10.120\"",
+              "\"10.219.186.70\""
+            ]
+          },
+          "FunctionName": "Out-CPGFilesForSingleComponentWithPool",
+          "ModuleName": "$WorkflowRepoPath/VectorTools/Modules/VectorTools-CPG",
+          "ThrowIfErrored": true
+        }
+      ]
+    },
+    {
+      "Name": "Submit CPG For Component",
+      "Type": "Stage",
+      "NamedParams": {
+        "ChangePackageName": "Upload CPG for $ComponentName",
+        "DestSyncFolder": "$SandboxPath/$($_ComponentBuildInfos[$ComponentName].RelativePath)/ci/CPG",
+        "RemoveItem": true,
+        "SandboxLocation": "$SandboxPath",
+        "SourceFolder": "$WorkspacePath/CPG",
+        "Summary": "Upload CPG for $ComponentName",
+        "TaskId": "$TaskId"
+      },
+      "When": {
+        "Condition": "($_ComponentBuildInfos[$ComponentName].Configs.Arxmls.SwcArxml.Count -gt 0) -and ($SandboxContext.Params.UploadResult)"
+      },
+      "WithEnv": [
+        {
+          "Key": "_ComponentBuildInfos",
+          "Value": "$WorkspacePath/ProjectConfig/ComponentBuildInfos.json"
+        }
+      ],
+      "FunctionName": "Sync-FolderAndCommit",
+      "Lock": "Upload CPG for $ProjectName $ComponentName",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/ptc_cmdrouter_pwsh/Modules/PTC_CMDRouter_Pwsh_GitStyleCMD"
+    }
+  ]
+}
