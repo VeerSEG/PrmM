@@ -106,7 +106,7 @@
                       "ProjectName": "\"$($ParallelContext.SubprojectName)\"",
                       "UpdateProjects":"\"$($_CommitsMessages.Dependencies),$($ParallelContext.SubprojectName)\""
                     },
-                    "JobFolder": "\"Gitlab/$($ParallelContext.GroupName)/$($ParallelContext.ProjectName)/$($ParallelContext.Branch)/Support\"",
+                    "JobFolder": "\"Gitlab/$($ParallelContext.ProjectPath)/$($ParallelContext.Branch)/Support\"",
                     "JobName": "\"UpdateProjectToRevision\"",
                     "NoWaitJob": true,
                     "ObtainTestsResult": false
