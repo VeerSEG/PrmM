@@ -56,28 +56,6 @@
                                 "OutputFilePath": "$ArchivePath/DependeedRepos.json",
                                 "ForceArrayOutput": true
                             }
-                        },
-                        {
-                            "Name": "Obtain the Dependeed Project.",
-                            "Type": "Stage",
-                            "ModuleName": "$SandboxPath/.seg/Scripts/Gitlab/Modules/GitlabActivities",
-                            "FunctionName": "Find-SegmetaSubprojectUsage",
-                            "NamedParams": {
-                                "GitlabBaseUrl": "$SEGGitlabUrl",
-                                "GroupPath": "engscm/hv",
-                                "MetaFilePath": "seg_meta/development.segmeta.yml",
-                                "TargetSubprojectUrl": "$SEGGitlabUrl/$ProjectPath",
-                                "TargetRevision": "$SandboxProjectDevPath",
-                                "IncludeSubgroups":true,
-                                "TokenTable":{
-                                    "gitlab.web.sg.lan": "$env:SEGGitlabTokenSecretText",
-                                    "git4ea.web.sg.lan": "$env:SEGEAGitlabTokenSecretText"
-                                }
-                            },
-                            "OutputProcess": {
-                                "OutputFilePath": "$ArchivePath/DependeedReposOld.json",
-                                "ForceArrayOutput": true
-                            }
                         }
                     ]
                 },
@@ -108,7 +86,7 @@
             "Name": "Trigger Meta Project Update",
             "Type": "ParallelWithTemplate",
             "ParallelSetNameTemplate": "Update Branch $($ParallelContext.ProjectName)",
-            "ParallelWith": "$_DependeedRepos+$_DependeedReposOld",
+            "ParallelWith": "$_DependeedRepos",
             "WithEnv": [
                 {
                     "Key": "_CommitsMessages",
@@ -117,10 +95,6 @@
                 {
                     "Key": "_DependeedRepos",
                     "Value": "$ArchivePath/DependeedRepos.json"
-                },
-                {
-                    "Key": "_DependeedReposOld",
-                    "Value": "$ArchivePath/DependeedReposOld.json"
                 }
             ],
             "Stages": [
