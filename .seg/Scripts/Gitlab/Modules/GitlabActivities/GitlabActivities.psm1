@@ -261,7 +261,7 @@ function Find-SegmetaSubprojectUsage {
                         MetaFilePath       = $MetaFilePath
                         SubprojectUrl      = $m.SubprojectUrl
                         SubprojectRevision = $m.SubprojectRevision
-                        SubprojectName   =$m.SubprojectName
+                        SubprojectName     = $m.SubprojectName
                         YamlPath           = $m.YamlPath
                     }
 

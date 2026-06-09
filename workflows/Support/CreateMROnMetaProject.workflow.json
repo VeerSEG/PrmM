@@ -87,7 +87,7 @@
             "Name": "Trigger Meta Project Update",
             "Type": "ParallelWithTemplate",
             "ParallelSetNameTemplate": "Update Branch $($ParallelContext.ProjectName)-$($ParallelContext.Branch)",
-            "ParallelWith": "$_DependeedRepos",
+            "ParallelWith": "$_DependeedRepos|Where-Object{-not $_.Branch.Contains(\"Sprint\")}",
             "WithEnv": [
                 {
                     "Key": "_CommitsMessages",
