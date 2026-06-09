@@ -86,7 +86,7 @@
         {
             "Name": "Trigger Meta Project Update",
             "Type": "ParallelWithTemplate",
-            "ParallelSetNameTemplate": "Update Branch $($ParallelContext.ProjectName)",
+            "ParallelSetNameTemplate": "Update Branch $($ParallelContext.ProjectName)-$($ParallelContext.Branch)",
             "ParallelWith": "$_DependeedRepos",
             "WithEnv": [
                 {
