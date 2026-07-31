@@ -2,5 +2,7 @@
     "*main",
     "*Development",
     "*Integration",
-    "*Release"
+    "*Release",
+    "*Sprint",
+    "Sprint*"
 ]

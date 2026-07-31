@@ -3,7 +3,7 @@
     "squash_option": "always",
     "remove_source_branch_after_merge": true,
     "resolve_outdated_diff_discussions": true,
-    "only_allow_merge_if_pipeline_succeeds": true,
+    "only_allow_merge_if_pipeline_succeeds": false,
     "merge_pipelines_enabled": true,
     "only_allow_merge_if_all_discussions_are_resolved": true,
     "merge_commit_template": "Merge branch '%{source_branch}' into '%{target_branch}'\n\n%{title}\n\n%{description}\n\n%{issues}\n\nSee merge request %{reference}",

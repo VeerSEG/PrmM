@@ -15,7 +15,7 @@ if(Test-Path "$PSScriptRoot/Review") {
         "Id"      = $_.BaseName
         "Content" = $_.BaseName
         "Icon"    = "feedback"
-        "Event"   = ".seg/Extensions/SEGTreeView/ASPICE/Review/$($_.Name)"
+        "Script"   = ".seg/Extensions/SEGTreeView/ASPICE/Review/$($_.Name)"
     }
 })
 }

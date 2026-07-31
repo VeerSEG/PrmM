@@ -106,7 +106,7 @@
                     "Params": {
                       "ProjectName": "\"$($ParallelContext.SubprojectName)\"",
                       "UpdateProjects":"\"$($_CommitsMessages.Dependencies),$($ParallelContext.SubprojectName)\"",
-                      "UpdateMessage":"$_CommitsMessages.Summary"
+                      "UpdateMessage":"if($_CommitsMessages.Summary){$_CommitsMessages.Summary}else{$SandboxContext.Changes.CommitMessage}"
                     },
                     "JobFolder": "\"Gitlab/$($ParallelContext.ProjectPath)/$($ParallelContext.Branch)/Support\"",
                     "JobName": "\"UpdateProjectToRevision\"",
