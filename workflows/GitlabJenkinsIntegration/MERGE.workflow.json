@@ -36,34 +36,7 @@
       "Value": "$SEGJenkinsShareFolder\\Configs\\ProjectConfigs\\$ProjectName\\Configs.json"
     }
   ],
-  "Stages": [
-    {
-      "Name": "Information Read and Process",
-      "Type": "ParallelStages",
-      "Parallel": [
-        {
-          "Name": "ValidationListRead",
-          "Type": "ParallelSet",
-          "Stages": [
-            {
-              "Name": "Read Validation List",
-              "Type": "Stage",
-              "Desc": "Read the validations need to be performed.",
-              "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-MergeRequest",
-              "FunctionName": "Get-MarkdownCheckboxStatus",
-              "NamedParams": {
-                "ChapterTitle": "## Performing Validation",
-                "Content": "$gitlabMergeRequestDescription"
-              },
-              "GitlabIntegration": true,
-              "OutputProcess": {
-                "OutputFilePath": "$ArchivePath/ValidationList.json"
-              }
-            }
-          ]
-        }
-      ]
-    },
+  "Stages": [    
     {
       "Name": "Project CI Process",
       "Type": "ParallelStages",

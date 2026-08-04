@@ -170,6 +170,18 @@
           }
         },
         {
+          "Name": "Setup Un Protected Branches Config",
+          "Type": "Stage",
+          "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
+          "FunctionName": "UnProtect-BranchesFromJson",
+          "NamedParams": {
+            "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+            "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
+            "JsonFilePath": "$SandboxPath/.seg/CI/CaC/ProtectedBranches.json",
+            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))"
+          }
+        },
+        {
           "Name": "Create Branches Folders And Seed",
           "Type": "ParallelWithTemplate",
           "ParallelSetNameTemplate": "Gen Workflow and Seed for $($ParallelContext.Name)",
