@@ -3,7 +3,7 @@
   "Type": "Workflow",
   "Description": "This workflow will be triggered when a merge request is created or reopened. It will read the validation list, perform project CI processes, and generate a report template.",
   "RequiredNode": "Git",
-  "CanExecuteLocal":false,
+  "CanExecuteLocal": false,
   "WorkflowRepo": {
     "Type": "ReposSet",
     "Repos": {
@@ -36,7 +36,7 @@
       "Value": "$SEGJenkinsShareFolder\\Configs\\ProjectConfigs\\$ProjectName\\Configs.json"
     }
   ],
-  "Stages": [    
+  "Stages": [
     {
       "Name": "Project CI Process",
       "Type": "ParallelStages",
@@ -44,32 +44,33 @@
         {
           "Name": "ProjectValidation",
           "Type": "ParallelSet",
-          "Stages": []
-        },
-        {
-          "Name": "TaskValidation",
-          "Type": "ParallelSet",
           "Stages": [
             {
-              "Name": "Read Task Info",
-              "Type": "Stage",
-              "Desc": "Task Id should belongs to the current project. And the status shoulde be In progress.",
-              "ModuleName": "$WorkflowRepoPath/PTCKpiM/Modules/PTCKpiM-TaskValidation",
-              "FunctionName": "Confirm-TaskStatus",
-              "NamedParams": {
-                "ExpectedProject": "",
-                "ExpectedState": "In progress",
-                "ExpectedUser": "$($BuildTriggerUser.NTAccount)",
-                "TaskID": "$($gitlabMergeRequestTitle.Split('-')[-1])"
-              },
-              "WithEnv": [
+              "Name": "Information Read and Process",
+              "Type": "ParallelStages",
+              "Parallel": [
                 {
-                  "Key": "ProjectInfos",
-                  "Value": "$SandboxPath/.seg/CI/CIEnvConfig/ProjectInfos/ProjectInfos.json"
+                  "Name": "ValidationListRead",
+                  "Type": "ParallelSet",
+                  "Stages": [
+                    {
+                      "Name": "Read Validation List",
+                      "Type": "Stage",
+                      "Desc": "Read the validations need to be performed.",
+                      "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-MergeRequest",
+                      "FunctionName": "Get-MarkdownCheckboxStatus",
+                      "NamedParams": {
+                        "ChapterTitle": "## Performing Validation",
+                        "Content": "$gitlabMergeRequestDescription"
+                      },
+                      "GitlabIntegration": true,
+                      "OutputProcess": {
+                        "OutputFilePath": "$ArchivePath/ValidationList.json"
+                      }
+                    }
+                  ]
                 }
-              ],
-              "GitlabIntegration": true,
-              "IgnoreError": true
+              ]
             }
           ]
         }
