@@ -84,7 +84,7 @@
           "Name": "PTC Validation and Link Creation",
           "Type": "ParallelSet",
           "When": {
-            "Condition": "($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ })"
+            "Condition": "(-not $SandboxProjectDevPath -like \"Sprint*-*\") -and ($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ })"
           },
           "Stages": [
             {
