@@ -33,7 +33,7 @@
       "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-Git",
       "FunctionName": "Start-MergeBranch",
       "NamedParams": {
-        "SourceBranch": "origin/$(($SandboxProjectDevPath.Split(\"/\")|Select-Object -Skip 1 -SkipLast 1) -join \"/\")"
+        "SourceBranch": "origin/$($SandboxProjectDevPath.Split(\"-\")[0]) -join \"/\")"
       },
       "Lock": "UpdateWithSourceBranch::$SandboxProjectDevPath"
     },

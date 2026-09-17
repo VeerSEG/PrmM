@@ -213,7 +213,7 @@
               "Name": "Start Branches Merging",
               "Type": "ParallelWithTemplate",
               "ParallelSetNameTemplate": "Update Branch $($ParallelContext.Name)",
-              "ParallelWith": "$_DevPathsInfo|Where-Object{$_.StartsWith(\"Devs/$SandboxProjectDevPath/\")}|Foreach-Object{@{Name=$_;DevPath=$_}}",
+              "ParallelWith": "$_DevPathsInfo|Where-Object{$_ -like \"Sprint*-*\"\"}|Foreach-Object{@{Name=$_;DevPath=$_}}",
               "WithEnv": [
                 {
                   "Key": "_DevPathsInfo",
