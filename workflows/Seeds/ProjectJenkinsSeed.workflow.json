@@ -58,7 +58,7 @@
         "ConfigurationList": [
           {
             "Type": "\"Directory\"",
-            "Path": "$SandboxPath/.seg/CI"
+            "Path": "\"$SandboxPath/.seg/CI\""
           },
           {
             "Type":"\"File\"",
