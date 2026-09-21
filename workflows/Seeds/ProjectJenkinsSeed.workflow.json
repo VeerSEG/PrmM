@@ -2,7 +2,7 @@
   "Name": "ProjectJenkinsSeed",
   "Type": "Workflow",
   "Description": "The initial workflow for the project. It will set up the gitproject settings, including MR template, protected branches, enable CICD",
-  "RequiredNode": "Git",
+  "RequiredNode": "Git&Seed",
   "CanExecuteLocal":false,
   "WorkflowRepo": {
     "Type": "ReposSet",
