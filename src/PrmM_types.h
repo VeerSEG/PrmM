@@ -1,5 +1,5 @@
 //
-// (c) SEG-Automotive Germany GmbH        Mon Oct 14 11:41:42 2024
+// (c) SEG-Automotive Germany GmbH        Tue Jun 23 23:29:11 2026
 // All rights reserved,
 // also regarding any disposal, exploitation, reproduction, editing, distribution,
 // as well as in the event of applications for industrial property rights.
@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'PrmM'.
 //
-// Model version                  : 1.16
+// Model version                  : 1.22
 // Simulink Coder version         : 9.0 (R2018b) 24-May-2018
-// C/C++ source code generated on : Mon Oct 14 11:41:42 2024
+// C/C++ source code generated on : Tue Jun 23 23:29:11 2026
 //
 // Target selection: autosar.tlc
 // Embedded hardware selection: Infineon->TriCore

@@ -5,9 +5,9 @@
  *
  * Code generation for model "PrmM".
  *
- * Model version              : 1.16
+ * Model version              : 1.22
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Oct 14 11:41:42 2024
+ * C source code generated on : Tue Jun 23 23:29:11 2026
  * 
  * Target selection: autosar.tlc
  * Embedded hardware selection: Infineon->TriCore
@@ -294,7 +294,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
       /* Maximum Difference     */      0 
       /* Conversion Method      */      PrmM_CM_single_V 
       /* Lower Limit            */      24.0 
-      /* Upper Limit            */      54.0
+      /* Upper Limit            */      56.0
     /end CHARACTERISTIC
     
     
@@ -307,7 +307,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
       /* Maximum Difference     */      0 
       /* Conversion Method      */      PrmM_CM_single_V 
       /* Lower Limit            */      24.0 
-      /* Upper Limit            */      54.0
+      /* Upper Limit            */      56.0
     /end CHARACTERISTIC
     
     
@@ -320,7 +320,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
       /* Maximum Difference     */      0 
       /* Conversion Method      */      PrmM_CM_single_V 
       /* Lower Limit            */      24.0 
-      /* Upper Limit            */      54.0
+      /* Upper Limit            */      56.0
     /end CHARACTERISTIC
     
     
@@ -333,7 +333,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
       /* Maximum Difference     */      0 
       /* Conversion Method      */      PrmM_CM_single_V 
       /* Lower Limit            */      24.0 
-      /* Upper Limit            */      54.0
+      /* Upper Limit            */      56.0
     /end CHARACTERISTIC
     
     
@@ -346,7 +346,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
       /* Maximum Difference     */      0 
       /* Conversion Method      */      PrmM_CM_single_V 
       /* Lower Limit            */      24.0 
-      /* Upper Limit            */      54.0
+      /* Upper Limit            */      56.0
     /end CHARACTERISTIC
     
     
@@ -359,7 +359,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
       /* Maximum Difference     */      0 
       /* Conversion Method      */      PrmM_CM_single_V 
       /* Lower Limit            */      24.0 
-      /* Upper Limit            */      54.0
+      /* Upper Limit            */      56.0
     /end CHARACTERISTIC
     
     
@@ -649,13 +649,10 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
         PrmM_S18_CS_PrmM_iReqMaxBattI_xdf32
         PrmM_S18_CS_PrmM_iReqMinBattI_xdf32
         PrmM_S18_CS_PrmM_mReqTq_xdf32
-        PrmM_S18_CS_PrmM_mTqLimMax_xdf32
-        PrmM_S18_CS_PrmM_mTqLimMin_xdf32
         PrmM_S18_CS_PrmM_nReqSpd_xdf32
         PrmM_S18_CS_PrmM_uReqMaxBattU_xdf32
         PrmM_S18_CS_PrmM_uReqMinBattU_xdf32
         PrmM_S18_CS_PrmM_uReqU_xdf32
-        PrmM_S18_CS_PrmM_yMaxTqGrdt_xdf32
         PrmM_S18_CustExtDes
         PrmM_S18_CustTqLim
       /end SUB_GROUP
@@ -696,22 +693,6 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_mTqLimMax_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_mTqLimMax_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_mTqLimMax_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_mTqLimMin_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_mTqLimMin_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_mTqLimMin_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
       /* Name                   */       PrmM_S18_CS_PrmM_nReqSpd_xdf32
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_nReqSpd_xdf32"
       /begin REF_MEASUREMENT
@@ -744,20 +725,12 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_yMaxTqGrdt_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_yMaxTqGrdt_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_yMaxTqGrdt_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
       /* Name                   */       PrmM_S18_CustExtDes
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes"
       /begin SUB_GROUP
-        PrmM_S30_CS_PrmM_nLwrSpdBd_XDF32
-        PrmM_S30_SpdDesDetermin
-        PrmM_S30_VoltDesDetermin
+        PrmM_S27_CS_PrmM_nLwrSpdBd_XDF32
+        PrmM_S27_SpdDesDetermin
+        PrmM_S27_VoltDesDetermin
       /end SUB_GROUP
     /end GROUP
     
@@ -765,8 +738,11 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
       /* Name                   */       PrmM_S18_CustTqLim
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim"
       /begin SUB_GROUP
-        PrmM_S31_CalcGradientLimit
-        PrmM_S31_TqLimitationDetermin
+        PrmM_S28_CS_PrmM_mTqLimMax_xdf32
+        PrmM_S28_CS_PrmM_mTqLimMin_xdf32
+        PrmM_S28_CS_PrmM_yMaxTqGrdt_xdf32
+        PrmM_S28_CalcGradientLimit
+        PrmM_S28_TorqueLimitation
       /end SUB_GROUP
     /end GROUP
     
@@ -798,7 +774,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S30_CS_PrmM_nLwrSpdBd_XDF32
+      /* Name                   */       PrmM_S27_CS_PrmM_nLwrSpdBd_XDF32
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/CS_PrmM_nLwrSpdBd_XDF32"
       /begin REF_CHARACTERISTIC
         CS_PrmM_nLwrSpdBd_XDF32
@@ -806,39 +782,63 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S30_SpdDesDetermin
+      /* Name                   */       PrmM_S27_SpdDesDetermin
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/SpdDesDetermin"
       /begin SUB_GROUP
-        PrmM_S49_CS_PrmM_fSpdReqSelect_XDB
-        PrmM_S49_CS_PrmM_nSpdReqInt_XDF32
+        PrmM_S46_CS_PrmM_fSpdReqSelect_XDB
+        PrmM_S46_CS_PrmM_nSpdReqInt_XDF32
       /end SUB_GROUP
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S30_VoltDesDetermin
+      /* Name                   */       PrmM_S27_VoltDesDetermin
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/VoltDesDetermin"
       /begin SUB_GROUP
-        PrmM_S51_CS_PrmM_uVoltReqComless_XDF32
+        PrmM_S48_CS_PrmM_uVoltReqComless_XDF32
       /end SUB_GROUP
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S31_CalcGradientLimit
+      /* Name                   */       PrmM_S28_CS_PrmM_mTqLimMax_xdf32
+      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CS_PrmM_mTqLimMax_xdf32"
+      /begin REF_MEASUREMENT
+        CS_PrmM_mTqLimMax_xdf32
+      /end REF_MEASUREMENT
+    /end GROUP
+    
+    /begin GROUP 
+      /* Name                   */       PrmM_S28_CS_PrmM_mTqLimMin_xdf32
+      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CS_PrmM_mTqLimMin_xdf32"
+      /begin REF_MEASUREMENT
+        CS_PrmM_mTqLimMin_xdf32
+      /end REF_MEASUREMENT
+    /end GROUP
+    
+    /begin GROUP 
+      /* Name                   */       PrmM_S28_CS_PrmM_yMaxTqGrdt_xdf32
+      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CS_PrmM_yMaxTqGrdt_xdf32"
+      /begin REF_MEASUREMENT
+        CS_PrmM_yMaxTqGrdt_xdf32
+      /end REF_MEASUREMENT
+    /end GROUP
+    
+    /begin GROUP 
+      /* Name                   */       PrmM_S28_CalcGradientLimit
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CalcGradientLimit"
       /begin SUB_GROUP
-        PrmM_S55_CS_PrmM_fTqGrdSelect_XDB
-        PrmM_S55_CS_PrmM_mMaxTqGrdtInt_XDF32
+        PrmM_S56_CS_PrmM_fTqGrdSelect_XDB
+        PrmM_S56_CS_PrmM_mMaxTqGrdtInt_XDF32
       /end SUB_GROUP
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S31_TqLimitationDetermin
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TqLimitationDetermin"
+      /* Name                   */       PrmM_S28_TorqueLimitation
+      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation"
       /begin SUB_GROUP
-        PrmM_S56_CS_PrmM_mTqminmerge_xdf32
-        PrmM_S56_CS_PrmM_nHSpdBd_XDF32
-        PrmM_S56_CS_PrmM_nLwrSpdBd_XDF32
-        PrmM_S56_CS_PrmM_nZeroThd_XDF32
+        PrmM_S57_CS_PrmM_mTqminmerge_xdf32
+        PrmM_S57_CS_PrmM_nHSpdBd_XDF32
+        PrmM_S57_CS_PrmM_nLwrSpdBd_XDF32
+        PrmM_S57_CS_PrmM_nZeroThd_XDF32
       /end SUB_GROUP
     /end GROUP
     
@@ -891,7 +891,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S49_CS_PrmM_fSpdReqSelect_XDB
+      /* Name                   */       PrmM_S46_CS_PrmM_fSpdReqSelect_XDB
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/SpdDesDetermin/CS_PrmM_fSpdReqSelect_XDB"
       /begin REF_CHARACTERISTIC
         CS_PrmM_fSpdReqSelect_XDB
@@ -899,7 +899,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S49_CS_PrmM_nSpdReqInt_XDF32
+      /* Name                   */       PrmM_S46_CS_PrmM_nSpdReqInt_XDF32
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/SpdDesDetermin/CS_PrmM_nSpdReqInt_XDF32"
       /begin REF_CHARACTERISTIC
         CS_PrmM_nSpdReqInt_XDF32
@@ -907,7 +907,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S51_CS_PrmM_uVoltReqComless_XDF32
+      /* Name                   */       PrmM_S48_CS_PrmM_uVoltReqComless_XDF32
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/VoltDesDetermin/CS_PrmM_uVoltReqComless_XDF32"
       /begin REF_CHARACTERISTIC
         CS_PrmM_uVoltReqComless_XDF32
@@ -915,7 +915,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S55_CS_PrmM_fTqGrdSelect_XDB
+      /* Name                   */       PrmM_S56_CS_PrmM_fTqGrdSelect_XDB
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CalcGradientLimit/CS_PrmM_fTqGrdSelect_XDB"
       /begin REF_CHARACTERISTIC
         CS_PrmM_fTqGrdSelect_XDB
@@ -923,7 +923,7 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S55_CS_PrmM_mMaxTqGrdtInt_XDF32
+      /* Name                   */       PrmM_S56_CS_PrmM_mMaxTqGrdtInt_XDF32
       /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CalcGradientLimit/CS_PrmM_mMaxTqGrdtInt_XDF32"
       /begin REF_CHARACTERISTIC
         CS_PrmM_mMaxTqGrdtInt_XDF32
@@ -931,32 +931,32 @@ ASAP2_VERSION  1 31   /* Version 1.31 */
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S56_CS_PrmM_mTqminmerge_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TqLimitationDetermin/CS_PrmM_mTqminmerge_xdf32"
+      /* Name                   */       PrmM_S57_CS_PrmM_mTqminmerge_xdf32
+      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_mTqminmerge_xdf32"
       /begin REF_MEASUREMENT
         CS_PrmM_mTqminmerge_xdf32
       /end REF_MEASUREMENT
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S56_CS_PrmM_nHSpdBd_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TqLimitationDetermin/CS_PrmM_nHSpdBd_XDF32"
+      /* Name                   */       PrmM_S57_CS_PrmM_nHSpdBd_XDF32
+      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_nHSpdBd_XDF32"
       /begin REF_CHARACTERISTIC
         CS_PrmM_nHSpdBd_XDF32
       /end REF_CHARACTERISTIC
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S56_CS_PrmM_nLwrSpdBd_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TqLimitationDetermin/CS_PrmM_nLwrSpdBd_XDF32"
+      /* Name                   */       PrmM_S57_CS_PrmM_nLwrSpdBd_XDF32
+      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_nLwrSpdBd_XDF32"
       /begin REF_CHARACTERISTIC
         CS_PrmM_nLwrSpdBd_XDF32
       /end REF_CHARACTERISTIC
     /end GROUP
     
     /begin GROUP 
-      /* Name                   */       PrmM_S56_CS_PrmM_nZeroThd_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TqLimitationDetermin/CS_PrmM_nZeroThd_XDF32"
+      /* Name                   */       PrmM_S57_CS_PrmM_nZeroThd_XDF32
+      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_nZeroThd_XDF32"
       /begin REF_CHARACTERISTIC
         CS_PrmM_nZeroThd_XDF32
       /end REF_CHARACTERISTIC
