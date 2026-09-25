@@ -1,0 +1,288 @@
+{
+  "Name": "ProjectJenkinsSeed",
+  "Type": "Workflow",
+  "Description": "The initial workflow for the project. It will set up the gitproject settings, including MR template, protected branches, enable CICD",
+  "RequiredNode": "Git",
+  "CanExecuteLocal":false,
+  "WorkflowRepo": {
+    "Type": "ReposSet",
+    "Repos": {
+      "JenkinsServerSeed": {
+        "Type": "SEGGitlab",
+        "Branch": "master",
+        "UrlRelativePath": "ci-development/jenkins-server-seed.git"
+      }
+    }
+  },
+  "Envs": {
+    "UseAutoThrottle": "Enable"
+  },
+  "WorkflowRunnerRepo": {
+    "Type": "SEGGitlab",
+    "Branch": "main",
+    "UrlRelativePath": "ci-development/workflowrunner.git"
+  },
+  "WithEnv": [
+    {
+      "Key": "_MonitorBranches",
+      "Value": "$SandboxPath/.seg/CI/CaC/MonitorBranches.json"
+    },
+    {
+      "Key": "_GitPropertyParams",
+      "Value": "$SandboxPath/.seg/CI/CaC/GitPropertyParams.json"
+    }
+  ],
+  "DisallowConcurrentBuild": true,
+  "Stages": [
+    {
+      "Name": "Get All Branches",
+      "Type": "Stage",
+      "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-Git",
+      "FunctionName": "Get-AllRemoteBranchesInfo",
+      "NamedParams": {
+        "SandboxPath": "$SandboxPath"
+      },
+      "OutputProcess": {
+        "ForceArrayOutput": true,
+        "OutputFilePath": "$ArchivePath/ProjectDevPathsInfo.json"
+      },
+      "ThrowIfFailed": true
+    },
+    {
+      "Name": "Generate Signature",
+      "Type": "Stage",
+      "Description": "Generate singature for current project to make sure the workflows has been init from Jenkins side.",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Hash",
+      "FunctionName": "Get-HashForConfigContent",
+      "NamedParams": {
+        "ConfigurationList": [
+          {
+            "Type": "\"Directory\"",
+            "Path": "$SandboxPath/.seg/CI"
+          },
+          {
+            "Type":"\"File\"",
+            "Path":"\"$SandboxPath/workflows/Seeds/ProjectJenkinsSeed.workflow.json\""
+          },
+          {
+            "Type": "\"Array\"",
+            "Content": " @{Name=\"ElseBranches\";DevPath=$ProjectDevPath};$_DevPathsInfo|Where-Object{$branchName=$_;$_MonitorBranches|Where-Object{$branchName -like $_ }}|Foreach-Object{@{Name=$_;DevPath=$_}}",
+            "Path": "$SandboxPath"
+          }
+        ]
+      },
+      "WithEnv": [
+        {
+          "Key": "_DevPathsInfo",
+          "Value": "$ArchivePath/ProjectDevPathsInfo.json"
+        }
+      ],
+      "OutputProcess": {
+        "OutputFilePath": "$ArchivePath/SeedsSignature.json"
+      }
+    },
+    {
+      "Name": "Check if Signature Existed",
+      "Type": "JenkinsApi",
+      "FunctionName": "checkBuildWithDesc",
+      "NamedParams": {
+        "Description": "$($_SeedsSignature)",
+        "OutputPath": "\"$WorkspacePath/LabelStatus.json\""
+      },
+      "WithEnv": [
+        {
+          "Key": "_SeedsSignature",
+          "Value": "$ArchivePath/SeedsSignature.json"
+        }
+      ]
+    },
+    {
+      "Name": "Init Project Jenkins Seeds",
+      "Type": "StageSet",
+      "When": {
+        "Condition": "-not $_LabelStatus.HasLabel"
+      },
+      "WithEnv": [
+        {
+          "Key": "_LabelStatus",
+          "Value": "$WorkspacePath/LabelStatus.json"
+        }
+      ],
+      "Stages": [
+        {
+          "Name": "Copy Folder Xml Basic",
+          "Type": "Stage",
+          "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Basic",
+          "FunctionName": "Copy-ItemToDestDirectory",
+          "NamedParams": {
+            "DestLocation": "$WorkspacePath/FolderTemplate/FolderTemplate.xml",
+            "SourceLocation": "$WorkflowRunnerLoc/Resources/FolderTemplate.xml"
+          }
+        },
+        {
+          "Name": "Enable CICD for Project",
+          "Type": "Stage",
+          "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
+          "FunctionName": "Add-CICDSupport",
+          "NamedParams": {
+            "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+            "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
+            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))"
+          }
+        },
+        {
+          "Name": "Enable Jenkins Integration for Project",
+          "Type": "Stage",
+          "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
+          "FunctionName": "Add-JenkinsIntegration",
+          "NamedParams": {
+            "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+            "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
+            "JenkinsProjectName": "$ProjectJenkinsRootFolder/$ProjectDevPath/GitlabJenkinsIntegration/GitlabRouter",
+            "JenkinsUrl": "$JENKINS_URL",
+            "Password": "$env:JenkinsUser_Password",
+            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))",
+            "Username": "$env:JenkinsUser_UserName"
+          }
+        },
+        {
+          "Name": "Setup Merge Request Config",
+          "Type": "Stage",
+          "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
+          "FunctionName": "Set-GitlabMergeRequestSettings",
+          "NamedParams": {
+            "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+            "ConfigFilePath": "$SandboxPath/.seg/CI/CaC/MergeRequestConfig.json",
+            "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
+            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))"
+          }
+        },
+        {
+          "Name": "Setup Protected Branches Config",
+          "Type": "Stage",
+          "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
+          "FunctionName": "Protect-BranchesFromJson",
+          "NamedParams": {
+            "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+            "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
+            "JsonFilePath": "$SandboxPath/.seg/CI/CaC/ProtectedBranches.json",
+            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))"
+          }
+        },
+        {
+          "Name": "Setup Un Protected Branches Config",
+          "Type": "Stage",
+          "ModuleName": "$WorkflowRepoPath/JenkinsServerSeed/Modules/JenkinsServerSeed-Gitlab",
+          "FunctionName": "UnProtect-BranchesFromJson",
+          "NamedParams": {
+            "AccessToken": "$(if($ProjectType -eq \"EAGitlab\"){$env:SEGEAGitlabTokenSecretText}else{$env:SEGGitlabTokenSecretText})",
+            "GitlabUrl": "$(if($ProjectType -eq \"EAGitlab\"){$SEGEAGitlabUrl}else{$SEGGitlabUrl})",
+            "JsonFilePath": "$SandboxPath/.seg/CI/CaC/ProtectedBranches.json",
+            "RepoLocation": "$($ProjectPath.Replace(\".git\", \"\"))"
+          }
+        },
+        {
+          "Name": "Create Branches Folders And Seed",
+          "Type": "ParallelWithTemplate",
+          "ParallelSetNameTemplate": "Gen Workflow and Seed for $($ParallelContext.Name)",
+          "ParallelWith": "@{Name=\"ElseBranches\";DevPath=$ProjectDevPath};$_DevPathsInfo|Where-Object{$branchName=$_;$_MonitorBranches|Where-Object{$branchName -like $_ }}|Foreach-Object{@{Name=$_;DevPath=$_}}",
+          "WithEnv": [
+            {
+              "Key": "_DevPathsInfo",
+              "Value": "$ArchivePath/ProjectDevPathsInfo.json"
+            }
+          ],
+          "Stages": [
+            {
+              "Name": "Generate Project Branch Folder Xml",
+              "Type": "Stage",
+              "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-JenkinsBasic",
+              "FunctionName": "Out-FolderXml",
+              "NamedParams": {
+                "EnvironmentProperties": {
+                  "BranchFolderName": "$($ParallelContext.Name)",
+                  "ProjectDevPath": "$($ParallelContext.DevPath)"
+                },
+                "OutputFilePath": "$WorkspacePath/JobFolderXml/$($ParallelContext.Name).xml"
+              }
+            },
+            {
+              "Name": "Add or Update Project Branch Folder",
+              "Type": "Groovy",
+              "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+              "FunctionName": "LoadXml",
+              "NamedParams": {
+                "Name": "$ParallelContext.Name",
+                "FilePath": "\"$WorkspacePath/JobFolderXml/$($ParallelContext.Name).xml\"",
+                "FolderName": "\"$ProjectJenkinsRootFolder\""
+              }
+            },
+            {
+              "Name": "Generate Project Branch Seed Job Xml",
+              "Type": "Stage",
+              "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-JenkinsBasic",
+              "FunctionName": "Out-WorkflowIntoJenkinsXml",
+              "NamedParams": {
+                "AdditionalEnvironments": {
+                  "WorkflowPath": "\"workflows/Seeds/JenkinsSeed.workflow.json\""
+                },
+                "OutputPath": "$WorkspacePath/JobXml/$($ParallelContext.Name)/JenkinsSeed.xml",
+                "Workflow": "$_JenkinsSeedJob.Params+=$_GitPropertyParams;$_JenkinsSeedJob.Params.ProjectDevPath.Default=$ParallelContext.DevPath;$_JenkinsSeedJob"
+              },
+              "WithEnv": [
+                {
+                  "Key": "_JenkinsSeedJob",
+                  "Value": "$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json"
+                }
+              ]
+            },
+            {
+              "Name": "Add or Update Branch Seed Job",
+              "Type": "Groovy",
+              "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+              "FunctionName": "LoadXml",
+              "NamedParams": {
+                "Name": "\"JenkinsSeed\"",
+                "FilePath": "\"$WorkspacePath/JobXml/$($ParallelContext.Name)/JenkinsSeed.xml\"",
+                "FolderName": "\"$ProjectJenkinsRootFolder/$($ParallelContext.Name)/_JenkinsCaC\""
+              }
+            },
+            {
+              "Name": "Trigger Project Jenkins Seed Job",
+              "Type": "Workflow",
+              "NamedParams": {
+                "JobFolder": "\"$ProjectJenkinsRootFolder/$($ParallelContext.Name)/_JenkinsCaC\"",
+                "JobName": "\"JenkinsSeed\"",
+                "NoWaitJob": true
+              },
+              "IgnoreError": true
+            }
+          ]
+        },
+        {
+          "Name": "Adapt Signature",
+          "Type": "JenkinsApi",
+          "FunctionName": "SetCurrentBuildDesc",
+          "NamedParams": {
+            "Description": "$_SeedsSignature"
+          },
+          "WithEnv": [
+            {
+              "Key": "_SeedsSignature",
+              "Value": "$ArchivePath/SeedsSignature.json"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "WithCredentials": {
+    "SecretText": [
+      "SEGEAGitlabTokenSecretText",
+      "SEGGitlabTokenSecretText"
+    ],
+    "UserInfo": [
+      "JenkinsUser"
+    ]
+  }
+}

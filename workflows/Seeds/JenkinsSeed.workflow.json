@@ -1,0 +1,265 @@
+{
+  "Name": "JenkinsSeed",
+  "Type": "Workflow",
+  "Description": "The initial workflow seed for setting up the workflow for the current branch.",
+  "Tag": [
+    "ProjectConfigurationManagement"
+  ],
+  "RequiredNode": "Git",
+  "CanExecuteLocal":false,
+  "WorkflowRunnerRepo": {
+    "Type": "SEGGitlab",
+    "Branch": "main",
+    "UrlRelativePath": "ci-development/workflowrunner.git"
+  },
+  "Params": {},
+  "WithEnv": [
+    {
+      "Key": "_GitPropertyParams",
+      "Value": "$SandboxPath/.seg/CI/CaC/GitPropertyParams.json"
+    }
+  ],
+  "Stages": [
+    {
+      "Name": "Generate Workflow Signature",
+      "Type": "Stage",
+      "Description": "Generate singature for current workflow, to make sure the workflows has been init for this branch.",
+      "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-JenkinsBasic",
+      "FunctionName": "Out-WorkflowsSignature",
+      "NamedParams": {
+        "SandboxPath": "$SandboxPath"
+      },
+      "OutputProcess": {
+        "OutputFilePath": "$ArchivePath/WorkflowSignature.json"
+      }
+    },
+    {
+      "Name": "Generate Signature",
+      "Type": "Stage",
+      "Description": "Generate singature based on the all context from CI related configuration, JenkinsSeed workflow. To make sure the corrrect jenkins seed has been executed once for the project.",
+      "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Hash",
+      "FunctionName": "Get-HashForConfigContent",
+      "NamedParams": {
+        "ConfigurationList": [
+          {
+            "Type":"\"File\"",
+            "Path":"\"$SandboxPath/workflows/Seeds/JenkinsSeed.workflow.json\""
+          },
+          {
+            "Type":"\"String\"",
+            "Content":"$_WorkflowSignature"
+          }
+        ]
+      },
+      "WithEnv": [
+        {
+          "Key": "_WorkflowSignature",
+          "Value": "$ArchivePath/WorkflowSignature.json"
+        }
+      ],
+      "OutputProcess": {
+        "OutputFilePath": "$ArchivePath/SeedsSignature.json"
+      }
+    },
+    {
+      "Name": "Check if Signature Existed",
+      "Type": "JenkinsApi",
+      "FunctionName": "checkBuildWithDesc",
+      "NamedParams": {
+        "Description": "$($_SeedsSignature)",
+        "OutputPath": "\"$WorkspacePath/LabelStatus.json\""
+      },
+      "WithEnv": [
+        {
+          "Key": "_SeedsSignature",
+          "Value": "$ArchivePath/SeedsSignature.json"
+        }
+      ]
+    },
+    {
+      "Name": "Init Jenkins Seeds",
+      "Type": "StageSet",
+      "Description": "Based on if the signature has been exeucted once successfuly. To continue setup the project.",
+      "When": {
+        "Condition": "-not $_LabelStatus.HasLabel"
+      },
+      "WithEnv": [
+        {
+          "Key": "_LabelStatus",
+          "Value": "$WorkspacePath/LabelStatus.json"
+        }
+      ],
+      "Stages": [
+        {
+          "Name": "Copy Folder Xml Basic",
+          "Type": "Stage",
+          "ModuleName": "$WorkflowRunnerLoc/Dependencies/pwshbasiccmd/Modules/PwshBasicCmd-Basic",
+          "FunctionName": "Copy-ItemToDestDirectory",
+          "NamedParams": {
+            "DestLocation": "$WorkspacePath/FolderTemplate/FolderTemplate.xml",
+            "SourceLocation": "$WorkflowRunnerLoc/Resources/FolderTemplate.xml"
+          }
+        },
+        {
+          "Name": "Basic Job Creation based on Branch",
+          "Type": "ParallelStages",
+          "Parallel": [
+            {
+              "Name": "Job Creation for All Branches",
+              "Type": "ParallelSet",
+              "Stages": [
+                {
+                  "Name": "Job Creation for All Branches",
+                  "Type": "ParallelWithTemplate",
+                  "ParallelSetNameTemplate": "Gen for $($ParallelContext.Name)",
+                  "ParallelWith": [
+                    {
+                      "Name": "\"Support\"",
+                      "JenkinsFolder": "\"Support\"",
+                      "WorkflowsSubFolderInSandbox": "\"workflows/Support\""
+                    }
+                  ],
+                  "Stages": [
+                    {
+                      "Name": "Create $($ParallelContext.Name) Folder",
+                      "Type": "Groovy",
+                      "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+                      "FunctionName": "LoadXml",
+                      "NamedParams": {
+                        "Name": "$ParallelContext.JenkinsFolder",
+                        "FilePath": "\"$WorkspacePath/FolderTemplate/FolderTemplate.xml\"",
+                        "FolderName": "\"$ProjectJenkinsRootFolder/$BranchFolderName\""
+                      }
+                    },
+                    {
+                      "Name": "Create $($ParallelContext.Name) Jobs",
+                      "Type": "ParallelWithTemplate",
+                      "ParallelSetNameTemplate": "Gen Workflow for $($ParallelContext.Name)",
+                      "ParallelWith": "Get-ChildItem \"$SandboxPath/$($ParallelContext.WorkflowsSubFolderInSandbox)\" -Filter *.workflow.json|Foreach-Object{@{Name=$_.Name.Replace('.workflow.json',''); Path=$_.FullName}}",
+                      "Stages": [
+                        {
+                          "Name": "Generate Create $($ParallelContext.Name) Job Xml",
+                          "Type": "Stage",
+                          "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-JenkinsBasic",
+                          "FunctionName": "Out-WorkflowIntoJenkinsXml",
+                          "NamedParams": {
+                            "AdditionalEnvironments": {
+                              "WorkflowPath": "\"$($ParallelContext.Parent.WorkflowsSubFolderInSandbox)/$($ParallelContext.Name).workflow.json\""
+                            },
+                            "OutputPath": "$WorkspacePath/JobXmlFromFolder/$($ParallelContext.Parent.JenkinsFolder)/$($ParallelContext.Name).xml",
+                            "Workflow": "$_JobTemplate.Params+=$_GitPropertyParams;$_JobTemplate.Params.ProjectDevPath.Default=$ProjectDevPath;$_JobTemplate"
+                          },
+                          "WithEnv": [
+                            {
+                              "Key": "_JobTemplate",
+                              "Value": "$SandboxPath/$($ParallelContext.Parent.WorkflowsSubFolderInSandbox)/$($ParallelContext.Name).workflow.json"
+                            }
+                          ]
+                        },
+                        {
+                          "Name": "Add or Update $($ParallelContext.Name) Job",
+                          "Type": "Groovy",
+                          "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+                          "FunctionName": "LoadXml",
+                          "NamedParams": {
+                            "Name": "\"$($ParallelContext.Name)\"",
+                            "FilePath": "\"$WorkspacePath/JobXmlFromFolder/$($ParallelContext.Parent.JenkinsFolder)/$($ParallelContext.Name).xml\"",
+                            "FolderName": "\"$ProjectJenkinsRootFolder/$BranchFolderName/$($ParallelContext.Parent.JenkinsFolder)\""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Name": "Job Creation for GitlabIntegration",
+              "Type": "ParallelSet",
+              "Stages": [
+                {
+                  "Name": "Job Creation for All Branches",
+                  "Type": "ParallelWithTemplate",
+                  "ParallelSetNameTemplate": "Gen for $($ParallelContext.Name)",
+                  "ParallelWith": [
+                    {
+                      "Name": "\"GitlabJenkinsIntegration\"",
+                      "JenkinsFolder": "\"GitlabJenkinsIntegration\"",
+                      "WorkflowsSubFolderInSandbox": "\"workflows/GitlabJenkinsIntegration\""
+                    }
+                  ],
+                  "Stages": [
+                    {
+                      "Name": "Create $($ParallelContext.Name) Folder",
+                      "Type": "Groovy",
+                      "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+                      "FunctionName": "LoadXml",
+                      "NamedParams": {
+                        "Name": "$ParallelContext.JenkinsFolder",
+                        "FilePath": "\"$WorkspacePath/FolderTemplate/FolderTemplate.xml\"",
+                        "FolderName": "\"$ProjectJenkinsRootFolder/$BranchFolderName\""
+                      }
+                    },
+                    {
+                      "Name": "Create $($ParallelContext.Name) Jobs",
+                      "Type": "ParallelWithTemplate",
+                      "ParallelSetNameTemplate": "Gen Workflow for $($ParallelContext.Name)",
+                      "ParallelWith": "Get-ChildItem \"$SandboxPath/$($ParallelContext.WorkflowsSubFolderInSandbox)\" -Filter *.workflow.json|Foreach-Object{@{Name=$_.Name.Replace('.workflow.json',''); Path=$_.FullName}}",
+                      "Stages": [
+                        {
+                          "Name": "Generate Create $($ParallelContext.Name) Job Xml",
+                          "Type": "Stage",
+                          "ModuleName": "$WorkflowRunnerLoc/Modules/WorkflowRunner-JenkinsBasic",
+                          "FunctionName": "Out-WorkflowIntoJenkinsXml",
+                          "NamedParams": {
+                            "AdditionalEnvironments": {
+                              "WorkflowPath": "\"$($ParallelContext.Parent.WorkflowsSubFolderInSandbox)/$($ParallelContext.Name).workflow.json\"",
+                              "GitlabJenkinsIntegration":"$ProjectType"
+                            },
+                            "OutputPath": "$WorkspacePath/JobXmlFromFolder/$($ParallelContext.Parent.JenkinsFolder)/$($ParallelContext.Name).xml",
+                            "Workflow": "$_JobTemplate.Params+=$_GitPropertyParams;$_JobTemplate.Params.ProjectDevPath.Default=$ProjectDevPath;$_JobTemplate"
+                          },
+                          "WithEnv": [
+                            {
+                              "Key": "_JobTemplate",
+                              "Value": "$SandboxPath/$($ParallelContext.Parent.WorkflowsSubFolderInSandbox)/$($ParallelContext.Name).workflow.json"
+                            }
+                          ]
+                        },
+                        {
+                          "Name": "Add or Update $($ParallelContext.Name) Job",
+                          "Type": "Groovy",
+                          "ModuleName": "$WorkflowRunnerLoc/Groovy/JenkinsApi.groovy",
+                          "FunctionName": "LoadXml",
+                          "NamedParams": {
+                            "Name": "\"$($ParallelContext.Name)\"",
+                            "FilePath": "\"$WorkspacePath/JobXmlFromFolder/$($ParallelContext.Parent.JenkinsFolder)/$($ParallelContext.Name).xml\"",
+                            "FolderName": "\"$ProjectJenkinsRootFolder/$BranchFolderName/$($ParallelContext.Parent.JenkinsFolder)\""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Name": "Adapt Signature",
+          "Type": "JenkinsApi",
+          "FunctionName": "SetCurrentBuildDesc",
+          "NamedParams": {
+            "Description": "$_SeedsSignature"
+          },
+          "WithEnv": [
+            {
+              "Key": "_SeedsSignature",
+              "Value":  "$ArchivePath/SeedsSignature.json"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

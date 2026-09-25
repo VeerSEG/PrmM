@@ -1,0 +1,2 @@
+*.segform.json  diff=SEGForm    merge=SEGForm
+*.segmeta.yml  diff=SEGMeta    merge=SEGMeta

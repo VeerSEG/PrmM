@@ -1,0 +1,2 @@
+Import-Module "$PSScriptRoot/../Modules/Git-Action"
+Invoke-DistributeChangesToChild -SkipPush -Job "LocalTrial" -SandboxPath "." -ParentBranchName "800_100_SW_B_02_01_P01_Integration" -ChildBranchPattern "Devs/800_100_SW_B_02_01_P01_Integration/*"

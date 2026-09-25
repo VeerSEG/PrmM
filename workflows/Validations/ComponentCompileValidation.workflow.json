@@ -1,0 +1,109 @@
+{
+  "Name": "ComponentCompileValidation",
+  "Type": "Workflow",
+  "RequiredNode": "Git",
+  "WorkflowRepo": {
+    "Type": "ReposSet",
+    "Repos": {
+      "SEGIniFileReader": {
+        "Type": "SEGGitlab",
+        "Branch": "master",
+        "UrlRelativePath": "ci-development/segini-file-reader.git"
+      },
+      "IntermediateComponentTool": {
+        "Type": "SEGGitlab",
+        "Branch": "master",
+        "UrlRelativePath": "ci-development/intermediate-component-tool.git"
+      },
+      "SoftwareBuildTool": {
+        "Type": "SEGGitlab",
+        "Branch": "main",
+        "UrlRelativePath": "ci-development/softwarebuildtool.git"
+      },
+      "StaticAnalysisTool": {
+        "Type": "SEGGitlab",
+        "Branch": "master",
+        "UrlRelativePath": "ci-development/code-ast-analysis.git"
+      }
+    }
+  },
+  "WorkflowRunnerRepo": {
+    "Type": "SEGGitlab",
+    "Branch": "main",
+    "UrlRelativePath": "ci-development/workflowrunner.git"
+  },
+  "Envs": {
+   
+  },
+  "Stages": [
+    {
+      "Name": "CFileValidations",
+      "Type": "ParallelWithTemplate",
+      "ParallelSetNameTemplate": "Validate $($ParallelContext.Name)",
+      "ParallelWith": "Get-ChildItem -Filter \"*.c\" -Path \"$SandboxPath/src\"|Foreach-Object{@{Name=$_.BaseName, Path=\"src/$($_.Name)\"}}",
+      "Stages": [
+        {
+          "Name": "Get Static Analysis Dump with CPG Compile",
+          "Type": "Stage",
+          "NamedParams": {
+            "IncludeFiles": [
+              "\"ci/Stub/Includes/TaskingPreDefinedMarco.h\""
+            ],
+            "IncludeFolders": [
+              "\"src\"",
+              "\"ci/CPG/headers\"",
+              "\"ci/Stub/Includes\"",
+              "\"C:/_SoftwareBuildSetup/Tasking/TriCoreV6.2r2p2AddOnV2/ctc/include\""
+            ],
+            "OutputFile": "$WorkspacePath/$($ParallelContext.Name).cpg.sar.json",
+            "Salt": "Get-Content \"ci/Config/cFlags.conf\" -Raw",
+            "SandboxLocation": "$SandboxPath",
+            "SourceFile": "$($ParallelContext.Path)"
+          },
+          "FunctionName": "Out-ASTTreeForFunctionsAndVariables",
+          "ModuleName": "$WorkflowRepoPath/StaticAnalysisTool/Modules/CodeASTAnalysis-Basic"
+        },
+        {
+          "Name": "Validate Compile with CPG Files",
+          "Type": "Stage",
+          "NamedParams": {
+            "CompileCommands": [
+              {
+                "Command": {
+                  "AdditionalArgs": "Get-Content \"ci/Config/cFlags.conf\"",
+                  "CaseName": "\"CompileWithCPG\"",
+                  "ClassName": "\"$ComponentName.Compilation.$($ParallelContext.Name)\"",
+                  "IncludeFiles": [
+                    "\"ci/Stub/Includes/TaskingPreDefinedMarco.h\""
+                  ],
+                  "IncludeFolders": [
+                    "\"src\"",
+                    "\"ci/CPG/headers\"",
+                    "\"ci/Stub/Includes\"",
+                    "\"C:/_SoftwareBuildSetup/Tasking/TriCoreV6.2r2p2AddOnV2/ctc/include\""
+                    ],
+                  "PoolPath": "\"$GlobalContainer/TASKING/CCTC\"",
+                  "Signature": "$_CompileInfo.Signature",
+                  "SourceFileRelativeLocation": "\"$($_ComponentBuildInfo.RelativePath)/$($ParallelContext.Path)\"",
+                  "WorkingPath": "\"$SandboxPath\""
+                },
+                "Tool": "\"CCTC\""
+              }
+            ],
+            "RunParallel": true,
+            "SuiteName": "ComponentCompileWithTasking",
+            "TestsResultPath": "$TestsResultPath"
+          },
+          "WithEnv": [
+            {
+              "Key": "_CompileInfo",
+              "Value": "$WorkspacePath/$($ParallelContext.Name).cpg.sar.json"
+            }
+          ],
+          "FunctionName": "Start-CompileCommandList",
+          "ModuleName": "$WorkflowRepoPath/SoftwareBuildTool/Modules/SoftwareBuildTool-BuildSoftware"
+        }
+      ]
+    }
+  ]
+}

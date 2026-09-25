@@ -1,0 +1,111 @@
+{
+    "explorer.copyRelativePathSeparator": "/",
+    "task.allowAutomaticTasks": "on",
+    "openInExternalApp.openMapper": [
+        {
+            "extensionName": "xlsx",
+            "apps": [
+                {
+                    "title": "Microsoft Excel",
+                    "openCommand": "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+                }
+            ]
+        },
+        {
+            "extensionName": "xls",
+            "apps": [
+                {
+                    "title": "Microsoft Excel",
+                    "openCommand": "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+                }
+            ]
+        },
+        {
+            "extensionName": "csv",
+            "apps": [
+                {
+                    "title": "Microsoft Excel",
+                    "openCommand": "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+                }
+            ]
+        },
+        {
+            "extensionName": "pptx",
+            "apps": [
+                {
+                    "title": "Microsoft PowerPoint",
+                    "openCommand": "C:\\Program Files\\Microsoft Office\\root\\Office16\\POWERPNT.EXE"
+                }
+            ]
+        },
+        {
+            "extensionName": "ppt",
+            "apps": [
+                {
+                    "title": "Microsoft PowerPoint",
+                    "openCommand": "C:\\Program Files\\Microsoft Office\\root\\Office16\\POWERPNT.EXE"
+                }
+            ]
+        },
+        {
+            "extensionName": "docx",
+            "apps": [
+                {
+                    "title": "Microsoft Word",
+                    "openCommand": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+                }
+            ]
+        },
+        {
+            "extensionName": "doc",
+            "apps": [
+                {
+                    "title": "Microsoft Word",
+                    "openCommand": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+                }
+            ]
+        },
+        {
+            "extensionName": "eap",
+            "apps": [
+                {
+                    "title": "Enterprise Architect",
+                    "openCommand": "C:\\Program Files\\Sparx Systems\\EA\\EA.exe"
+                }
+            ]
+        },
+        {
+            "extensionName": "eapx",
+            "apps": [
+                {
+                    "title": "Enterprise Architect",
+                    "openCommand": "C:\\Program Files\\Sparx Systems\\EA\\EA.exe"
+                }
+            ]
+        },
+        {
+            "extensionName": "qea",
+            "apps": [
+                {
+                    "title": "Enterprise Architect 16+",
+                    "openCommand": "C:\\Program Files\\Sparx Systems\\EA\\EA.exe"
+                }
+            ]
+        },
+        {
+            "extensionName": "qeax",
+            "apps": [
+                {
+                    "title": "Enterprise Architect 16+",
+                    "openCommand": "C:\\Program Files\\Sparx Systems\\EA\\EA.exe"
+                }
+            ]
+        }
+    ],
+    "git.repositoryScanMaxDepth": 7,
+    "git.repositoryScanIgnoredFolders": [
+        "node_modules",
+        "workflows",
+        ".*"
+    ]
+}

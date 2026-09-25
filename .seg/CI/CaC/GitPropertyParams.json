@@ -1,0 +1,19 @@
+{
+    "ProjectDevPath": {
+        "Type": "String",
+        "Description": "Set use which commit to be used.",
+        "Default": "main"
+    },
+    "CommitId": {
+        "Type": "String",
+        "Description": "Set use which commit to be used."
+    },
+    "ProjectSourcePath": {
+        "Type": "String",
+        "Description": "Set use which branch to merge from"
+    },
+    "ProjectTagVersion": {
+        "Type": "String",
+        "Description": "Set use which Tag version"
+    }
+}

@@ -1,0 +1,8 @@
+[
+    "main",
+    "*Development",
+    "*Integration",
+    "*Release",
+    "*Sprint",
+    "Sprint*"
+]

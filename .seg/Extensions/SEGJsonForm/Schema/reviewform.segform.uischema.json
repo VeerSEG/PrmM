@@ -1,0 +1,426 @@
+{
+  "ui:field": "LayoutGridField",
+  "ui:layoutGrid": {
+    "ui:row": {
+      "spacing": 2,
+      "children": [
+        {
+          "ui:row": {
+            "spacing": 2,
+            "children": [
+              {
+                "ui:columns": {
+                  "size": 12,
+                  "children": [
+                    "Overview"
+                  ]
+                }
+              },
+              {
+                "ui:columns": {
+                  "size": 12,
+                  "children": [
+                    "CheckList"
+                  ]
+                }
+              },
+              {
+                "ui:columns": {
+                  "size": 12,
+                  "children": [
+                    "Findings"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "Overview": {
+    "ui:field": "LayoutGridField",
+    "ui:layoutGrid": {
+      "ui:row": {
+        "spacing": 2,
+        "children": [
+          {
+            "ui:columns": {
+              "size": 12,
+              "children": [
+                {
+                  "ui:row": {
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "ui:columns": {
+                          "size": 4,
+                          "children": [
+                            "ProjectInformation"
+                          ]
+                        }
+                      },
+                      {
+                        "ui:columns": {
+                          "size": 4,
+                          "children": [
+                            "ReviewMethod"
+                          ]
+                        }
+                      },
+                      {
+                        "ui:columns": {
+                          "size": 4,
+                          "children": [
+                            "ReviewWorkProduct"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "ui:row": {
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "ui:columns": {
+                          "size": 4,
+                          "children": [
+                            "ReviewScope"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "ui:row": {
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "ui:columns": {
+                          "size": 12,
+                          "children": [
+                            "ReviewItems"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "ui:row": {
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "ui:columns": {
+                          "size": 12,
+                          "children": [
+                            "ReviewTeam"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "ReviewScope": {
+      "ui:widget": "radio"
+    },
+    "ReviewItems": {
+      "ui:options": {
+        "label": true
+      },
+      "items": {
+        "ui:field": "LayoutGridField",
+        "ui:layoutGrid": {
+          "ui:row": {
+            "spacing": 2,
+            "children": [
+              {
+                "ui:columns": {
+                  "size": 4,
+                  "children": [
+                    "DocumentID"
+                  ]
+                }
+              },
+              {
+                "ui:columns": {
+                  "size": 4,
+                  "children": [
+                    "Author"
+                  ]
+                }
+              },
+              {
+                "ui:columns": {
+                  "size": 4,
+                  "children": [
+                    "Version"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ReviewTeam": {
+      "ui:field": "LayoutGridField",
+      "ui:layoutGrid": {
+        "ui:row": {
+          "spacing": 2,
+          "children": [
+            {
+              "ui:columns": {
+                "size": 12,
+                "children": [
+                  "MandatoryMembers"
+                ]
+              }
+            },
+            {
+              "ui:columns": {
+                "size": 12,
+                "children": [
+                  "AdditionalMembers"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "MandatoryMembers": {
+        "Author": {
+          "ui:field": "LayoutGridField",
+          "ui:layoutGrid": {
+            "ui:row": {
+              "spacing": 2,
+              "children": [
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "ReviewTeamRole"
+                    ]
+                  }
+                },
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "ProjectRole"
+                    ]
+                  }
+                },
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "Name"
+                    ]
+                  }
+                },
+                {
+                  "ui:row": {
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "ui:columns": {
+                          "size": 12,
+                          "children": [
+                            "ReviewScope"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "ReviewScope": {
+            "ui:widget": "checkboxes",
+            "ui:options": {
+              "inline": true
+            }
+          }
+        },
+        "PeerSWDeveloper": {
+          "ui:field": "LayoutGridField",
+          "ui:layoutGrid": {
+            "ui:row": {
+              "spacing": 2,
+              "children": [
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "ReviewTeamRole"
+                    ]
+                  }
+                },
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "ProjectRole"
+                    ]
+                  }
+                },
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "Name"
+                    ]
+                  }
+                },
+                {
+                  "ui:row": {
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "ui:columns": {
+                          "size": 12,
+                          "children": [
+                            "ReviewScope"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "ReviewScope": {
+            "ui:widget": "checkboxes",
+            "ui:options": {
+              "inline": true
+            }
+          }
+        },
+        "SWArchitect": {
+          "ui:field": "LayoutGridField",
+          "ui:layoutGrid": {
+            "ui:row": {
+              "spacing": 2,
+              "children": [
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "ReviewTeamRole"
+                    ]
+                  }
+                },
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "ProjectRole"
+                    ]
+                  }
+                },
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "Name"
+                    ]
+                  }
+                },
+                {
+                  "ui:row": {
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "ui:columns": {
+                          "size": 12,
+                          "children": [
+                            "ReviewScope"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "ReviewScope": {
+            "ui:widget": "checkboxes",
+            "ui:options": {
+              "inline": true
+            }
+          }
+        }
+      },
+      "AdditionalMembers": {
+        "items": {
+          "ui:field": "LayoutGridField",
+          "ui:layoutGrid": {
+            "ui:row": {
+              "spacing": 2,
+              "children": [
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "ReviewTeamRole"
+                    ]
+                  }
+                },
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "ProjectRole"
+                    ]
+                  }
+                },
+                {
+                  "ui:columns": {
+                    "size": 4,
+                    "children": [
+                      "Name"
+                    ]
+                  }
+                },
+                {
+                  "ui:row": {
+                    "spacing": 2,
+                    "children": [
+                      {
+                        "ui:columns": {
+                          "size": 12,
+                          "children": [
+                            "ReviewScope"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "ReviewScope": {
+            "ui:widget": "checkboxes",
+            "ui:options": {
+              "inline": true
+            }
+          }
+        }
+      }
+    }
+  }
+}
