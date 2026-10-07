@@ -84,7 +84,7 @@
           "Name": "PTC Validation and Link Creation",
           "Type": "ParallelSet",
           "When": {
-            "Condition": "($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ })"
+            "Condition": "(-not $SandboxProjectDevPath -like \"Sprint*-*\") -and ($_MonitorBranches|Where-Object{$SandboxProjectDevPath -like $_ })"
           },
           "Stages": [
             {
@@ -213,7 +213,7 @@
               "Name": "Start Branches Merging",
               "Type": "ParallelWithTemplate",
               "ParallelSetNameTemplate": "Update Branch $($ParallelContext.Name)",
-              "ParallelWith": "$_DevPathsInfo|Where-Object{$_.StartsWith(\"Devs/$SandboxProjectDevPath/\")}|Foreach-Object{@{Name=$_;DevPath=$_}}",
+              "ParallelWith": "$_DevPathsInfo|Where-Object{$_ -like \"Sprint*-*\"\"}|Foreach-Object{@{Name=$_;DevPath=$_}}",
               "WithEnv": [
                 {
                   "Key": "_DevPathsInfo",
