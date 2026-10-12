@@ -1,0 +1,67 @@
+{
+  "Name": "BTCAutomation",
+  "Type": "Workflow",
+  "RequiredNode": "BTC",
+  "WorkflowRepo": {
+    "Type": "ReposSet",
+    "Repos": {
+      "BTCTestSuite": {
+        "Type": "SEGGitlab",
+        "Branch": "dev/luciani/ImportDemoInSEG",
+        "UrlRelativePath": "ci-development/btc-test-suite.git"
+      }
+    }
+  },
+  "WorkflowRunnerRepo": {
+    "Type": "SEGGitlab",
+    "Branch": "main",
+    "UrlRelativePath": "ci-development/workflowrunner.git"
+  },
+  "Lock": "",
+  "Params": {
+    "ProfileList": {
+      "Type": "String",
+      "Description": "List of EPP profile paths to execute."
+    },
+    "HeaderFilesLocation": {
+      "Type": "String",
+      "Description": "Path to the header files location (build includes)."
+    },
+    "HtmlReportsPath": {
+      "Type": "String",
+      "Description": "Output path for HTML reports. Reports.json will be generated here."
+    },
+    "ForceTriggerAll": {
+      "Type": "Bool",
+      "Description": "Force trigger all BTC tests regardless of changes."
+    }
+  },
+  "Stages": [
+    {
+      "Name": "Get Latest Include Files",
+      "Type": "Workflow",
+      "NamedParams": {
+        "ArchiveDownloadPath": "\"$WorkspacePath/Includes\"",
+        "JobFolder": "\"$ProjectJenkinsRootFolder.Split('/'); $i=[array]::LastIndexOf($p,'SubRepos'); ($p[0..($i-1)] -join '/') + '/' + $p[$i-1].Substring(0,7) + '/Integration/Support'\"",
+        "JobName": "\"GenerateIncludeHeaders\"",
+        "ObtainTestsResult": false,
+        "ShareSandbox": true,
+        "ThrowIfError": true,
+        "UseLastSuccessResult": true
+      }
+    },
+    {
+      "Name": "BTC Test Execution",
+      "Type": "Stage",
+      "NamedParams": {
+        "EppFileList": "\"$SandboxPath\"|Get-ChildItem  -Filter *.epp -Recurse|Select-Object -ExpandProperty FullName",
+        "HtmlReportsPath": "$HtmlReportsPath",
+        "TestsResultPath": "$TestsResultPath",
+        "HeaderFilesLocation": "$(Get-ChildItem \"$WorkspacePath/Includes/SwBuild/Headers/*/include\" -Directory|Select-Object -First 1 -ExpandProperty \"FullName\")"
+      },
+      "FunctionName": "Start-BTCTestProfile",
+      "ModuleName": "$WorkflowRepoPath/BTCTestSuite/Modules/BtcTestSuite-Basic/BtcTestSuite-Basic",
+      "IgnoreError": true
+    }
+  ]
+}
