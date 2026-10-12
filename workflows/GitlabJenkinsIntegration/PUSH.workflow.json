@@ -47,6 +47,7 @@
       "Description": "This stage will check if the current branch integration has already been setup. By checking the signature of the workflows and .seg folder.",
       "NamedParams": {
         "CanShareSandbox": true,
+        "NoWaitJob": true,
         "JobFolder": "\"$ProjectJenkinsRootFolder/$BranchFolderName/_JenkinsCaC\"",
         "JobName": "\"JenkinsSeed\""
       },

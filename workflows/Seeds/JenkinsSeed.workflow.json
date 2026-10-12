@@ -5,7 +5,7 @@
   "Tag": [
     "ProjectConfigurationManagement"
   ],
-  "RequiredNode": "Git",
+  "RequiredNode": "Seed",
   "CanExecuteLocal":false,
   "WorkflowRunnerRepo": {
     "Type": "SEGGitlab",
