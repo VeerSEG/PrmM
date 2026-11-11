@@ -1,971 +1,723 @@
-/* Modified for VEOS! -> modul */
 /******************************************************************************
  *
  *  ASAP2 file:     PrmM.a2l
  *
+ * 
+ *
  * Code generation for model "PrmM".
  *
- * Model version              : 1.22
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Tue Jun 23 23:29:11 2026
- * 
+ * Model version              : 15.14
+ * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
+ * C source code generated on : Tue Nov 10 23:20:35 2026
+ *
  * Target selection: autosar.tlc
  * Embedded hardware selection: Infineon->TriCore
- * Code generation objective: MISRA C:2012 guidelines
+ * Code generation objectives: Unspecified
  * Validation result: Not run
  *
  * (add additional file header information here)
  *
  ******************************************************************************/
-
-ASAP2_VERSION  1 31   /* Version 1.31 */
+ASAP2_VERSION  1 31     /* Version 1.31 */
 
 /begin PROJECT ProjectName "Project Comment Goes Here"
-  
+
   /begin HEADER "Header Comments go here"
-    
   /end HEADER
-  
-  
+
   /begin MODULE ModuleName  "Module Comment Goes Here"
-    
+
     /begin MOD_PAR "MOD PAR Comment Goes Here"
-      
     /end MOD_PAR
-    
-    /begin MOD_COMMON  "Mod Common Comment Here" 
+
+    /begin MOD_COMMON  "Mod Common Comment Here"
       BYTE_ORDER     MSB_LAST
+
+      ALIGNMENT_BYTE 1
+      ALIGNMENT_WORD 2
+      ALIGNMENT_LONG 4
+      ALIGNMENT_FLOAT32_IEEE 4
+      ALIGNMENT_FLOAT64_IEEE 4
     /end MOD_COMMON
-    
-    /begin RECORD_LAYOUT Scalar_BOOLEAN
-      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Scalar_UBYTE
-      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Scalar_BYTE
-      FNC_VALUES  1 SBYTE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Scalar_UWORD
-      FNC_VALUES  1 UWORD COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Scalar_SWORD
-      FNC_VALUES 1 SWORD COLUMN_DIR DIRECT
-    /end RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Scalar_ULONG
-      FNC_VALUES  1 ULONG COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Scalar_LONG
-      FNC_VALUES  1 SLONG COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Scalar_FLOAT32_IEEE
-      FNC_VALUES  1 FLOAT32_IEEE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Scalar_FLOAT64_IEEE
-      FNC_VALUES  1 FLOAT64_IEEE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    
-    /begin RECORD_LAYOUT Lookup1D_BOOLEAN
-      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_X_BOOLEAN
-      AXIS_PTS_X  1 UBYTE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_BYTE
-      FNC_VALUES  1 SBYTE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_X_BYTE
-      AXIS_PTS_X  1 SBYTE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_UBYTE
-      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_X_UBYTE
-      AXIS_PTS_X  1 UBYTE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_UWORD
-      FNC_VALUES  1 UWORD COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_X_UWORD
-      AXIS_PTS_X  1 UWORD INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_WORD
-      FNC_VALUES  1 SWORD COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_X_WORD
-      AXIS_PTS_X  1 SWORD INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_ULONG
-      FNC_VALUES  1 ULONG COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_X_ULONG
-      AXIS_PTS_X  1 ULONG INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_SLONG
-      FNC_VALUES  1 SLONG COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_X_LONG
-      AXIS_PTS_X  1 SLONG INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_FLOAT32_IEEE
-      FNC_VALUES  1 FLOAT32_IEEE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_X_FLOAT32_IEEE
-      AXIS_PTS_X  1 FLOAT32_IEEE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_FLOAT64_IEEE
-      FNC_VALUES  1 FLOAT64_IEEE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup1D_X_FLOAT64_IEEE
-      AXIS_PTS_X  1 FLOAT64_IEEE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_BOOLEAN
-      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_X_BOOLEAN
-      AXIS_PTS_X  1 UBYTE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT    
-    
-    /begin RECORD_LAYOUT Lookup2D_UBYTE
-      FNC_VALUES  1 UBYTE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_X_UBYTE
-      AXIS_PTS_X  1 UBYTE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_BYTE
-      FNC_VALUES  1 SBYTE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_X_BYTE
-      AXIS_PTS_X  1 SBYTE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_UWORD
-      FNC_VALUES  1 UWORD COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_X_UWORD
-      AXIS_PTS_X  1 UWORD INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_WORD
-      FNC_VALUES  1 SWORD COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_X_WORD
-      AXIS_PTS_X  1 SWORD INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_ULONG
-      FNC_VALUES  1 ULONG COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_X_ULONG
-      AXIS_PTS_X  1 ULONG INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_LONG
-      FNC_VALUES  1 SLONG COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_X_LONG
-      AXIS_PTS_X  1 SLONG INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_FLOAT32_IEEE
-      FNC_VALUES  1 FLOAT32_IEEE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_X_FLOAT32_IEEE
-      AXIS_PTS_X 1 FLOAT32_IEEE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_FLOAT64_IEEE
-      FNC_VALUES  1  FLOAT64_IEEE COLUMN_DIR DIRECT
-    /end   RECORD_LAYOUT
-    
-    /begin RECORD_LAYOUT Lookup2D_X_FLOAT64_IEEE
-      AXIS_PTS_X 1 FLOAT64_IEEE INDEX_INCR DIRECT
-    /end   RECORD_LAYOUT
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_mMaxTqGrdtInt_XDF32  
-      /* Long Identifier        */      "Maximum internal torque request gradient. Nm per second.
-      "
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_mMaxTqGrdtInt_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_N_m_s 
-      /* Lower Limit            */      1000.0 
-      /* Upper Limit            */      2000.0
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_nHSpdBd_XDF32  
-      /* Long Identifier        */      "Above this speed lower bound of  torque request is set to minimum electromagnetical limit. "
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_nHSpdBd_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_rpm 
-      /* Lower Limit            */      -3.4E+38 
-      /* Upper Limit            */      3.4E+38
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_nLwrSpdBd_XDF32  
-      /* Long Identifier        */      "Below this speed drag torque is set as torque request"
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_nLwrSpdBd_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_rpm 
-      /* Lower Limit            */      -3.4E+38 
-      /* Upper Limit            */      3.4E+38
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_nSpdReqInt_XDF32  
-      /* Long Identifier        */      "Internally specified speed target for speed mode"
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_nSpdReqInt_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_rpm 
-      /* Lower Limit            */      -3.4E+38 
-      /* Upper Limit            */      3.4E+38
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_nZeroThd_XDF32  
-      /* Long Identifier        */      "Thd to round min/max Ext Tq Lim to zero"
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_nZeroThd_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_N_m 
-      /* Lower Limit            */      0.0 
-      /* Upper Limit            */      1.0
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_uDcMaxBattLess_XDF32  
-      /* Long Identifier        */      "Internal value to restrict maximum voltage limit for Batteryless mode."
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMaxBattLess_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_V 
-      /* Lower Limit            */      24.0 
-      /* Upper Limit            */      56.0
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_uDcMaxOtherM_XDF32  
-      /* Long Identifier        */      "Internal value to restrict maximum voltage limit for speed, torque or communicationless mode."
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMaxOtherM_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_V 
-      /* Lower Limit            */      24.0 
-      /* Upper Limit            */      56.0
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_uDcMaxVoltMode_XDF32  
-      /* Long Identifier        */      "Internal value to restrict maximum voltage limit for voltage mode."
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMaxVoltMode_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_V 
-      /* Lower Limit            */      24.0 
-      /* Upper Limit            */      56.0
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_uDcMinBattLess_XDF32  
-      /* Long Identifier        */      "Internal value to restrict minimum voltage limit fo Batteryless mode."
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMinBattLess_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_V 
-      /* Lower Limit            */      24.0 
-      /* Upper Limit            */      56.0
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_uDcMinOtherM_XDF32  
-      /* Long Identifier        */      "Internal value to restrict minimum voltage limit for speed, torque or communicationless mode."
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMinOtherM_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_V 
-      /* Lower Limit            */      24.0 
-      /* Upper Limit            */      56.0
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_uDcMinVoltMode_XDF32  
-      /* Long Identifier        */      "Internal value to restrict minimum voltage limit for voltage mode."
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMinVoltMode_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_V 
-      /* Lower Limit            */      24.0 
-      /* Upper Limit            */      56.0
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_uVoltReqComless_XDF32  
-      /* Long Identifier        */      "Internally specified voltage target in communicationless Limphome Mode"
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uVoltReqComless_XDF32@ */ 
-      /* Record Layout          */      Scalar_FLOAT32_IEEE 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_single_V 
-      /* Lower Limit            */      -3.4E+38 
-      /* Upper Limit            */      3.4E+38
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_fSpdReqSelect_XDB  
-      /* Long Identifier        */      "Speed request method selector. False: Internal Value  True: Value from CAN"
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_fSpdReqSelect_XDB@ */ 
-      /* Record Layout          */      Scalar_BOOLEAN 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_boolean 
-      /* Lower Limit            */      0 
-      /* Upper Limit            */      1
-    /end CHARACTERISTIC
-    
-    
-    /begin CHARACTERISTIC
-      /* Name                   */      CS_PrmM_fTqGrdSelect_XDB  
-      /* Long Identifier        */      "Gradient method selector. True: Internal Value  False: Value from CAN"
-      /* Type                   */      VALUE 
-      /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_fTqGrdSelect_XDB@ */ 
-      /* Record Layout          */      Scalar_BOOLEAN 
-      /* Maximum Difference     */      0 
-      /* Conversion Method      */      PrmM_CM_boolean 
-      /* Lower Limit            */      0 
-      /* Upper Limit            */      1
-    /end CHARACTERISTIC
-    
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_iReqMaxBattI_xdf32
-      /* Long identifier        */      "Maximun battery current limit"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_A
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      -1200.0
-      /* Upper limit            */      1200.0
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_iReqMaxBattI_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_iReqMinBattI_xdf32
-      /* Long identifier        */      "Minimun battery current limit"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_A
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      -1200.0
-      /* Upper limit            */      1200.0
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_iReqMinBattI_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_mTqminmerge_xdf32
-      /* Long identifier        */      ""
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      -3.4E+38
-      /* Upper limit            */      3.4E+38
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_mTqminmerge_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_mReqTq_xdf32
-      /* Long identifier        */      "requested torque"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_N_m
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      -75.0
-      /* Upper limit            */      75.0
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_mReqTq_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_uReqU_xdf32
-      /* Long identifier        */      "requested DC voltage"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_V
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      0.0
-      /* Upper limit            */      54.0
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_uReqU_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_nReqSpd_xdf32
-      /* Long identifier        */      "requested mechanical speed"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_rpm
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      -10000.0
-      /* Upper limit            */      54000.0
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_nReqSpd_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_mTqLimMax_xdf32
-      /* Long identifier        */      "Maximum torque limit"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_N_m
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      -75.0
-      /* Upper limit            */      75.0
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_mTqLimMax_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_mTqLimMin_xdf32
-      /* Long identifier        */      "Minimun torque limit"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_N_m
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      -75.0
-      /* Upper limit            */      75.0
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_mTqLimMin_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_uReqMaxBattU_xdf32
-      /* Long identifier        */      "Maximum battery voltage limit"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_V
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      0.0
-      /* Upper limit            */      2500.0
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_uReqMaxBattU_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_uReqMinBattU_xdf32
-      /* Long identifier        */      "Minimun battery voltage limit"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_V
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      0.0
-      /* Upper limit            */      2500.0
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_uReqMinBattU_xdf32@ */
-    /end MEASUREMENT
-    
-    
-    /begin MEASUREMENT
-      /* Name                   */      CS_PrmM_yMaxTqGrdt_xdf32
-      /* Long identifier        */      "Maximmun gradient limit"
-      /* Data type              */      FLOAT32_IEEE
-      /* Conversion method      */      PrmM_CM_single_N_m_s
-      /* Resolution (Not used)  */      0
-      /* Accuracy (Not used)    */      0
-      /* Lower limit            */      -3.4E+38
-      /* Upper limit            */      3.4E+38
-      ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_yMaxTqGrdt_xdf32@ */
-    /end MEASUREMENT
-    
-    /begin COMPU_METHOD
-      /* Name of CompuMethod    */      PrmM_CM_single_N_m_s
-      /* Long identifier        */      "Q = V"
-      /* Conversion Type        */      RAT_FUNC
-      /* Format                 */      "%8.6"
-      /* Units                  */      "N*m/s"
-      /* Coefficients           */      COEFFS 0 1 0 0 0 1
-    /end COMPU_METHOD
-    
-    /begin COMPU_METHOD
-      /* Name of CompuMethod    */      PrmM_CM_single_rpm
-      /* Long identifier        */      "Q = V"
-      /* Conversion Type        */      RAT_FUNC
-      /* Format                 */      "%8.6"
-      /* Units                  */      "rpm"
-      /* Coefficients           */      COEFFS 0 1 0 0 0 1
-    /end COMPU_METHOD
-    
-    /begin COMPU_METHOD
-      /* Name of CompuMethod    */      PrmM_CM_single_N_m
-      /* Long identifier        */      "Q = V"
-      /* Conversion Type        */      RAT_FUNC
-      /* Format                 */      "%8.6"
-      /* Units                  */      "N*m"
-      /* Coefficients           */      COEFFS 0 1 0 0 0 1
-    /end COMPU_METHOD
-    
-    /begin COMPU_METHOD
-      /* Name of CompuMethod    */      PrmM_CM_single_V
-      /* Long identifier        */      "Q = V"
-      /* Conversion Type        */      RAT_FUNC
-      /* Format                 */      "%8.6"
-      /* Units                  */      "V"
-      /* Coefficients           */      COEFFS 0 1 0 0 0 1
-    /end COMPU_METHOD
-    
-    /begin COMPU_METHOD
-      /* Name of CompuMethod    */      PrmM_CM_boolean
-      /* Long identifier        */      "Q = V"
-      /* Conversion Type        */      RAT_FUNC
-      /* Format                 */      "%1.0"
-      /* Units                  */      ""
-      /* Coefficients           */      COEFFS 0 1 0 0 0 1
-    /end COMPU_METHOD
-    
-    /begin COMPU_METHOD
-      /* Name of CompuMethod    */      PrmM_CM_single_A
-      /* Long identifier        */      "Q = V"
-      /* Conversion Type        */      RAT_FUNC
-      /* Format                 */      "%8.6"
-      /* Units                  */      "A"
-      /* Coefficients           */      COEFFS 0 1 0 0 0 1
-    /end COMPU_METHOD
-    
-    /begin COMPU_METHOD
-      /* Name of CompuMethod    */      PrmM_CM_single
-      /* Long identifier        */      "Q = V"
-      /* Conversion Type        */      RAT_FUNC
-      /* Format                 */      "%8.6"
-      /* Units                  */      ""
-      /* Coefficients           */      COEFFS 0 1 0 0 0 1
-    /end COMPU_METHOD
-    
-    /begin GROUP 
-      /* Name                   */       PrmM
-      /* Long identifier        */       "PrmM"
-      /* Root                    */       ROOT
-      /begin SUB_GROUP
-        PrmM_Root_PrmM_Proc_100ms_sys
-        PrmM_Root_PrmM_Proc_1ms_sys
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_Root_PrmM_Proc_100ms_sys
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys"
-      /begin SUB_GROUP
-        PrmM_S2_ParameterManager100ms
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_Root_PrmM_Proc_1ms_sys
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys"
-      /begin SUB_GROUP
-        PrmM_S3_ParameterManager1ms
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S2_ParameterManager100ms
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms"
-      /begin SUB_GROUP
-        PrmM_S4_ElectricalLimits
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S3_ParameterManager1ms
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms"
-      /begin SUB_GROUP
-        PrmM_S18_CS_PrmM_iReqMaxBattI_xdf32
-        PrmM_S18_CS_PrmM_iReqMinBattI_xdf32
-        PrmM_S18_CS_PrmM_mReqTq_xdf32
-        PrmM_S18_CS_PrmM_nReqSpd_xdf32
-        PrmM_S18_CS_PrmM_uReqMaxBattU_xdf32
-        PrmM_S18_CS_PrmM_uReqMinBattU_xdf32
-        PrmM_S18_CS_PrmM_uReqU_xdf32
-        PrmM_S18_CustExtDes
-        PrmM_S18_CustTqLim
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S4_ElectricalLimits
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits"
-      /begin SUB_GROUP
-        PrmM_S5_BatterylessOperation
-        PrmM_S5_Other
-        PrmM_S5_VoltageMode
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_iReqMaxBattI_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_iReqMaxBattI_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_iReqMaxBattI_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_iReqMinBattI_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_iReqMinBattI_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_iReqMinBattI_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_mReqTq_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_mReqTq_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_mReqTq_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_nReqSpd_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_nReqSpd_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_nReqSpd_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_uReqMaxBattU_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_uReqMaxBattU_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_uReqMaxBattU_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_uReqMinBattU_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_uReqMinBattU_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_uReqMinBattU_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CS_PrmM_uReqU_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_uReqU_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_uReqU_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CustExtDes
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes"
-      /begin SUB_GROUP
-        PrmM_S27_CS_PrmM_nLwrSpdBd_XDF32
-        PrmM_S27_SpdDesDetermin
-        PrmM_S27_VoltDesDetermin
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S18_CustTqLim
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim"
-      /begin SUB_GROUP
-        PrmM_S28_CS_PrmM_mTqLimMax_xdf32
-        PrmM_S28_CS_PrmM_mTqLimMin_xdf32
-        PrmM_S28_CS_PrmM_yMaxTqGrdt_xdf32
-        PrmM_S28_CalcGradientLimit
-        PrmM_S28_TorqueLimitation
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S5_BatterylessOperation
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/BatterylessOperation"
-      /begin SUB_GROUP
-        PrmM_S7_CS_PrmM_uDcMaxBattLess_XDF32
-        PrmM_S7_CS_PrmM_uDcMinBattLess_XDF32
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S5_Other
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/Other"
-      /begin SUB_GROUP
-        PrmM_S10_CS_PrmM_uDcMaxOtherM_XDF32
-        PrmM_S10_CS_PrmM_uDcMinOtherM_XDF32
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S5_VoltageMode
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/VoltageMode"
-      /begin SUB_GROUP
-        PrmM_S11_CS_PrmM_uDcMaxVoltMode_XDF32
-        PrmM_S11_CS_PrmM_uDcMinVoltMode_XDF32
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S27_CS_PrmM_nLwrSpdBd_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/CS_PrmM_nLwrSpdBd_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_nLwrSpdBd_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S27_SpdDesDetermin
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/SpdDesDetermin"
-      /begin SUB_GROUP
-        PrmM_S46_CS_PrmM_fSpdReqSelect_XDB
-        PrmM_S46_CS_PrmM_nSpdReqInt_XDF32
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S27_VoltDesDetermin
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/VoltDesDetermin"
-      /begin SUB_GROUP
-        PrmM_S48_CS_PrmM_uVoltReqComless_XDF32
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S28_CS_PrmM_mTqLimMax_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CS_PrmM_mTqLimMax_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_mTqLimMax_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S28_CS_PrmM_mTqLimMin_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CS_PrmM_mTqLimMin_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_mTqLimMin_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S28_CS_PrmM_yMaxTqGrdt_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CS_PrmM_yMaxTqGrdt_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_yMaxTqGrdt_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S28_CalcGradientLimit
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CalcGradientLimit"
-      /begin SUB_GROUP
-        PrmM_S56_CS_PrmM_fTqGrdSelect_XDB
-        PrmM_S56_CS_PrmM_mMaxTqGrdtInt_XDF32
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S28_TorqueLimitation
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation"
-      /begin SUB_GROUP
-        PrmM_S57_CS_PrmM_mTqminmerge_xdf32
-        PrmM_S57_CS_PrmM_nHSpdBd_XDF32
-        PrmM_S57_CS_PrmM_nLwrSpdBd_XDF32
-        PrmM_S57_CS_PrmM_nZeroThd_XDF32
-      /end SUB_GROUP
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S7_CS_PrmM_uDcMaxBattLess_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/BatterylessOperation/CS_PrmM_uDcMaxBattLess_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_uDcMaxBattLess_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S7_CS_PrmM_uDcMinBattLess_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/BatterylessOperation/CS_PrmM_uDcMinBattLess_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_uDcMinBattLess_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S10_CS_PrmM_uDcMaxOtherM_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/Other/CS_PrmM_uDcMaxOtherM_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_uDcMaxOtherM_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S10_CS_PrmM_uDcMinOtherM_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/Other/CS_PrmM_uDcMinOtherM_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_uDcMinOtherM_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S11_CS_PrmM_uDcMaxVoltMode_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/VoltageMode/CS_PrmM_uDcMaxVoltMode_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_uDcMaxVoltMode_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S11_CS_PrmM_uDcMinVoltMode_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/VoltageMode/CS_PrmM_uDcMinVoltMode_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_uDcMinVoltMode_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S46_CS_PrmM_fSpdReqSelect_XDB
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/SpdDesDetermin/CS_PrmM_fSpdReqSelect_XDB"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_fSpdReqSelect_XDB
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S46_CS_PrmM_nSpdReqInt_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/SpdDesDetermin/CS_PrmM_nSpdReqInt_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_nSpdReqInt_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S48_CS_PrmM_uVoltReqComless_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustExtDes/VoltDesDetermin/CS_PrmM_uVoltReqComless_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_uVoltReqComless_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S56_CS_PrmM_fTqGrdSelect_XDB
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CalcGradientLimit/CS_PrmM_fTqGrdSelect_XDB"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_fTqGrdSelect_XDB
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S56_CS_PrmM_mMaxTqGrdtInt_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CalcGradientLimit/CS_PrmM_mMaxTqGrdtInt_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_mMaxTqGrdtInt_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S57_CS_PrmM_mTqminmerge_xdf32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_mTqminmerge_xdf32"
-      /begin REF_MEASUREMENT
-        CS_PrmM_mTqminmerge_xdf32
-      /end REF_MEASUREMENT
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S57_CS_PrmM_nHSpdBd_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_nHSpdBd_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_nHSpdBd_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S57_CS_PrmM_nLwrSpdBd_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_nLwrSpdBd_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_nLwrSpdBd_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    /begin GROUP 
-      /* Name                   */       PrmM_S57_CS_PrmM_nZeroThd_XDF32
-      /* Long identifier        */       "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_nZeroThd_XDF32"
-      /begin REF_CHARACTERISTIC
-        CS_PrmM_nZeroThd_XDF32
-      /end REF_CHARACTERISTIC
-    /end GROUP
-    
-    
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_fTqGrdSelect_XDB
+    /* Long Identifier        */      "Gradient method selector. True: Internal Value  False: Value from CAN"
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_fTqGrdSelect_XDB@ */
+    /* Record Layout          */      Record_BOOLEAN
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_boolean
+    /* Lower Limit            */      0
+    /* Upper Limit            */      1
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_mMaxTqGrdtInt_XDF32
+    /* Long Identifier        */      "Maximum internal torque request gradient. Nm per second.\r\n"
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_mMaxTqGrdtInt_XDF32@ */
+    /* Record Layout          */      Record_FLOAT32_IEEE
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_single_N_into_m_per_s
+    /* Lower Limit            */      1000.000000
+    /* Upper Limit            */      2000.000000
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_nHSpdBd_XDF32
+    /* Long Identifier        */      "Above this speed lower bound of  torque request is set to minimum electromagnetical limit. "
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_nHSpdBd_XDF32@ */
+    /* Record Layout          */      Record_FLOAT32_IEEE
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_single_rpm
+    /* Lower Limit            */      -3.4E+38
+    /* Upper Limit            */      3.4E+38
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_nLwrSpdBd_XDF32
+    /* Long Identifier        */      "Below this speed drag torque is set as torque request"
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_nLwrSpdBd_XDF32@ */
+    /* Record Layout          */      Record_FLOAT32_IEEE
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_single_rpm
+    /* Lower Limit            */      -3.4E+38
+    /* Upper Limit            */      3.4E+38
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_uDcMaxBattLess_XDF32
+    /* Long Identifier        */      "Internal value to restrict maximum voltage limit for Batteryless mode."
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMaxBattLess_XDF32@ */
+    /* Record Layout          */      Record_FLOAT32_IEEE
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_single_V
+    /* Lower Limit            */      24.000000
+    /* Upper Limit            */      56.000000
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_uDcMaxOtherM_XDF32
+    /* Long Identifier        */      "Internal value to restrict maximum voltage limit for speed, torque or communicationless mode."
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMaxOtherM_XDF32@ */
+    /* Record Layout          */      Record_FLOAT32_IEEE
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_single_V
+    /* Lower Limit            */      24.000000
+    /* Upper Limit            */      56.000000
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_uDcMaxVoltMode_XDF32
+    /* Long Identifier        */      "Internal value to restrict maximum voltage limit for voltage mode."
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMaxVoltMode_XDF32@ */
+    /* Record Layout          */      Record_FLOAT32_IEEE
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_single_V
+    /* Lower Limit            */      24.000000
+    /* Upper Limit            */      56.000000
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_uDcMinBattLess_XDF32
+    /* Long Identifier        */      "Internal value to restrict minimum voltage limit fo Batteryless mode."
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMinBattLess_XDF32@ */
+    /* Record Layout          */      Record_FLOAT32_IEEE
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_single_V
+    /* Lower Limit            */      24.000000
+    /* Upper Limit            */      56.000000
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_uDcMinOtherM_XDF32
+    /* Long Identifier        */      "Internal value to restrict minimum voltage limit for speed, torque or communicationless mode."
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMinOtherM_XDF32@ */
+    /* Record Layout          */      Record_FLOAT32_IEEE
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_single_V
+    /* Lower Limit            */      24.000000
+    /* Upper Limit            */      56.000000
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC 
+    /* Name                   */      CS_PrmM_uDcMinVoltMode_XDF32
+    /* Long Identifier        */      "Internal value to restrict minimum voltage limit for voltage mode."
+    /* Type                   */      VALUE
+    /* ECU Address            */      0x0000 /* @ECU_Address@CS_PrmM_uDcMinVoltMode_XDF32@ */
+    /* Record Layout          */      Record_FLOAT32_IEEE
+    /* Maximum Difference     */      0
+    /* Conversion Method      */      PrmM_CM_single_V
+    /* Lower Limit            */      24.000000
+    /* Upper Limit            */      56.000000
+  /end CHARACTERISTIC 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_iReqMaxBattI_xdf32
+    /* Long identifier        */      "Maximun battery current limit"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_A
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      -1200.000000
+    /* Upper limit            */      1200.000000
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_iReqMaxBattI_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_iReqMinBattI_xdf32
+    /* Long identifier        */      "Minimun battery current limit"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_A
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      -1200.000000
+    /* Upper limit            */      1200.000000
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_iReqMinBattI_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_mReqTq_xdf32
+    /* Long identifier        */      "requested torque"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_N_into_m
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      -75.000000
+    /* Upper limit            */      75.000000
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_mReqTq_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_mTqLimMax_xdf32
+    /* Long identifier        */      "Maximum torque limit"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_N_into_m
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      -75.000000
+    /* Upper limit            */      75.000000
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_mTqLimMax_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_mTqLimMin_xdf32
+    /* Long identifier        */      "Minimun torque limit"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_N_into_m
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      -75.000000
+    /* Upper limit            */      75.000000
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_mTqLimMin_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_mTqminmerge_xdf32
+    /* Long identifier        */      ""
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_N_into_m
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      -3.4E+38
+    /* Upper limit            */      3.4E+38
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_mTqminmerge_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_nReqSpd_xdf32
+    /* Long identifier        */      "requested mechanical speed"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_rpm
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      -10000.000000
+    /* Upper limit            */      54000.000000
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_nReqSpd_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_uReqMaxBattU_xdf32
+    /* Long identifier        */      "Maximum battery voltage limit"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_V
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      0.000000
+    /* Upper limit            */      2500.000000
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_uReqMaxBattU_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_uReqMinBattU_xdf32
+    /* Long identifier        */      "Minimun battery voltage limit"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_V
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      0.000000
+    /* Upper limit            */      2500.000000
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_uReqMinBattU_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_uReqU_xdf32
+    /* Long identifier        */      "requested DC voltage"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_V
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      0.000000
+    /* Upper limit            */      54.000000
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_uReqU_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT 
+    /* Name                   */      CS_PrmM_yMaxTqGrdt_xdf32
+    /* Long identifier        */      "Maximmun gradient limit"
+    /* Data type              */      FLOAT32_IEEE
+    /* Conversion method      */      PrmM_CM_single_N_into_m_per_s
+    /* Resolution (Not used)  */      0      
+    /* Accuracy (Not used)    */      0      
+    /* Lower limit            */      -3.4E+38
+    /* Upper limit            */      3.4E+38
+    ECU_ADDRESS                       0x0000 /* @ECU_Address@CS_PrmM_yMaxTqGrdt_xdf32@ */
+    /begin IF_DATA XCP
+      /begin DAQ_EVENT VARIABLE
+          /begin DEFAULT_EVENT_LIST
+            EVENT  0x0000
+          /end DEFAULT_EVENT_LIST
+      /end DAQ_EVENT
+    /end IF_DATA
+  /end MEASUREMENT 
+
+  /begin COMPU_METHOD
+    /* Name of CompuMethod    */      PrmM_CM_boolean
+    /* Long identifier        */      "Q = V"
+    /* Conversion Type        */      RAT_FUNC
+    /* Format                 */      "%1.0"
+    /* Units                  */      ""
+    /* Coefficients           */      COEFFS 0 1 0 0 0 1
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD
+    /* Name of CompuMethod    */      PrmM_CM_single_A
+    /* Long identifier        */      "Q = V"
+    /* Conversion Type        */      RAT_FUNC
+    /* Format                 */      "%8.6"
+    /* Units                  */      "A"
+    /* Coefficients           */      COEFFS 0 1 0 0 0 1
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD
+    /* Name of CompuMethod    */      PrmM_CM_single_N_into_m
+    /* Long identifier        */      "Q = V"
+    /* Conversion Type        */      RAT_FUNC
+    /* Format                 */      "%8.6"
+    /* Units                  */      "N*m"
+    /* Coefficients           */      COEFFS 0 1 0 0 0 1
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD
+    /* Name of CompuMethod    */      PrmM_CM_single_N_into_m_per_s
+    /* Long identifier        */      "Q = V"
+    /* Conversion Type        */      RAT_FUNC
+    /* Format                 */      "%8.6"
+    /* Units                  */      "N*m/s"
+    /* Coefficients           */      COEFFS 0 1 0 0 0 1
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD
+    /* Name of CompuMethod    */      PrmM_CM_single_V
+    /* Long identifier        */      "Q = V"
+    /* Conversion Type        */      RAT_FUNC
+    /* Format                 */      "%8.6"
+    /* Units                  */      "V"
+    /* Coefficients           */      COEFFS 0 1 0 0 0 1
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD
+    /* Name of CompuMethod    */      PrmM_CM_single_rpm
+    /* Long identifier        */      "Q = V"
+    /* Conversion Type        */      RAT_FUNC
+    /* Format                 */      "%8.6"
+    /* Units                  */      "rpm"
+    /* Coefficients           */      COEFFS 0 1 0 0 0 1
+  /end COMPU_METHOD
+
+  /begin  RECORD_LAYOUT Record_BOOLEAN
+    FNC_VALUES 1 UBYTE COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin  RECORD_LAYOUT Record_FLOAT32_IEEE
+    FNC_VALUES 1 FLOAT32_IEEE COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin GROUP
+    /* Name                   */      PrmM
+    /* Long identifier        */      "PrmM"
+    /* Root                   */      ROOT
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_100ms_sys
+      PrmM.PrmM_Proc_1ms_sys
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.BatterylessOperation
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.Other
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.VoltageMode
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.BatterylessOperation
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/BatterylessOperation"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.BatterylessOperation.CS_PrmM_uDcMaxBattLess_XDF32
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.BatterylessOperation.CS_PrmM_uDcMinBattLess_XDF32
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.BatterylessOperation.CS_PrmM_uDcMaxBattLess_XDF32
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/BatterylessOperation/CS_PrmM_uDcMaxBattLess_XDF32"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_uDcMaxBattLess_XDF32
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.BatterylessOperation.CS_PrmM_uDcMinBattLess_XDF32
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/BatterylessOperation/CS_PrmM_uDcMinBattLess_XDF32"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_uDcMinBattLess_XDF32
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.Other
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/Other"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.Other.CS_PrmM_uDcMaxOtherM_XDF32
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.Other.CS_PrmM_uDcMinOtherM_XDF32
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.Other.CS_PrmM_uDcMaxOtherM_XDF32
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/Other/CS_PrmM_uDcMaxOtherM_XDF32"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_uDcMaxOtherM_XDF32
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.Other.CS_PrmM_uDcMinOtherM_XDF32
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/Other/CS_PrmM_uDcMinOtherM_XDF32"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_uDcMinOtherM_XDF32
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.VoltageMode
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/VoltageMode"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.VoltageMode.CS_PrmM_uDcMaxVoltMode_XDF32
+      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.VoltageMode.CS_PrmM_uDcMinVoltMode_XDF32
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.VoltageMode.CS_PrmM_uDcMaxVoltMode_XDF32
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/VoltageMode/CS_PrmM_uDcMaxVoltMode_XDF32"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_uDcMaxVoltMode_XDF32
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_100ms_sys.ParameterManager100ms.ElectricalLimits.VoltageMode.CS_PrmM_uDcMinVoltMode_XDF32
+    /* Long identifier        */      "PrmM/PrmM_Proc_100ms_sys/ParameterManager100ms/ElectricalLimits/VoltageMode/CS_PrmM_uDcMinVoltMode_XDF32"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_uDcMinVoltMode_XDF32
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_iReqMaxBattI_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_iReqMinBattI_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_mReqTq_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_nReqSpd_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_uReqMaxBattU_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_uReqMinBattU_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_uReqU_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_iReqMaxBattI_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_iReqMaxBattI_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_iReqMaxBattI_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_iReqMinBattI_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_iReqMinBattI_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_iReqMinBattI_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_mReqTq_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_mReqTq_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_mReqTq_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_nReqSpd_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_nReqSpd_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_nReqSpd_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_uReqMaxBattU_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_uReqMaxBattU_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_uReqMaxBattU_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_uReqMinBattU_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_uReqMinBattU_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_uReqMinBattU_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CS_PrmM_uReqU_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CS_PrmM_uReqU_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_uReqU_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CS_PrmM_mTqLimMax_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CS_PrmM_mTqLimMin_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CS_PrmM_yMaxTqGrdt_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CalcGradientLimit
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.TorqueLimitation
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CS_PrmM_mTqLimMax_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CS_PrmM_mTqLimMax_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_mTqLimMax_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CS_PrmM_mTqLimMin_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CS_PrmM_mTqLimMin_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_mTqLimMin_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CS_PrmM_yMaxTqGrdt_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CS_PrmM_yMaxTqGrdt_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_yMaxTqGrdt_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CalcGradientLimit
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CalcGradientLimit"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CalcGradientLimit.CS_PrmM_fTqGrdSelect_XDB
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CalcGradientLimit.CS_PrmM_mMaxTqGrdtInt_XDF32
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CalcGradientLimit.CS_PrmM_fTqGrdSelect_XDB
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CalcGradientLimit/CS_PrmM_fTqGrdSelect_XDB"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_fTqGrdSelect_XDB
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.CalcGradientLimit.CS_PrmM_mMaxTqGrdtInt_XDF32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/CalcGradientLimit/CS_PrmM_mMaxTqGrdtInt_XDF32"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_mMaxTqGrdtInt_XDF32
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.TorqueLimitation
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation"
+    /begin SUB_GROUP
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.TorqueLimitation.CS_PrmM_mTqminmerge_xdf32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.TorqueLimitation.CS_PrmM_nHSpdBd_XDF32
+      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.TorqueLimitation.CS_PrmM_nLwrSpdBd_XDF32
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.TorqueLimitation.CS_PrmM_mTqminmerge_xdf32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_mTqminmerge_xdf32"
+    /begin REF_MEASUREMENT
+      CS_PrmM_mTqminmerge_xdf32
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.TorqueLimitation.CS_PrmM_nHSpdBd_XDF32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_nHSpdBd_XDF32"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_nHSpdBd_XDF32
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
+  /begin GROUP
+    /* Name                   */      PrmM.PrmM_Proc_1ms_sys.ParameterManager1ms.CustTqLim.TorqueLimitation.CS_PrmM_nLwrSpdBd_XDF32
+    /* Long identifier        */      "PrmM/PrmM_Proc_1ms_sys/ParameterManager1ms/CustTqLim/TorqueLimitation/CS_PrmM_nLwrSpdBd_XDF32"
+    /begin REF_CHARACTERISTIC
+      CS_PrmM_nLwrSpdBd_XDF32
+    /end REF_CHARACTERISTIC
+  /end GROUP
+
   /end MODULE
-  
-  
+
 /end PROJECT
 /* (add any file trailer comments here) */
-/* EOF PrmM.a2l */
+/* EOF PrmM.a2l*/

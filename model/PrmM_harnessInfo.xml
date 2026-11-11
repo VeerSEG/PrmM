@@ -10,7 +10,6 @@
     <P Name="Owner">bd</P>
     <P Name="OwnerType">BD_HARNESS</P>
     <P Name="OwnerPath">.</P>
-    <P Name="LockMode">off</P>
     <P Name="Directory"/>
     <P Name="FileName">PrmM_CustomerLimits.slx</P>
     <P Name="SavedVersion">9.2</P>
@@ -22,7 +21,6 @@
     <P Name="RebuildModelData">false</P>
     <P Name="Graphical">false</P>
     <P Name="DriveFcnCallWithTS">true</P>
-    <P Name="OwnerBDName">PrmM</P>
     <P Name="ScheduleInitTermReset">false</P>
     <P Name="AutoShapeInputs">false</P>
     <P Name="SLDVCompatible">no</P>
@@ -37,6 +35,9 @@
     <P Name="CustomSinkPath"/>
     <P Name="BlockSIDs">924|1024|0|0|0|0|0</P>
     <P Name="OpenGraphs"/>
+    <P Name="ExistingBuildFolder"/>
+    <P Name="FunctionInterfaceName"/>
+    <P Name="SysArchSUTModel"/>
   </Harness>
   <Harness>
     <P Name="Name">PrmM_CustomerRequest</P>
@@ -48,7 +49,6 @@
     <P Name="Owner">bd</P>
     <P Name="OwnerType">BD_HARNESS</P>
     <P Name="OwnerPath">.</P>
-    <P Name="LockMode">off</P>
     <P Name="Directory"/>
     <P Name="FileName">PrmM_CustomerRequest.slx</P>
     <P Name="SavedVersion">9.2</P>
@@ -60,7 +60,6 @@
     <P Name="RebuildModelData">false</P>
     <P Name="Graphical">false</P>
     <P Name="DriveFcnCallWithTS">true</P>
-    <P Name="OwnerBDName">PrmM</P>
     <P Name="ScheduleInitTermReset">false</P>
     <P Name="AutoShapeInputs">false</P>
     <P Name="SLDVCompatible">no</P>
@@ -75,6 +74,9 @@
     <P Name="CustomSinkPath"/>
     <P Name="BlockSIDs">604|704|0|0|0|0|0</P>
     <P Name="OpenGraphs">||||PrmM_CustomerRequest</P>
+    <P Name="ExistingBuildFolder"/>
+    <P Name="FunctionInterfaceName"/>
+    <P Name="SysArchSUTModel"/>
   </Harness>
   <Harness>
     <P Name="Name">PrmM_InternalLimits</P>
@@ -86,7 +88,6 @@
     <P Name="Owner">bd</P>
     <P Name="OwnerType">BD_HARNESS</P>
     <P Name="OwnerPath">.</P>
-    <P Name="LockMode">off</P>
     <P Name="Directory"/>
     <P Name="FileName">PrmM_InternalLimits.slx</P>
     <P Name="SavedVersion">9.2</P>
@@ -98,7 +99,6 @@
     <P Name="RebuildModelData">false</P>
     <P Name="Graphical">false</P>
     <P Name="DriveFcnCallWithTS">true</P>
-    <P Name="OwnerBDName">PrmM</P>
     <P Name="ScheduleInitTermReset">false</P>
     <P Name="AutoShapeInputs">false</P>
     <P Name="SLDVCompatible">no</P>
@@ -113,5 +113,12 @@
     <P Name="CustomSinkPath"/>
     <P Name="BlockSIDs">614|714|0|0|0|0|0</P>
     <P Name="OpenGraphs">||||PrmM_InternalLimits</P>
+    <P Name="ExistingBuildFolder"/>
+    <P Name="FunctionInterfaceName"/>
+    <P Name="SysArchSUTModel"/>
   </Harness>
+  <ModelMetadata>
+    <P Name="ModelUUID">2196223f-ba33-4c1f-8fe6-db90a94a8dbf</P>
+    <P Name="OwnerBDName">PrmM</P>
+  </ModelMetadata>
 </HarnessInformation>

@@ -19,8 +19,7 @@ bk/**/*
 bk/Tools_cfg/vector/
 !bk/08_Includes
 
-arch/**
-!arch/**/.git
+
 
 sw_core_tools/**
 !sw_core_tools/**/.git
